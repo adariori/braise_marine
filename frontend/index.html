@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GRILLADES</title>
+    <link rel="stylesheet" href="assets/css/style.css" />
+    <link rel="stylesheet" href="assets/css/output.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
+</head>
+
+<body>
+
+    <!-- header sec -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <img src="logo.png" alt="Logo" class="w-10 h-10">
+                <span class="text-xl font-bold tracking-tight">Grillades<span
+                        class="text-orange-600">Tropicales</span></span>
+            </div>
+            <ul class="hidden md:flex space-x-8 font-medium text-gray-700">
+                <li class="hover:text-orange-600 cursor-pointer transition">La Carte</li>
+                <li class="hover:text-orange-600 cursor-pointer transition">Réservations</li>
+                <li class="hover:text-orange-600 cursor-pointer transition">Contact</li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- apropos sect -->
+    <section class="py-16 bg-stone-50">
+        <div class="container mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
+            <div>
+                <h2 class="text-3xl font-bold text-green-900 mb-6">À propos</h2>
+                <p class="text-gray-600 leading-relaxed text-lg">
+                    Nous sommes un restaurant de grillades tropicales situé à la plage. Nous proposons une cuisine
+                    délicieuse
+                    et des plats préparés avec les meilleurs ingrédients locaux.
+                </p>
+            </div>
+            <div class="rounded-2xl overflow-hidden shadow-xl aspect-video bg-gray-200">
+                <img src="about-image.jpg" alt="Notre restaurant" class="w-full h-full object-cover">
+            </div>
+        </div>
+    </section>
+
+    <!-- hero sec -->
+    <section class="relative min-h-[80vh] flex items-center justify-center text-center text-white">
+        <div class="absolute inset-0 z-0">
+            <img src="hero-grill.jpg" alt="Grillades" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-black/50"></div>
+        </div>
+
+        <div class="relative z-10 container mx-auto px-6">
+            <h1 class="text-5xl md:text-7xl font-bold mb-6 tracking-tight">
+                Le Goût Authentique des <span class="text-orange-500">Tropiques</span>
+            </h1>
+            <p class="text-lg md:text-xl mb-10 max-w-2xl mx-auto text-gray-200">
+                Découvrez nos grillades au feu de bois, marinées avec passion et servies face à la mer.
+            </p>
+
+            <div class="flex flex-col md:flex-row justify-center gap-4">
+                <button
+                    class="bg-orange-600 hover:bg-orange-700 text-white px-8 py-4 rounded-full font-bold text-lg transition-all transform hover:scale-105">
+                    Voir le menu
+                </button>
+                <button
+                    class="bg-transparent border-2 border-white hover:bg-white hover:text-black text-white px-8 py-4 rounded-full font-bold text-lg transition-all">
+                    Réserver une table
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Menu sec -->
+    <section class="py-20 bg-white">
+        <div class="container mx-auto px-6">
+            <h2
+                class="text-4xl font-bold text-center text-stone-900 mb-16 underline decoration-orange-500 decoration-4 underline-offset-8">
+                Notre Menu
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                <article
+                    class="group bg-white rounded-3xl shadow-lg overflow-hidden border border-gray-100 hover:shadow-2xl transition">
+                    <div class="h-64 overflow-hidden">
+                        <img src="poulet.jpg" alt="Poulet Braisé"
+                            class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                    </div>
+                    <div class="p-8">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-2xl font-bold">Poulet Braisé Tropical</h3>
+                            <span class="text-orange-600 font-bold text-xl">15€</span>
+                        </div>
+                        <p class="text-gray-600 mb-6">Accompagné d'allocos croustillants et d'une sauce épicée maison
+                            secrète.</p>
+                        <div class="flex items-center text-sm text-gray-400 italic">
+                            <i class="fa fa-fire text-orange-500 mr-2"></i> Spécialité du chef
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- Reservation -->
+    <section class="py-20 bg-stone-100">
+        <div class="container mx-auto px-6">
+            <div class="max-w-2xl mx-auto bg-white p-10 rounded-3xl shadow-xl">
+                <h2 class="text-3xl font-bold text-center text-green-900 mb-8">Réserver une table</h2>
+
+                <form action="" class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Nom complet</label>
+                        <input type="text" placeholder="Votre nom"
+                            class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition"
+                            required>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Nombre de convives</label>
+                            <input type="number" min="1" max="20" value="2"
+                                class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Date et heure</label>
+                            <input type="datetime-local"
+                                class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition"
+                                required>
+                        </div>
+                    </div>
+
+                    <button type="submit"
+                        class="w-full bg-green-800 hover:bg-green-900 text-white font-bold py-4 rounded-xl shadow-lg transition-all transform hover:-translate-y-1">
+                        Confirmer la réservation
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Info & map -->
+    <section class="py-20 bg-white">
+        <div class="container mx-auto px-6 grid md:grid-cols-2 gap-12">
+            <div class="flex flex-col justify-center">
+                <h2 class="text-3xl font-bold text-green-900 mb-6">Nous trouver</h2>
+                <div class="space-y-4 text-gray-600">
+                    <div class="flex items-start space-x-4">
+                        <i class="fa fa-map-marker text-orange-600 text-xl mt-1"></i>
+                        <p class="text-lg">Route de la Plage, 97190 Le Gosier, Guadeloupe</p>
+                    </div>
+                    <div class="flex items-start space-x-4">
+                        <i class="fa fa-phone text-orange-600 text-xl mt-1"></i>
+                        <p class="text-lg">+229 XX XX XX XX</p>
+                    </div>
+                    <div class="flex items-start space-x-4">
+                        <i class="fa fa-clock-o text-orange-600 text-xl mt-1"></i>
+                        <p class="text-lg">Ouvert 7j/7 : 12h-15h / 19h-23h</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="h-80 rounded-3xl overflow-hidden shadow-inner border-4 border-white">
+                <iframe src="https://www.google.com/maps/embed?pb=..." width="100%" height="100%" style="border:0;"
+                    allowfullscreen="" loading="lazy"></iframe>
+            </div>
+        </div>
+    </section>
+
+    <!-- Carte Google Maps -->
+    <iframe src="" width="100%" height="300" style="border:0; border-radius: 15px;" allowfullscreen="" loading="lazy">
+    </iframe>
+    </section>
+
+    <!-- footer -->
+    <footer class="bg-stone-900 text-stone-400 py-12">
+        <div
+            class="container mx-auto px-6 flex flex-col md:flex-row justify-between items-center space-y-6 md:space-y-0">
+            <p>© 2026 Grillades Tropicales. Tous droits réservés.</p>
+
+            <div class="flex space-x-6">
+                <a href="#" class="hover:text-white transition text-2xl"><i class="fa fa-facebook"></i></a>
+                <a href="#" class="hover:text-white transition text-2xl"><i class="fa fa-instagram"></i></a>
+            </div>
+
+            <p class="font-medium text-white">Fait avec 🔥 pour les amoureux de la grillade.</p>
+        </div>
+    </footer>
+
+</body>
+
+</html>

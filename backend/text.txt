@@ -1,0 +1,49 @@
+1. La Table des Plats (meals)
+Au lieu de juste mettre "Nom" et "Prix", on anticipe les besoins futurs.
+
+id : Identifiant unique.
+
+name : Le nom du plat.
+
+description : Les ingrédients ou le détail (important pour le client).
+
+price : Le prix (en entier ou décimal).
+
+image_url : Le chemin vers la photo du plat.
+
+category_id : (Clé étrangère) Pour lier le plat à une catégorie (Entrée, Plat, Boisson).
+
+is_available : Un booléen (0 ou 1). Crucial ! Si le restaurant n'a plus de poisson un soir, le gérant clique sur un bouton et le plat disparaît du site sans être supprimé de la base.
+
+is_featured : Pour mettre le plat en "Spécialité du chef" en haut de la page.
+
+2. La Table des Catégories (categories)
+Ne mets pas les catégories en texte fixe dans la table des plats. Crée une table à part.
+
+id : Identifiant.
+
+label : (ex: "Entrées", "Desserts", "Vins").
+
+sort_order : Un chiffre pour décider l'ordre d'affichage (ex: les entrées toujours en premier).
+
+3. La Table des Réservations (reservations)
+Même si tu envoies un mail, stocker les réservations permet au gérant de consulter sa liste le soir sur son interface admin.
+
+id : Identifiant.
+
+customer_name : Nom du client.
+
+customer_phone : Son numéro WhatsApp.
+
+reservation_date : Date et heure.
+
+guests_count : Nombre de personnes.
+
+status : (En attente, Confirmé, Annulé).
+
+4. La Table de Configuration (settings)
+C'est ici que tu mets les infos du restaurant pour ne jamais avoir à les changer dans le code HTML.
+
+key : (ex: opening_hours, whatsapp_number, restaurant_address).
+
+value : (ex: 08h - 22h, +229XXXXXXXX, Cotonou, Rue X).

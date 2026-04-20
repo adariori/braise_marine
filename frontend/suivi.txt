@@ -1,0 +1,30 @@
+index.html (Le contenu)
+C'est ici que tu vas construire toutes les sections que nous avons vues. Comme on est en pur HTML pour l'instant, tu vas tout mettre dans ce fichier, mais en utilisant des commentaires pour bien séparer les futures "briques" PHP :
+
+Section Navigation : Le logo à gauche, les liens (Menu, Réservation, Contact) à droite.
+
+Section Hero : Une grande image de fond (un beau plat) avec un titre en gras (text-5xl avec Tailwind) et un bouton "Découvrir la carte".
+
+Section Menu (La Carte) : * Tu crées des "Cartes" (Cards) HTML pour chaque plat.
+
+Chaque carte contient : l'image, le nom, le prix et le bouton "Commander sur WhatsApp".
+
+Section Réservation : Un formulaire HTML avec des balises <input> pour le nom, la date et le nombre de personnes.
+
+Section Pied de page (Footer) : Tes liens vers TikTok, l'adresse du resto et les horaires.
+
+B. assets/css/style.css (Le design)
+C'est le fichier que Tailwind va utiliser.
+
+Son rôle : Il va contenir les utilitaires de design. Par exemple, c'est lui qui dira que tes boutons sont arrondis (rounded-full) et qu'ils ont une couleur orange appétissante (bg-orange-500).
+
+Ce qu'il fait : Il assure que ton site est "Responsive" (qu'il est aussi beau sur un iPhone que sur un ordinateur à l'ESGIS).
+
+C. js/main.js (Le comportement)
+Puisqu'on n'a pas encore de PHP, le JavaScript va simuler l'intelligence du site :
+
+Bouton WhatsApp : Il va contenir une petite fonction qui, quand on clique sur un plat, ouvre un lien https://wa.me/numéro?text=Je veux commander....
+
+Filtrage (Optionnel) : Si tu veux impressionner le client, tu peux faire en sorte que si on clique sur un bouton "Entrées", le JavaScript cache les autres plats.
+
+Menu Mobile : Pour que le petit menu "hamburger" s'ouvre proprement sur téléphone.
