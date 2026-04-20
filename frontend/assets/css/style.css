@@ -1,1 +1,11 @@
 @import "tailwindcss";
+
+@theme {
+    --color-braise: #E63946;
+    --color-tropical-green: #064E3B;
+    --color-amber-glow:#F2994A;
+
+    --shadow-fire:0 10px 40px -10px rgba(230, 57, 70, 0.5);
+
+    --radius-super:2.5rem;
+}
