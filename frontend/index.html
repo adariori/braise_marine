@@ -44,9 +44,11 @@
                 <p class="text-lg md:text-xl mb-10 max-w-2xl mx-auto text-gray-100">
                     Découvrez nos grillades au feu de bois, marinées avec passion et servies face à la mer.
                 </p>
+
                 <div class="flex flex-col md:flex-row justify-center gap-4">
                     <button
-                        class="bg-braise text-white px-10 py-4 rounded-full font-bold text-lg shadow-fire transition-all hover:scale-105">
+                        class="bg-braise text-white px-10 py-4 rounded-full font-bold text-lg shadow-fire transition-all hover:scale-105"
+                        id="voir_menu">
                         Voir le menu
                     </button>
                     <button
@@ -74,26 +76,17 @@
 
         <section class="py-24 bg-white">
             <div class="container mx-auto px-6">
-                <h2
-                    class="text-4xl font-bold text-center text-stone-900 mb-16 underline decoration-braise decoration-4 underline-offset-8">
+                <div class="flex justify-center gap-4 mb-10">
+                    <button class="bg-braise text-white px-6 py-2 rounded-full font-bold">Tous</button>
+                    <button class="bg-white border border-gray-200 px-6 py-2 rounded-full">Viandes</button>
+                    <button class="bg-white border border-gray-200 px-6 py-2 rounded-full">Poissons</button>
+                </div>
+                <h2 class="text-4xl font-bold text-center text-stone-900 mb-16 underline decoration-braise decoration-4 underline-offset-8"
+                    id="notre-menu">
                     Notre Menu
                 </h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 justify-items-center">
-                    <article
-                        class="max-w-sm bg-white rounded-super shadow-lg overflow-hidden border border-gray-100 hover:border-amber-glow transition-all duration-300 hover:shadow-2xl group">
-                        <div class="h-56 overflow-hidden">
-                            <img src="poulet.jpg" alt="Poulet"
-                                class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
-                        </div>
-                        <div class="p-6">
-                            <div class="flex justify-between items-center mb-4">
-                                <h3 class="text-xl font-bold text-tropical-green">Poulet Braisé</h3>
-                                <span class="text-braise font-bold text-lg">15€</span>
-                            </div>
-                            <p class="text-gray-600 text-sm mb-6">Accompagné d'allocos et sauce maison piquante ou
-                                douce.</p>
-                        </div>
-                    </article>
+                <div id="conteneur-grid"
+                    class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 justify-items-center">
                 </div>
             </div>
         </section>
@@ -174,6 +167,7 @@
         </div>
     </footer>
 
+    <script src="assets/js/main.js"></script>
 </body>
 
 </html>

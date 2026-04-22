@@ -79,3 +79,53 @@ document.addEventListener('DOMContentLoaded', () => {
     displayMenu(menuData);
     // ... etc
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Module 2 (Suite) : L'Intelligence du Menu
+Étape 3 : Le Filtrage Dynamique
+
+Le but : Créer une "passoire" pour trier tes plats.
+
+En JS : On va apprendre à utiliser .filter(). C'est une fonction qui crée une nouvelle liste à partir de la tienne en ne gardant que ce qui nous intéresse (ex: seulement les poissons).
+
+L'action : Quand on clique sur un bouton "Poissons", on vide la grille HTML et on relance la fonction d'affichage uniquement avec la liste filtrée.
+
+Module 3 : Le Configurateur (La Logique Métier)
+Étape 1 : La Fenêtre de Personnalisation (Modal)
+
+Le but : Quand on clique sur un plat, une petite fenêtre s'ouvre pour choisir l'accompagnement (Riz, Alloco, Patate douce).
+
+En JS : On va apprendre à créer un élément "flottant" qui récupère les infos du plat cliqué.
+
+Étape 2 : Le Calcul du Prix en temps réel
+
+Le but : Si le client ajoute un supplément (ex: double sauce ou boisson), le prix doit changer sous ses yeux avant qu'il ne valide.
+
+En JS : On va créer une petite variable total qui s'additionne à chaque fois qu'une case est cochée.
+
+Module 4 : Les Formulaires (Validation & Propreté)
+Étape 1 : Sécurité de la Réservation
+
+Le but : Empêcher le client d'envoyer un formulaire vide ou de réserver pour une date déjà passée (ex: réserver pour hier).
+
+En JS : On va utiliser les objets Date pour comparer l'heure actuelle avec l'heure choisie par le client.
+
+Étape 2 : L'Effet de Succès (L'animation de fin)
+
+Le but : Au lieu de recharger la page (ce qui est moche), on va faire disparaître le formulaire et faire apparaître un message animé : "C'est réservé ! 🍗".
+
+En JS : On va manipuler les classes CSS pour créer cette transition fluide.
