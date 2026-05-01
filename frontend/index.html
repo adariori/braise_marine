@@ -12,8 +12,8 @@
 
 <body class="antialiased text-gray-800 bg-white">
 
-    <header class="bg-white/90 backdrop-blur-md shadow-sm sticky top-0 z-50">
-        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+    <header id="main-header" class="bg-white/90 backdrop-blur-md shadow-sm sticky top-0 z-50">
+        <nav id="nav-links" class="container mx-auto px-6 py-4 flex justify-between items-center">
             <div class="flex items-center space-x-2">
                 <img src="logo.png" alt="Logo" class="w-10 h-10">
                 <span class="text-xl font-bold tracking-tight text-tropical-green">
@@ -25,13 +25,14 @@
                 <li class="hover:text-braise cursor-pointer transition">Réservations</li>
                 <li class="hover:text-braise cursor-pointer transition">Contact</li>
             </ul>
-            <button class="md:hidden text-tropical-green">
+            <button id="burger-menu" class="md:hidden text-tropical-green">
                 <i class="fa fa-bars text-2xl"></i>
             </button>
         </nav>
     </header>
 
     <main>
+
         <section class="relative min-h-[85vh] flex items-center justify-center text-center text-white">
             <div class="absolute inset-0 z-0">
                 <img src="hero-grill.jpg" alt="Grillades" class="w-full h-full object-cover">
@@ -59,6 +60,7 @@
             </div>
         </section>
 
+
         <section class="py-20 bg-stone-50">
             <div class="container mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
                 <div>
@@ -74,12 +76,16 @@
             </div>
         </section>
 
+
         <section class="py-24 bg-white">
             <div class="container mx-auto px-6">
                 <div class="flex justify-center gap-4 mb-10">
-                    <button class="bg-braise text-white px-6 py-2 rounded-full font-bold">Tous</button>
-                    <button class="bg-white border border-gray-200 px-6 py-2 rounded-full">Viandes</button>
-                    <button class="bg-white border border-gray-200 px-6 py-2 rounded-full">Poissons</button>
+                    <button id="btn-tous" class="btn-filtre"
+                        class="bg-braise text-white px-6 py-2 rounded-full font-bold">Tous</button>
+                    <button id="btn-viandes" class="btn-filtre"
+                        class="bg-white border border-gray-200 px-6 py-2 rounded-full">Viandes</button>
+                    <button id="btn-poissons" class="btn-filtre"
+                        class="bg-white border border-gray-200 px-6 py-2 rounded-full">Poissons</button>
                 </div>
                 <h2 class="text-4xl font-bold text-center text-stone-900 mb-16 underline decoration-braise decoration-4 underline-offset-8"
                     id="notre-menu">
@@ -90,6 +96,7 @@
                 </div>
             </div>
         </section>
+
 
         <section class="py-20 bg-tropical-green">
             <div class="container mx-auto px-6">
@@ -168,6 +175,13 @@
     </footer>
 
     <script src="assets/js/main.js"></script>
+
+    <div>
+        <div>
+            <button>❌</button>
+        </div>
+    </div>
+    
 </body>
 
 </html>
