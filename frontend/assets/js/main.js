@@ -7,6 +7,8 @@ const btnTous = document.querySelector("#btn-tous")
 const btnViandes = document.querySelector("#btn-viandes")
 const btnPoissons = document.querySelector("#btn-poissons")
 const allbtn = document.querySelectorAll('.btn-filtre')
+const modal = document.querySelector('#modal-overlay')
+const closeModal = document.querySelector('#close-modal')
 
 burgerMenu.addEventListener('click', (e) => {
     navlinks.classList.toggle('hidden');
@@ -52,54 +54,93 @@ voirmenu.addEventListener('click', (e) => {
     menu.scrollIntoView({ behavior: 'smooth' })
 })
 
+//ouverture modal pour inofs de plat
+function ouvrirModal(plat) {
+    document.querySelector('#modal-titre').textContent = plat.nom;
+    document.querySelector('#modal-prix').textContent = `${plat.prix}€`;
+    document.querySelector('#modal-desc').textContent = plat.description;
+
+    const imgModal = document.querySelector('#modal-img')
+    imgModal.src = plat.image
+    imgModal.alt = plat.nom
+
+    modal.classList.remove('hidden')
+    modal.classList.add('flex')
+}
+
+//fermeture modal avec btn X
+closeModal.addEventListener('click', () => {
+    modal.classList.add('hidden')
+    modal.classList.remove('flex')
+})
+
+//fermeture via clic fond noir
+modal.addEventListener('click', (e) => {
+    if (e.target === modal) {
+        modal.classList.add('hidden')
+        modal.classList.remove('flex')
+    }
+})
+
+//affichage menu
 function afficherMenu(listeAPresenter) {
     const zoneFaim = document.querySelector('#conteneur-grid')
-
     zoneFaim.innerHTML = ``;
 
     listeAPresenter.forEach(plat => {
-        zoneFaim.innerHTML += ` <article class="max-w-sm bg-white rounded-super shadow-lg overflow-hidden border border-gray-100 hover:border-amber-glow transition-all duration-300 hover:shadow-2xl group">
-                <div class="h-56 overflow-hidden">
-                    <img src="${plat.image}" alt="${plat.nom}" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+        const article = document.createElement('article')
+        article.className = "max-w-sm bg-white rounded-super shadow-lg overflow-hidden border border-gray-100 hover:border-amber-glow transition-all duration-300 hover:shadow-2xl group cursor-pointer"
+
+        article.innerHTML = `<div class="h-56 overflow-hidden">
+                <img src="${plat.image}" alt="${plat.nom}" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+            </div>
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-xl font-bold text-tropical-green">${plat.nom}</h3>
+                    <span class="text-braise font-bold text-lg">${plat.prix}€</span>
                 </div>
-                <div class="p-6">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-xl font-bold text-tropical-green">${plat.nom}</h3>
-                        <span class="text-braise font-bold text-lg">${plat.prix}€</span>
-                    </div>
-                    <p class="text-gray-600 text-sm mb-6">${plat.description}</p>
-                </div>
-            </article>`
+                <p class="text-gray-600 text-sm mb-2 italic">Cliquez pour voir les détails</p>
+            </div>`
+
+        article.addEventListener('click', () => {
+            ouvrirModal(plat)
+        })
+
+        zoneFaim.appendChild(article)
 
     });
 }
 
+//filte
 btnPoissons.addEventListener('click', () => {
     resetStyles()
     const listeFiltree = plats.filter(p => p.categorie === "poisson")
-    btnPoissons.classList.add('bg-braise', 'text-white')
+    btnPoissons.classList.add('bg-braise', 'text-white', 'font-bold')
+    btnPoissons.classList.remove('bg-white', 'text-gray-700')
     afficherMenu(listeFiltree)
 })
 
 btnViandes.addEventListener('click', () => {
     resetStyles()
     const listeFiltree = plats.filter(p => p.categorie === "viande")
-    btnViandes.classList.add('bg-braise', 'text-white')
+    btnViandes.classList.add('bg-braise', 'text-white', 'font-bold')
+    btnViandes.classList.remove('bg-white', 'text-gray-700')
     afficherMenu(listeFiltree)
 })
 
 btnTous.addEventListener('click', () => {
     resetStyles()
-    btnTous.classList.add('bg-braise', 'text-white')
+    btnTous.classList.add('bg-braise', 'text-white', 'font-bold')
+    btnTous.classList.remove('bg-white', 'text-gray-700')
     afficherMenu(plats)
 })
 
 function resetStyles() {
     allbtn.forEach(bouton => {
-        bouton.classList.remove('bg-braise','text-white')
-        bouton.classList.add('bg-white','text-gray-700')
+        bouton.classList.remove('bg-braise', 'text-white', 'font-bold')
+        bouton.classList.add('bg-white', 'text-gray-700', 'border', 'border-gray-200')
     })
 }
 
-
+resetStyles()
 afficherMenu(plats)

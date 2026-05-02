@@ -20,112 +20,72 @@ PLAT --(Appartenir)--> CATEGORIE : Chaque plat est rangé dans une case (ex: le 
 
 
 
-1. Module : Navigation (Le "Cerveau" du Header)
-C’est la première chose que l'utilisateur manipule.
-
-Étape 1 : Créer un "écouteur" sur le bouton hamburger pour ouvrir/fermer le menu mobile.
-
-Étape 2 : Ajouter un effet au défilement (scroll) : si l'utilisateur descend de plus de 50px, le header change de couleur ou devient plus petit.
-
-Étape 3 : Gérer la fermeture automatique du menu quand on clique sur un lien (pour ne pas rester bloqué sur le menu).
-
-2. Module : Menu Dynamique (Affichage & Filtres)
-Ici, on arrête d'écrire le HTML à la main pour les plats.
-
-Étape 1 : Créer ta "base de données" (un tableau d'objets JS) contenant tous tes plats, leurs prix, catégories et accompagnements.
-
-Étape 2 : Créer une fonction de rendu : elle parcourt tes données et génère le code HTML de chaque carte de plat automatiquement.
-
-Étape 3 : Créer le système de filtrage : quand on clique sur "Poissons", le JS cache tout sauf les poissons.
-
-3. Module : Configurateur de Commande (La Logique Métier)
-C'est la partie la plus "intelligente" qui gère les options.
-
-Étape 1 : Créer une fenêtre (modal) qui s'ouvre quand on clique sur un plat pour choisir l'accompagnement (Riz, Alloco, etc.).
-
-Étape 2 : Calculer le prix en temps réel : Prix Plat + Prix Option.
-
-Étape 3 : Gérer le choix "Sur place" vs "Livraison" pour ajouter ou non les frais de port.
-
-4. Module : Formulaires (Réservation & Livraison)
-Pour s'assurer de recevoir des données propres.
-
-Étape 1 : Empêcher l'envoi du formulaire si des champs sont vides (Validation).
-
-Étape 2 : Vérifier la logique des dates (interdire de réserver dans le passé).
-
-Étape 3 : Afficher un message de succès animé à la place du formulaire après validation.
 
 
-// 1. DONNÉES (Le dictionnaire des plats et accompagnements)
+
+
+
+
+### Module 3 : Le Tunnel de Commande (La Passerelle)
+*C'est ce qui fait le lien entre ton catalogue et ton encaissement.*
+
+**Étape 1 : Le "Panier" invisible (LocalStorage)**
+*   **Le but :** Ne plus simplement "afficher" une modal, mais transformer le clic sur "Commander" en une sauvegarde réelle.
+*   **En JS :** Apprendre à utiliser `JSON.stringify()` pour transformer ton plat en texte et le stocker dans la mémoire du navigateur. Cela permet de ne pas perdre le choix du client s'il rafraîchit la page.
+
+**Étape 2 : La Logique d'Accompagnement (Options)**
+*   **Le but :** Dans ta modal, ajouter des "checkbox" ou "radio buttons" pour les accompagnements (Alloco, Riz, Attiéké).
+*   **En JS :** Créer une fonction qui écoute le changement de ces options pour mettre à jour le prix total affiché dans la modal avant la validation.
+
+---
+
+### Module 4 : La Page de Caisse (`commande.html`)
+*C'est ici que l'on prépare le terrain pour Stripe.*
+
+**Étape 1 : Récupération et Rendu du Panier**
+*   **Le but :** Sur cette nouvelle page, lire ce qui a été stocké dans le `localStorage` pour l'afficher fièrement au client ("Votre sélection : Poisson Braisé - 20€").
+*   **En JS :** Utiliser `JSON.parse()` pour récupérer l'objet et reconstruire le résumé de la commande.
+
+**Étape 2 : Le Formulaire de Livraison Intelligent**
+*   **Le but :** Un formulaire qui s'adapte. Si le client choisit "Livraison", on affiche le champ "Adresse" ; s'il choisit "À emporter", on le cache.
+*   **En JS :** Manipuler les classes `hidden` / `block` sur les champs d'adresse en fonction du type de commande choisi.
+
+---
+
+### Module 5 : Finalisation & Sécurité (Pré-Stripe)
+*S'assurer que tout est parfait avant de parler d'argent.*
+
+**Étape 1 : Validation stricte des données**
+*   **Le but :** Vérifier que le numéro de téléphone est valide et que l'heure de retrait est cohérente avec les horaires d'ouverture du restaurant.
+*   **En JS :** Utiliser des expressions régulières (Regex) pour le téléphone et des conditions sur l'objet `Date()`.
+
+**Étape 2 : Le "Mock" de Paiement (Simulateur)**
+*   **Le but :** Créer une transition fluide vers un écran de chargement puis vers une page de succès, en attendant d'intégrer les clés API de Stripe.
+
+---
+
+### Ce que ton fichier `main.js` va devenir (Nouvelle structure) :
+
+```javascript
+// --- 1. CONFIGURATION & ÉTAT (Ce qu'on garde) ---
 const menuData = [...];
+let commandeActuelle = { plat: null, options: [], total: 0 };
 
-// 2. FONCTIONS DE RENDU (Afficher le menu sur la page)
-function displayMenu(items) { ... }
+// --- 2. GESTION DU STOCKAGE (Nouveau !) ---
+function sauvegarderChoix(plat) { ... } // localStorage.setItem
+function recupererChoix() { ... }       // localStorage.getItem
 
-// 3. LOGIQUE DE NAVIGATION (Menu mobile et Scroll)
-function initNavigation() { ... }
+// --- 3. MODAL & OPTIONS (Évolution) ---
+function calculerPrixTotalModal() { ... } // Additionne plat + suppléments
+function validerEtRediriger() { ... }    // Sauvegarde et window.location.href
 
-// 4. GESTION DES ÉVÉNEMENTS (Le clic sur les filtres, le calcul des prix)
-function handleFilters() { ... }
-function handleOrder() { ... }
+// --- 4. FORMULAIRES & VALIDATION ---
+function verifierHoraires() { ... }      // Empêche de commander à 3h du matin
+```
 
-// 5. VALIDATION FORMULAIRE
-function validateForm() { ... }
+### Prochaine action concrète :
+Pour avancer, tu dois maintenant décider du **"carnet de notes"** de tes accompagnements. 
 
-// LANCEMENT DU SITE
-document.addEventListener('DOMContentLoaded', () => {
-    initNavigation();
-    displayMenu(menuData);
-    // ... etc
-});
+**Conseil :** Dans ton tableau `plats`, ajoute une propriété `accompagnements_possibles` (un tableau de noms). Cela te permettra de générer les cases à cocher dans ta modal de manière automatique !
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Module 2 (Suite) : L'Intelligence du Menu
-Étape 3 : Le Filtrage Dynamique
-
-Le but : Créer une "passoire" pour trier tes plats.
-
-En JS : On va apprendre à utiliser .filter(). C'est une fonction qui crée une nouvelle liste à partir de la tienne en ne gardant que ce qui nous intéresse (ex: seulement les poissons).
-
-L'action : Quand on clique sur un bouton "Poissons", on vide la grille HTML et on relance la fonction d'affichage uniquement avec la liste filtrée.
-
-Module 3 : Le Configurateur (La Logique Métier)
-Étape 1 : La Fenêtre de Personnalisation (Modal)
-
-Le but : Quand on clique sur un plat, une petite fenêtre s'ouvre pour choisir l'accompagnement (Riz, Alloco, Patate douce).
-
-En JS : On va apprendre à créer un élément "flottant" qui récupère les infos du plat cliqué.
-
-Étape 2 : Le Calcul du Prix en temps réel
-
-Le but : Si le client ajoute un supplément (ex: double sauce ou boisson), le prix doit changer sous ses yeux avant qu'il ne valide.
-
-En JS : On va créer une petite variable total qui s'additionne à chaque fois qu'une case est cochée.
-
-Module 4 : Les Formulaires (Validation & Propreté)
-Étape 1 : Sécurité de la Réservation
-
-Le but : Empêcher le client d'envoyer un formulaire vide ou de réserver pour une date déjà passée (ex: réserver pour hier).
-
-En JS : On va utiliser les objets Date pour comparer l'heure actuelle avec l'heure choisie par le client.
-
-Étape 2 : L'Effet de Succès (L'animation de fin)
-
-Le but : Au lieu de recharger la page (ce qui est moche), on va faire disparaître le formulaire et faire apparaître un message animé : "C'est réservé ! 🍗".
-
-En JS : On va manipuler les classes CSS pour créer cette transition fluide.
+**On commence par modifier tes données de plats pour y ajouter les accompagnements ou on s'attaque directement au code de sauvegarde ?**

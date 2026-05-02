@@ -5,22 +5,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GRILLADES TROPICALES | Le Goût du Feu</title>
-    <link rel="stylesheet" href="assets/css/style.css" />
-    <link rel="stylesheet" href="assets/css/output.css">
+    <link rel="stylesheet" href="../assets/css/style.css" />
+    <link rel="stylesheet" href="../assets/css/output.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
 </head>
 
 <body class="antialiased text-gray-800 bg-white">
 
     <header id="main-header" class="bg-white/90 backdrop-blur-md shadow-sm sticky top-0 z-50">
-        <nav id="nav-links" class="container mx-auto px-6 py-4 flex justify-between items-center">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
             <div class="flex items-center space-x-2">
-                <img src="logo.png" alt="Logo" class="w-10 h-10">
+                <img src="../assets/images/logo.png" alt="Logo" class="w-10 h-10">
                 <span class="text-xl font-bold tracking-tight text-tropical-green">
                     Grillades<span class="text-braise">Tropicales</span>
                 </span>
             </div>
-            <ul class="hidden md:flex space-x-8 font-medium text-gray-700">
+            <ul id="nav-links" class="hidden md:flex space-x-8 font-medium text-gray-700">
                 <li class="hover:text-braise cursor-pointer transition">La Carte</li>
                 <li class="hover:text-braise cursor-pointer transition">Réservations</li>
                 <li class="hover:text-braise cursor-pointer transition">Contact</li>
@@ -33,6 +33,7 @@
 
     <main>
 
+        <!-- hero -->
         <section class="relative min-h-[85vh] flex items-center justify-center text-center text-white">
             <div class="absolute inset-0 z-0">
                 <img src="hero-grill.jpg" alt="Grillades" class="w-full h-full object-cover">
@@ -76,16 +77,16 @@
             </div>
         </section>
 
-
+        <!-- Menu -->
         <section class="py-24 bg-white">
             <div class="container mx-auto px-6">
                 <div class="flex justify-center gap-4 mb-10">
-                    <button id="btn-tous" class="btn-filtre"
-                        class="bg-braise text-white px-6 py-2 rounded-full font-bold">Tous</button>
-                    <button id="btn-viandes" class="btn-filtre"
-                        class="bg-white border border-gray-200 px-6 py-2 rounded-full">Viandes</button>
-                    <button id="btn-poissons" class="btn-filtre"
-                        class="bg-white border border-gray-200 px-6 py-2 rounded-full">Poissons</button>
+                    <button id="btn-tous"
+                        class="btn-filtre bg-braise text-white px-6 py-2 rounded-full font-bold">Tous</button>
+                    <button id="btn-viandes"
+                        class="btn-filtre bg-white border border-gray-200 px-6 py-2 rounded-full">Viandes</button>
+                    <button id="btn-poissons"
+                        class="btn-filtre bg-white border border-gray-200 px-6 py-2 rounded-full">Poissons</button>
                 </div>
                 <h2 class="text-4xl font-bold text-center text-stone-900 mb-16 underline decoration-braise decoration-4 underline-offset-8"
                     id="notre-menu">
@@ -97,7 +98,7 @@
             </div>
         </section>
 
-
+        <!-- Reservation -->
         <section class="py-20 bg-tropical-green">
             <div class="container mx-auto px-6">
                 <div class="max-w-2xl mx-auto bg-white p-10 rounded-super shadow-fire text-gray-800">
@@ -125,6 +126,7 @@
             </div>
         </section>
 
+        <!-- infos -->
         <section class="py-24 bg-white">
             <div class="container mx-auto px-6 grid md:grid-cols-2 gap-16">
                 <div class="flex flex-col justify-center">
@@ -159,6 +161,7 @@
         </section>
     </main>
 
+    <!-- footer -->
     <footer class="bg-stone-900 text-stone-400 py-16">
         <div class="container mx-auto px-6 text-center">
             <div class="mb-8">
@@ -174,14 +177,36 @@
         </div>
     </footer>
 
-    <script src="assets/js/main.js"></script>
-
-    <div>
-        <div>
-            <button>❌</button>
+    <!-- Modal -->
+    <div id="modal-overlay"
+        class="fixed inset-0 bg-black/70 backdrop-blur-sm z-[100] flex items-center justify-center hidden p-4">
+        <div
+            class="bg-white rounded-super max-w-lg w-full overflow-hidden shadow-2xl relative animate-in fade-in zoom-in duration-300">
+            <!-- femeture -->
+            <button id="close-modal"
+                class="absolute top-4 right-4 bg-white/80 hover:bg-braise hover:text-white w-10 h-10 rounded-full flex items-center justify-center transition z-10 text-xl">
+                <i class="fa fa-times"></i>
+            </button>
+            <!-- img -->
+            <div class="h-64">
+                <img src="" alt="" id="modal-img" class="w-full h-full object-cover">
+            </div>
+            <!-- contenu -->
+            <div class="p-8">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 id="modal-titre" class="text-3xl font-bold text-tropical-green"></h2>
+                    <span id="modal-prix" class="text-2xl font-bold text-braise"></span>
+                </div>
+                <p id="modal-desc" class="text-gray-600 leading-relaxed mb-8"></p>
+                <button
+                    class="w-full bg-tropical-green text-white font-bold py-4 rounded-xl hover:bg-braise transition-all shadow-lg">
+                    Commander ce plat
+                </button>
+            </div>
         </div>
     </div>
-    
+
+    <script src="../assets/js/main.js"></script>
 </body>
 
 </html>
