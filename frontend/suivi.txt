@@ -22,70 +22,36 @@ PLAT --(Appartenir)--> CATEGORIE : Chaque plat est rangé dans une case (ex: le 
 
 
 
+Étape 1 : Récupération et Rendu du Panier
+Actuellement, tes choix sont stockés dans le coffre-fort. Sur la page commande.html, tu dois effectuer le travail inverse.
 
+L'action : Au chargement de la page, tu vas "lire" le panier.
 
+La transformation : Tu vas utiliser JSON.parse() pour transformer ce texte en une liste d'objets manipulables.
 
+L'affichage : Tu vas créer une boucle qui génère du HTML pour chaque ligne (ex: une petite carte avec l'image du plat, le nom de l'accompagnement choisi, la quantité et le prix).
 
-### Module 3 : Le Tunnel de Commande (La Passerelle)
-*C'est ce qui fait le lien entre ton catalogue et ton encaissement.*
+Étape 2 : Le Calcul du Total Général
+Une fois que tu as affiché les plats, il faut faire l'addition pour que le client sache combien il doit payer.
 
-**Étape 1 : Le "Panier" invisible (LocalStorage)**
-*   **Le but :** Ne plus simplement "afficher" une modal, mais transformer le clic sur "Commander" en une sauvegarde réelle.
-*   **En JS :** Apprendre à utiliser `JSON.stringify()` pour transformer ton plat en texte et le stocker dans la mémoire du navigateur. Cela permet de ne pas perdre le choix du client s'il rafraîchit la page.
+Le but : Parcourir chaque élément du panier, multiplier le prix par la quantité, et afficher le résultat en gros en bas de page.
 
-**Étape 2 : La Logique d'Accompagnement (Options)**
-*   **Le but :** Dans ta modal, ajouter des "checkbox" ou "radio buttons" pour les accompagnements (Alloco, Riz, Attiéké).
-*   **En JS :** Créer une fonction qui écoute le changement de ces options pour mettre à jour le prix total affiché dans la modal avant la validation.
+Le détail : N'oublie pas d'ajouter une option pour supprimer un article ou modifier la quantité (boutons + et -) directement depuis cette page.
 
----
+Étape 3 : Le Formulaire de Livraison Intelligent
+C'est la partie "logique" de l'interface. Tu dois demander au client comment il veut récupérer sa commande.
 
-### Module 4 : La Page de Caisse (`commande.html`)
-*C'est ici que l'on prépare le terrain pour Stripe.*
+Le choix : Un sélecteur entre "Livraison à domicile" et "À emporter".
 
-**Étape 1 : Récupération et Rendu du Panier**
-*   **Le but :** Sur cette nouvelle page, lire ce qui a été stocké dans le `localStorage` pour l'afficher fièrement au client ("Votre sélection : Poisson Braisé - 20€").
-*   **En JS :** Utiliser `JSON.parse()` pour récupérer l'objet et reconstruire le résumé de la commande.
+Le comportement : * Si le client choisit Livraison, un champ "Adresse complète" apparaît.
 
-**Étape 2 : Le Formulaire de Livraison Intelligent**
-*   **Le but :** Un formulaire qui s'adapte. Si le client choisit "Livraison", on affiche le champ "Adresse" ; s'il choisit "À emporter", on le cache.
-*   **En JS :** Manipuler les classes `hidden` / `block` sur les champs d'adresse en fonction du type de commande choisi.
+S'il choisit À emporter, le champ adresse disparaît pour ne pas encombrer l'écran inutilement.
 
----
+Étape 4 : La Logique d'Accompagnement (Options)
+C'est ici que tu améliores l'expérience dans ton Modal.
 
-### Module 5 : Finalisation & Sécurité (Pré-Stripe)
-*S'assurer que tout est parfait avant de parler d'argent.*
+Le visuel : Sous la description du plat, tu vas ajouter une zone "Choisissez votre accompagnement".
 
-**Étape 1 : Validation stricte des données**
-*   **Le but :** Vérifier que le numéro de téléphone est valide et que l'heure de retrait est cohérente avec les horaires d'ouverture du restaurant.
-*   **En JS :** Utiliser des expressions régulières (Regex) pour le téléphone et des conditions sur l'objet `Date()`.
+Le choix : Utilise des boutons radio (on ne peut choisir qu'un seul accompagnement, ex: soit Riz, soit Alloco) ou des cases à cocher (si on peut en prendre plusieurs).
 
-**Étape 2 : Le "Mock" de Paiement (Simulateur)**
-*   **Le but :** Créer une transition fluide vers un écran de chargement puis vers une page de succès, en attendant d'intégrer les clés API de Stripe.
-
----
-
-### Ce que ton fichier `main.js` va devenir (Nouvelle structure) :
-
-```javascript
-// --- 1. CONFIGURATION & ÉTAT (Ce qu'on garde) ---
-const menuData = [...];
-let commandeActuelle = { plat: null, options: [], total: 0 };
-
-// --- 2. GESTION DU STOCKAGE (Nouveau !) ---
-function sauvegarderChoix(plat) { ... } // localStorage.setItem
-function recupererChoix() { ... }       // localStorage.getItem
-
-// --- 3. MODAL & OPTIONS (Évolution) ---
-function calculerPrixTotalModal() { ... } // Additionne plat + suppléments
-function validerEtRediriger() { ... }    // Sauvegarde et window.location.href
-
-// --- 4. FORMULAIRES & VALIDATION ---
-function verifierHoraires() { ... }      // Empêche de commander à 3h du matin
-```
-
-### Prochaine action concrète :
-Pour avancer, tu dois maintenant décider du **"carnet de notes"** de tes accompagnements. 
-
-**Conseil :** Dans ton tableau `plats`, ajoute une propriété `accompagnements_possibles` (un tableau de noms). Cela te permettra de générer les cases à cocher dans ta modal de manière automatique !
-
-**On commence par modifier tes données de plats pour y ajouter les accompagnements ou on s'attaque directement au code de sauvegarde ?**
+La mise à jour : Dès que le client coche une case, le prix en bas du modal doit changer instantanément. Si le poisson est à 20€ et que l'Alloco est à 3€, le bouton doit afficher "Ajouter au panier - 23€".

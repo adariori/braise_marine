@@ -12,7 +12,9 @@
 
 <body class="antialiased text-gray-800 bg-white">
 
-    <header id="main-header" class="bg-white/90 backdrop-blur-md shadow-sm sticky top-0 z-50">
+    <!-- header -->
+    <header id="main-header"
+        class="bg-white/90 backdrop-blur-md shadow-sm sticky top-0 z-50 transition-all duration-300">
         <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
             <div class="flex items-center space-x-2">
                 <img src="../assets/images/logo.png" alt="Logo" class="w-10 h-10">
@@ -20,24 +22,36 @@
                     Grillades<span class="text-braise">Tropicales</span>
                 </span>
             </div>
-            <ul id="nav-links" class="hidden md:flex space-x-8 font-medium text-gray-700">
-                <li class="hover:text-braise cursor-pointer transition">La Carte</li>
-                <li class="hover:text-braise cursor-pointer transition">Réservations</li>
-                <li class="hover:text-braise cursor-pointer transition">Contact</li>
-            </ul>
-            <button id="burger-menu" class="md:hidden text-tropical-green">
-                <i class="fa fa-bars text-2xl"></i>
-            </button>
+
+            <div class="flex items-center space-x-6">
+                <ul id="nav-links" class="hidden md:flex space-x-8 font-medium text-gray-700">
+                    <li class="hover:text-braise cursor-pointer transition"> <a href="#menu">La Carte</a></li>
+                    <li class="hover:text-braise cursor-pointer transition"> <a href="#reservation">Réservations</a>
+                    </li>
+                    <li class="hover:text-braise cursor-pointer transition"> <a href="#contact">Contact</a></li>
+                </ul>
+
+                <!-- Icône Caddie pour Commande -->
+                <a href="commande.html" class="text-tropical-green hover:text-braise transition-colors relative"
+                    title="Ma commande">
+                    <i class="fa fa-shopping-basket text-2xl"></i>
+                    <span
+                        class="absolute -top-2 -right-2 bg-braise text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">0</span>
+                </a>
+
+                <button id="burger-menu" class="md:hidden text-tropical-green">
+                    <i class="fa fa-bars text-2xl"></i>
+                </button>
+            </div>
         </nav>
     </header>
 
     <main>
-
         <!-- hero -->
         <section class="relative min-h-[85vh] flex items-center justify-center text-center text-white">
             <div class="absolute inset-0 z-0">
-                <img src="hero-grill.jpg" alt="Grillades" class="w-full h-full object-cover">
-                <div class="absolute inset-0 bg-black/40"></div>
+                <img src="" alt="Grillades" class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-black/50"></div>
             </div>
             <div class="relative z-10 container mx-auto px-6">
                 <h1 class="text-5xl md:text-7xl font-bold mb-6 tracking-tight">
@@ -49,19 +63,19 @@
 
                 <div class="flex flex-col md:flex-row justify-center gap-4">
                     <button
-                        class="bg-braise text-white px-10 py-4 rounded-full font-bold text-lg shadow-fire transition-all hover:scale-105"
+                        class="bg-braise text-white px-10 py-4 rounded-full font-bold text-lg shadow-lg hover:shadow-fire transition-all hover:scale-105"
                         id="voir_menu">
                         Voir le menu
                     </button>
-                    <button
-                        class="bg-transparent border-2 border-white hover:bg-white hover:text-black text-white px-10 py-4 rounded-full font-bold text-lg transition-all">
+                    <a href="#reservation"
+                        class="bg-transparent border-2 border-white hover:bg-white hover:text-tropical-green text-white px-10 py-4 rounded-full font-bold text-lg transition-all text-center">
                         Réserver une table
-                    </button>
+                    </a>
                 </div>
             </div>
         </section>
 
-
+        <!-- about -->
         <section class="py-20 bg-stone-50">
             <div class="container mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
                 <div>
@@ -72,26 +86,31 @@
                     </p>
                 </div>
                 <div class="rounded-super overflow-hidden shadow-2xl aspect-video bg-gray-200">
-                    <img src="about-image.jpg" alt="Notre restaurant" class="w-full h-full object-cover">
+                    <img src="" alt="Notre restaurant" class="w-full h-full object-cover">
                 </div>
             </div>
         </section>
 
         <!-- Menu -->
-        <section class="py-24 bg-white">
+        <section class="py-24 bg-white" id="menu">
             <div class="container mx-auto px-6">
-                <div class="flex justify-center gap-4 mb-10">
+                <!-- Filtres uniformisés -->
+                <div class="flex justify-center gap-4 mb-12">
                     <button id="btn-tous"
-                        class="btn-filtre bg-braise text-white px-6 py-2 rounded-full font-bold">Tous</button>
+                        class="btn-filtre bg-braise text-white px-8 py-2 rounded-full font-bold shadow-md transition-all">Tous</button>
                     <button id="btn-viandes"
-                        class="btn-filtre bg-white border border-gray-200 px-6 py-2 rounded-full">Viandes</button>
+                        class="btn-filtre bg-white border border-gray-200 text-gray-700 px-8 py-2 rounded-full hover:border-braise transition-all">Viandes</button>
                     <button id="btn-poissons"
-                        class="btn-filtre bg-white border border-gray-200 px-6 py-2 rounded-full">Poissons</button>
+                        class="btn-filtre bg-white border border-gray-200 text-gray-700 px-8 py-2 rounded-full hover:border-braise transition-all">Poissons</button>
                 </div>
-                <h2 class="text-4xl font-bold text-center text-stone-900 mb-16 underline decoration-braise decoration-4 underline-offset-8"
-                    id="notre-menu">
+
+                <h2 class="text-4xl font-bold text-center text-stone-900 mb-4" id="notre-menu">
                     Notre Menu
                 </h2>
+                <div class="w-24 h-1 bg-braise mx-auto mb-10 rounded-full"></div>
+
+                <p id="nbr_plat" class="text-center mb-8 text-gray-500 italic"></p>
+
                 <div id="conteneur-grid"
                     class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 justify-items-center">
                 </div>
@@ -99,53 +118,61 @@
         </section>
 
         <!-- Reservation -->
-        <section class="py-20 bg-tropical-green">
+        <section class="py-20 bg-tropical-green" id="reservation">
             <div class="container mx-auto px-6">
-                <div class="max-w-2xl mx-auto bg-white p-10 rounded-super shadow-fire text-gray-800">
+                <div
+                    class="max-w-2xl mx-auto bg-white p-10 rounded-super shadow-2xl text-gray-800 border border-white/20">
                     <h2 class="text-3xl font-bold text-center text-tropical-green mb-8">Réserver une table</h2>
                     <form action="#" class="space-y-6">
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-2">Nom complet</label>
                             <input type="text" placeholder="Votre nom"
-                                class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-braise outline-none transition"
+                                class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-braise focus:ring-1 focus:ring-braise outline-none transition"
                                 required>
                         </div>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <input type="number" placeholder="Convives"
-                                class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-braise outline-none">
-                            <input type="datetime-local"
-                                class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-braise outline-none"
-                                required>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Convives</label>
+                                <input type="number" placeholder="Nombre de personnes"
+                                    class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-braise outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Date & Heure</label>
+                                <input type="datetime-local"
+                                    class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-braise outline-none"
+                                    required>
+                            </div>
                         </div>
                         <button type="submit"
                             class="w-full bg-braise text-white font-bold py-4 rounded-xl shadow-lg hover:brightness-110 transition-all">
                             Confirmer la réservation
                         </button>
+                        <p id="soumission" class="text-center font-medium text-tropical-green"></p>
                     </form>
                 </div>
             </div>
         </section>
 
         <!-- infos -->
-        <section class="py-24 bg-white">
+        <section class="py-24 bg-white" id="contact">
             <div class="container mx-auto px-6 grid md:grid-cols-2 gap-16">
                 <div class="flex flex-col justify-center">
                     <h2 class="text-4xl font-bold text-tropical-green mb-8">Nous trouver</h2>
                     <div class="space-y-6 text-gray-600">
                         <div class="flex items-start space-x-4">
-                            <div class="bg-stone-100 p-3 rounded-full text-braise">
+                            <div class="bg-stone-100 p-4 rounded-full text-braise">
                                 <i class="fa fa-map-marker text-xl"></i>
                             </div>
                             <p class="text-lg">Route de la Plage, 97190 Le Gosier, Guadeloupe</p>
                         </div>
                         <div class="flex items-start space-x-4">
-                            <div class="bg-stone-100 p-3 rounded-full text-braise">
+                            <div class="bg-stone-100 p-4 rounded-full text-braise">
                                 <i class="fa fa-phone text-xl"></i>
                             </div>
                             <p class="text-lg">+229 XX XX XX XX</p>
                         </div>
                         <div class="flex items-start space-x-4">
-                            <div class="bg-stone-100 p-3 rounded-full text-braise">
+                            <div class="bg-stone-100 p-4 rounded-full text-braise">
                                 <i class="fa fa-clock-o text-xl"></i>
                             </div>
                             <p class="text-lg">Ouvert 7j/7 : 12h-15h / 19h-23h</p>
@@ -159,6 +186,7 @@
                 </div>
             </div>
         </section>
+
     </main>
 
     <!-- footer -->
@@ -179,34 +207,51 @@
 
     <!-- Modal -->
     <div id="modal-overlay"
-        class="fixed inset-0 bg-black/70 backdrop-blur-sm z-[100] flex items-center justify-center hidden p-4">
-        <div
-            class="bg-white rounded-super max-w-lg w-full overflow-hidden shadow-2xl relative animate-in fade-in zoom-in duration-300">
-            <!-- femeture -->
+        class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden items-center justify-center p-4 z-[9999]">
+        <div class="bg-white rounded-3xl max-w-lg w-full overflow-hidden shadow-2xl relative">
+
+            <!-- bouton prec -->
+            <button id="prev-plat"
+                class="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-braise hover:text-white w-12 h-12 rounded-full flex items-center justify-center z-20 transition">
+                <i class="fa fa-chevron-left"></i>
+            </button>
+
+            <!-- bouton suiv -->
+            <button id="next-plat"
+                class="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-braise hover:text-white w-12 h-12 rounded-full flex items-center justify-center z-20 transition">
+                <i class="fa fa-chevron-right"></i>
+            </button>
+
+            <!-- Bouton fermeture -->
             <button id="close-modal"
                 class="absolute top-4 right-4 bg-white/80 hover:bg-braise hover:text-white w-10 h-10 rounded-full flex items-center justify-center transition z-10 text-xl">
                 <i class="fa fa-times"></i>
             </button>
-            <!-- img -->
+
+            <!-- Image du plat -->
             <div class="h-64">
                 <img src="" alt="" id="modal-img" class="w-full h-full object-cover">
             </div>
-            <!-- contenu -->
+
+            <!-- Contenu -->
             <div class="p-8">
                 <div class="flex justify-between items-center mb-4">
                     <h2 id="modal-titre" class="text-3xl font-bold text-tropical-green"></h2>
                     <span id="modal-prix" class="text-2xl font-bold text-braise"></span>
                 </div>
                 <p id="modal-desc" class="text-gray-600 leading-relaxed mb-8"></p>
-                <button
-                    class="w-full bg-tropical-green text-white font-bold py-4 rounded-xl hover:bg-braise transition-all shadow-lg">
+
+                <!-- bouton Commander -->
+                <button id="btn-commander-modal"
+                    class="w-full bg-tropical-green text-white font-bold py-4 rounded-xl hover:bg-braise transition-all shadow-lg flex items-center justify-center gap-2">
+                    <i class="fa fa-shopping-cart"></i>
                     Commander ce plat
                 </button>
             </div>
         </div>
     </div>
 
-    <script src="../assets/js/main.js"></script>
+    <script defer src="../assets/js/main.js"></script>
 </body>
 
 </html>
