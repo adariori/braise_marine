@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?php echo $titre ?? 'Grillades Tropicales'; ?></title>
+    <link rel="stylesheet" href="../assets/css/style.css" />
+    <link rel="stylesheet" href="../assets/css/output.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
+</head>
+
+<body class="antialiased text-gray-800 <?php echo $page === 'commande' ? 'bg-stone-50' : 'bg-white'; ?>">
+
+    <?php if ($page === 'index') : ?>
+        <div id="toast-container" class="fixed top-24 right-6 z-[10000] flex flex-col gap-3"></div>
+    <?php endif; ?>
+
+    <header id="main-header" class="bg-white/90 backdrop-blur-md shadow-sm sticky top-0 z-50 transition-all duration-300">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+
+            <div class="flex items-center space-x-2">
+                <img src="../assets/images/logo.png" alt="Logo" class="w-10 h-10">
+                <span class="text-xl font-bold tracking-tight text-tropical-green">
+                    Grillades<span class="text-braise">Tropicales</span>
+                </span>
+            </div>
+
+            <?php if ($page === 'index') : ?>
+                <div class="flex items-center space-x-6">
+                    <ul id="nav-links" class="hidden md:flex space-x-8 font-medium text-gray-700">
+                        <li class="hover:text-braise cursor-pointer transition"><a href="#menu">La Carte</a></li>
+                        <li class="hover:text-braise cursor-pointer transition"><a href="#reservation">Réservations</a></li>
+                        <li class="hover:text-braise cursor-pointer transition"><a href="#contact">Contact</a></li>
+                    </ul>
+
+                    <!-- Icône panier -->
+                    <a href="commande.php" class="text-tropical-green hover:text-braise transition-colors relative" title="Ma commande">
+                        <i class="fa fa-shopping-basket text-2xl"></i>
+                        <span id="cart-count" class="absolute -top-2 -right-2 bg-braise text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full hidden">0</span>
+                    </a>
+
+                    <button id="burger-menu" class="md:hidden text-tropical-green">
+                        <i class="fa fa-bars text-2xl"></i>
+                    </button>
+                </div>
+
+            <?php else : ?>
+                <div class="flex items-center space-x-6">
+                    <a href="index.php" class="text-tropical-green font-medium hover:text-braise transition">
+                        <i class="fa fa-arrow-left mr-2"></i>Retour au menu
+                    </a>
+                    <div class="relative">
+                        <a href="commande.php" class="p-2 block">
+                            <i class="fa fa-shopping-basket text-2xl text-tropical-green"></i>
+                            <span id="cart-count" class="absolute -top-1 -right-1 bg-braise text-white text-[10px] font-bold rounded-full h-5 w-5 flex items-center justify-center hidden">0</span>
+                        </a>
+                    </div>
+                </div>
+            <?php endif; ?>
+
+        </nav>
+    </header>

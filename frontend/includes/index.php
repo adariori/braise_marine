@@ -1,56 +1,9 @@
-<!DOCTYPE html>
-<html lang="fr">
+    <?php
+    $page = 'index';
+    $titre = 'GRILLADES TROPICALES | Le Goût du Feu';
+    include 'header.php';
+    ?>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GRILLADES TROPICALES | Le Goût du Feu</title>
-    <link rel="stylesheet" href="../assets/css/style.css" />
-    <link rel="stylesheet" href="../assets/css/output.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
-</head>
-
-<body class="antialiased text-gray-800 bg-white">
-
-    <!-- notifs conteneur -->
-    <div id="toast-container" class="fixed top-24 right-6 z-[10000] flex flex-col gap-3"></div>
-
-    <!-- header -->
-    <header id="main-header"
-        class="bg-white/90 backdrop-blur-md shadow-sm sticky top-0 z-50 transition-all duration-300">
-        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <div class="flex items-center space-x-2">
-                <img src="../assets/images/logo.png" alt="Logo" class="w-10 h-10">
-                <span class="text-xl font-bold tracking-tight text-tropical-green">
-                    Grillades<span class="text-braise">Tropicales</span>
-                </span>
-            </div>
-
-            <div class="flex items-center space-x-6">
-                <ul id="nav-links" class="hidden md:flex space-x-8 font-medium text-gray-700">
-                    <li class="hover:text-braise cursor-pointer transition"> <a href="#menu">La Carte</a></li>
-                    <li class="hover:text-braise cursor-pointer transition"> <a href="#reservation">Réservations</a>
-                    </li>
-                    <li class="hover:text-braise cursor-pointer transition"> <a href="#contact">Contact</a></li>
-                </ul>
-
-                <!-- Icône Caddie pour Commande -->
-                <a href="commande.html" class="text-tropical-green hover:text-braise transition-colors relative"
-                    title="Ma commande">
-                    <i class="fa fa-shopping-basket text-2xl"></i>
-
-                    <span id="cart-count"
-                        class="absolute -top-2 -right-2 bg-braise text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full hidden">
-                        0
-                    </span>
-                </a>
-
-                <button id="burger-menu" class="md:hidden text-tropical-green">
-                    <i class="fa fa-bars text-2xl"></i>
-                </button>
-            </div>
-        </nav>
-    </header>
 
     <main>
         <!-- hero -->
@@ -195,20 +148,7 @@
     </main>
 
     <!-- footer -->
-    <footer class="bg-stone-900 text-stone-400 py-16">
-        <div class="container mx-auto px-6 text-center">
-            <div class="mb-8">
-                <span class="text-2xl font-bold text-white">Grillades<span class="text-braise">Tropicales</span></span>
-            </div>
-            <div class="flex justify-center space-x-8 mb-8">
-                <a href="#" class="hover:text-braise transition text-2xl"><i class="fa fa-facebook"></i></a>
-                <a href="#" class="hover:text-braise transition text-2xl"><i class="fa fa-instagram"></i></a>
-            </div>
-            <p class="text-sm border-t border-stone-800 pt-8">
-                © 2026 Grillades Tropicales. Fait avec passion pour les amoureux de la braise.
-            </p>
-        </div>
-    </footer>
+    <?php include 'footer.php'; ?>
 
     <!-- Modal -->
     <div id="modal-overlay"
@@ -261,6 +201,3 @@
     </div>
 
     <script src="../assets/js/main.js"></script>
-</body>
-
-</html>

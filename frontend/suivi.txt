@@ -1,41 +1,7 @@
-Plat : id_plat, nom, description, prix, image_url, est_disponible
-
-Categorie : id_categorie, libelle, icone
-
-Reservation : id_reser, date_heure, nb_personnes, statut, commentaire
-
-Client : id_client, nom_complet, telephone, email
-
-Accompagnement : id_acc, nom, supplement_prix
-
-Commande : id_com, date_heure, type, total_prix, adresse_livraison, statut
-
-Livreur : id_livreur, nom, vehicule, telephone
-
-
-
-CLIENT --(Effectuer)--> RESERVATION : Un client réserve une ou plusieurs fois.
-
-PLAT --(Appartenir)--> CATEGORIE : Chaque plat est rangé dans une case (ex: le "Poulet Braisé" est dans "Grillades").
-
-
-
-
-
-⚠️ Problèmes détectés
-Problème 1 — updateBadge() dans commande.js
-Dans commande.js, changerQuantite appelle :
-jsif (typeof updateBadge === "function") updateBadge()
-Mais updateBadge n't est pas défini dans commande.js. Il est dans main.js qui n'est pas chargé sur commande.html. Donc le badge ne se met pas à jour sur cette page.
-
-Problème 2 — Le prix sauvegardé ne tient pas compte du supplément
-Dans main.js, ajouterAuPanier() sauvegarde bien prix: plat.prix + supplement. ✅
-Mais dans commande.js, calculerTotaux() fait :
-jsitem.prix * item.quantite
-Ça utilise le prix déjà calculé. ✅ C'est bon.
-
-Problème 3 — Le modal est trop grand sur mobile
-Le modal a max-w-lg mais pas de max-h ni de overflow-y-auto. Si les accompagnements sont nombreux, le contenu peut dépasser l'écran sans scrollbar.
-
-Problème 4 — commande.html n'a pas de badge panier
-Le header de commande.html n'a pas d'icône panier avec badge, contrairement à index.html. Ce n'est pas bloquant mais c'est une incohérence visuelle.
+Client → Reservation (un client réserve)
+Client → Commande (un client passe une commande)
+Categorie → Plat (un plat appartient à une catégorie)
+Plat → LigneCommande (un plat apparaît dans une ligne)
+Accompagnement → LigneCommande (l'accompagnement choisi)
+Commande → LigneCommande (une commande a plusieurs lignes)
+Livreur → Commande (un livreur livre une commande)
