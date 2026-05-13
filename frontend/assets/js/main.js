@@ -26,7 +26,11 @@ const plats = [
         image: "../assets/images/1.jpg",
         description: "Accompagné d'allocos et sauce maison.",
         categorie: "viande",
-        accompagnements: ["Alloco", "Riz blanc", "Attiéké"]
+        accompagnements: [
+            { nom: "Alloco", supplement_prix: 7 },
+            { nom: "Riz blanc", supplement_prix: 5 },
+            { nom: "Attiéké", supplement_prix: 2 }
+        ]
     },
     {
         id: 2,
@@ -35,7 +39,11 @@ const plats = [
         image: "../assets/images/2.jpg",
         description: "Poisson frais grillé au feu de bois.",
         categorie: "poisson",
-        accompagnements: ["Frites de patate", "Alloco", "Riz"]
+        accompagnements: [
+            { nom: "Alloco", supplement_prix: 5 },
+            { nom: "Riz blanc", supplement_prix: 6 },
+            { nom: "Attiéké", supplement_prix: 2 }
+        ]
     },
     {
         id: 3,
@@ -44,7 +52,11 @@ const plats = [
         image: "../assets/images/3.jpg",
         description: "Agneau tendre mariné aux herbes tropicales.",
         categorie: "viande",
-        accompagnements: ["Alloco", "Riz blanc", "Attiéké"]
+        accompagnements: [
+            { nom: "Alloco", supplement_prix: 4 },
+            { nom: "Riz blanc", supplement_prix: 1 },
+            { nom: "Attiéké", supplement_prix: 2 }
+        ]
     },
     {
         id: 4,
@@ -53,7 +65,11 @@ const plats = [
         image: "../assets/images/4.jpg",
         description: "Gambas géantes marinées au citron vert.",
         categorie: "poisson",
-        accompagnements: ["Riz safrané", "Légumes grillés"]
+        accompagnements: [
+            { nom: "Alloco", supplement_prix: 14 },
+            { nom: "Riz blanc", supplement_prix: 12 },
+            { nom: "Attiéké", supplement_prix: 2 }
+        ]
     },
     {
         id: 5,
@@ -62,7 +78,11 @@ const plats = [
         image: "../assets/images/5.jpg",
         description: "Assortiment de viandes grillées.",
         categorie: "viande",
-        accompagnements: ["Alloco", "Frites", "Salade"]
+        accompagnements: [
+            { nom: "Alloco", supplement_prix: 1 },
+            { nom: "Riz blanc", supplement_prix: 3 },
+            { nom: "Attiéké", supplement_prix: 2 }
+        ]
     }
 ]
 
@@ -74,12 +94,7 @@ function sauvegarderPanier(panier) {
     localStorage.setItem("panier", JSON.stringify(panier))
 }
 
-function updateBadge() {
-    const panier = obtenirPanier()
-    const total = panier.reduce((sum, item) => sum + item.quantite, 0)
-    const badge = document.querySelector('.fa-shopping-basket + span')
-    if (badge) badge.textContent = total
-}
+let prixTotalCalculé = 0
 
 function genererOptionsAccompagnement(plat) {
     const conteneurOptions = document.querySelector('#options-accompagnement')
@@ -87,54 +102,92 @@ function genererOptionsAccompagnement(plat) {
 
     conteneurOptions.innerHTML = `<p class="font-bold text-gray-700 mb-2">Choisissez votre accompagnement :</p>`
 
+    const premierSupplement = plat.accompagnements[0]?.supplement_prix || 0
+    prixTotalCalculé = plat.prix + premierSupplement
+
+    const modalPrix = document.querySelector('#modal-prix')
+    if (modalPrix) modalPrix.textContent = `${prixTotalCalculé}€`
+
     plat.accompagnements.forEach((acc, index) => {
         const div = document.createElement('div')
-        div.className = "flex items-center space-x-3 mb-2 p-2 border rounded-xl hover:bg-stone-50 cursor-pointer"
+        div.className = "flex items-center space-x-3 mb-2 p-3 border rounded-xl hover:border-braise hover:bg-stone-50 cursor-pointer transition-all"
+
+        const texteSupplement = acc.supplement_prix === 0
+            ? '<span class="text-green-600 font-medium">(inclus)</span>'
+            : `<span class="text-gray-400">(+${acc.supplement_prix}€)</span>`
+
         div.innerHTML = `
-            <input type="radio" id="acc-${index}" name="accompagnement" value="${acc}" ${index === 0 ? 'checked' : ''} class="accent-braise w-4 h-4">
-            <label for="acc-${index}" class="flex-grow cursor-pointer text-gray-600">${acc}</label>
-        `
+            <input type="radio" id="acc-${index}" name="accompagnement" value="${acc.nom}" data-sup="${acc.supplement_prix}" class="accent-braise w-4 h-4" ${index === 0 ? 'checked' : ''}>
+            <label for="acc-${index}" class="flex-grow cursor-pointer text-gray-700 font-medium flex justify-between items-center">
+                ${acc.nom} ${texteSupplement}
+            </label>`
+
         div.addEventListener('click', () => {
-            div.querySelector('input').checked = true
+            const input = div.querySelector('input')
+            input.checked = true
+            prixTotalCalculé = plat.prix + acc.supplement_prix
+            const modalPrix = document.querySelector('#modal-prix')
+            if (modalPrix) modalPrix.textContent = `${prixTotalCalculé}€`
         })
+
         conteneurOptions.appendChild(div)
     })
 }
 
 function ajouterAuPanier(plat) {
     let panier = obtenirPanier()
-    const optionChoisie = document.querySelector('input[name="accompagnement"]:checked').value
-    
+
+    const radioCoche = document.querySelector('input[name="accompagnement"]:checked')
+    const optionChoisie = radioCoche ? radioCoche.value : "Aucun"
+    const supplement = radioCoche ? parseInt(radioCoche.dataset.sup) : 0
+
     const index = panier.findIndex(item => item.id === plat.id && item.accompagnement === optionChoisie)
 
     if (index !== -1) {
         panier[index].quantite += 1
     } else {
-        panier.push({ ...plat, accompagnement: optionChoisie, quantite: 1 })
+        panier.push({
+            id: plat.id,
+            nom: plat.nom,
+            image: plat.image,
+            basePrix: plat.prix,
+            prix: plat.prix + supplement,
+            accompagnement: optionChoisie,
+            quantite: 1
+        })
     }
 
     sauvegarderPanier(panier)
-    updateBadge()
+
+    if (typeof updateBadge === "function") updateBadge()
+    if (typeof showToast === "function") showToast(`${plat.nom} ajouté au panier !`)
 }
 
 function afficherContenuModal(index) {
     indexPlatActuel = index
     platSelectionne = plats[indexPlatActuel]
 
-    document.querySelector('#modal-titre').textContent = platSelectionne.nom
-    document.querySelector('#modal-prix').textContent = `${platSelectionne.prix}€`
-    document.querySelector('#modal-desc').textContent = platSelectionne.description
+    const titre = document.querySelector('#modal-titre')
+    const prix = document.querySelector('#modal-prix')
+    const desc = document.querySelector('#modal-desc')
+    const img = document.querySelector('#modal-img')
 
-    const imgModal = document.querySelector('#modal-img')
-    imgModal.src = platSelectionne.image
-    imgModal.alt = platSelectionne.nom
+    if (titre) titre.textContent = platSelectionne.nom
+    if (prix) prix.textContent = `${platSelectionne.prix}€`
+    if (desc) desc.textContent = platSelectionne.description
+
+    if (img) {
+        img.src = platSelectionne.image
+        img.alt = platSelectionne.nom
+    }
 
     genererOptionsAccompagnement(platSelectionne)
 }
 
 function ouvrirModal(plat) {
-    const indexClicke = plats.findIndex(p => p.id === plat.id)
-    afficherContenuModal(indexClicke)
+    const index = plats.findIndex(p => p.id === plat.id)
+    afficherContenuModal(index)
+
     modal.classList.remove('hidden')
     modal.classList.add('flex')
     document.body.classList.add('overflow-hidden')
@@ -148,9 +201,9 @@ function fermerModal() {
 }
 
 function resetStyles() {
-    allbtn.forEach(bouton => {
-        bouton.classList.remove('bg-braise', 'text-white', 'font-bold', 'shadow-md')
-        bouton.classList.add('bg-white', 'text-gray-700', 'border', 'border-gray-200')
+    allbtn.forEach(b => {
+        b.classList.remove('bg-braise', 'text-white', 'font-bold', 'shadow-md')
+        b.classList.add('bg-white', 'text-gray-700', 'border', 'border-gray-200')
     })
 }
 
@@ -160,14 +213,18 @@ function appliquerStyleActif(bouton) {
     bouton.classList.remove('bg-white', 'text-gray-700', 'border-gray-200')
 }
 
-function afficherMenu(listeAPresenter) {
-    const zoneFaim = document.querySelector('#conteneur-grid')
-    zoneFaim.innerHTML = ``
-    if (nbrplat) nbrplat.textContent = `${listeAPresenter.length} plat(s) disponible(s)`
+function afficherMenu(liste) {
+    const zone = document.querySelector('#conteneur-grid')
+    if (!zone) return
 
-    listeAPresenter.forEach(plat => {
+    zone.innerHTML = ''
+
+    if (nbrplat) nbrplat.textContent = `${liste.length} plat(s) disponible(s)`
+
+    liste.forEach(plat => {
         const article = document.createElement('article')
         article.className = "max-w-sm bg-white rounded-super shadow-lg overflow-hidden border border-gray-100 hover:border-braise transition-all duration-300 hover:shadow-2xl group cursor-pointer"
+
         article.innerHTML = `
             <div class="h-56 overflow-hidden">
                 <img src="${plat.image}" alt="${plat.nom}" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
@@ -179,82 +236,127 @@ function afficherMenu(listeAPresenter) {
                 </div>
                 <p class="text-gray-600 text-sm mb-2 italic">Cliquez pour voir les détails</p>
             </div>`
+
         article.addEventListener('click', () => ouvrirModal(plat))
-        zoneFaim.appendChild(article)
+        zone.appendChild(article)
     })
 }
 
-burgerMenu.addEventListener('click', () => navlinks.classList.toggle('hidden'))
-navlinks.addEventListener('click', () => navlinks.classList.add('hidden'))
+function updateBadge() {
+    const panier = JSON.parse(localStorage.getItem("panier")) || []
+    const badge = document.getElementById('cart-badge')
+
+    const total = panier.reduce((a, b) => a + b.quantite, 0)
+
+    if (!badge) return
+
+    if (total > 0) {
+        badge.innerText = total
+        badge.classList.remove('hidden')
+    } else {
+        badge.classList.add('hidden')
+    }
+}
+
+function showToast(message) {
+    const container = document.getElementById('toast-container')
+    if (!container) return
+
+    const toast = document.createElement('div')
+    toast.className = "bg-white border-l-4 border-braise shadow-lg rounded-r-lg p-4 flex items-center gap-3"
+
+    toast.innerHTML = `<i class="fa fa-check-circle text-braise text-xl"></i><span>${message}</span>`
+
+    container.appendChild(toast)
+
+    setTimeout(() => toast.remove(), 3000)
+}
+
+document.addEventListener('DOMContentLoaded', updateBadge)
+
+if (burgerMenu && navlinks) {
+    burgerMenu.addEventListener('click', () => navlinks.classList.toggle('hidden'))
+    navlinks.addEventListener('click', () => navlinks.classList.add('hidden'))
+}
 
 window.addEventListener('scroll', () => {
     if (window.scrollY > 50) {
         mainheader.classList.add('shadow-md', 'py-2')
-        mainheader.classList.remove('py-4')
     } else {
         mainheader.classList.remove('shadow-md', 'py-2')
-        mainheader.classList.add('py-4')
     }
 })
 
-voirmenu.addEventListener('click', () => menu.scrollIntoView({ behavior: 'smooth' }))
+if (voirmenu && menu) {
+    voirmenu.addEventListener('click', () => menu.scrollIntoView({ behavior: 'smooth' }))
+}
 
-btnCommanderModal.addEventListener('click', (e) => {
-    e.preventDefault()
-    if (platSelectionne) {
-        const texteOriginal = btnCommanderModal.innerHTML
-        ajouterAuPanier(platSelectionne)
-        btnCommanderModal.innerHTML = `<i class="fa fa-check"></i> Ajouté !`
-        btnCommanderModal.classList.replace('bg-tropical-green', 'bg-green-600')
-        setTimeout(() => {
-            fermerModal()
-            btnCommanderModal.innerHTML = texteOriginal
-            btnCommanderModal.classList.replace('bg-green-600', 'bg-tropical-green')
-        }, 800)
-    }
+if (btnCommanderModal) {
+    btnCommanderModal.addEventListener('click', (e) => {
+        e.preventDefault()
+        if (platSelectionne) ajouterAuPanier(platSelectionne)
+    })
+}
+
+if (closeModal) closeModal.addEventListener('click', fermerModal)
+
+if (modal) {
+    modal.addEventListener('click', e => {
+        if (e.target === modal) fermerModal()
+    })
+}
+
+document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') fermerModal()
 })
 
-closeModal.addEventListener('click', fermerModal)
-modal.addEventListener('click', (e) => { if (e.target === modal) fermerModal() })
-document.addEventListener('keydown', (e) => { if (e.key === 'Escape') fermerModal() })
+if (btnNext) {
+    btnNext.addEventListener('click', e => {
+        e.stopPropagation()
+        indexPlatActuel = (indexPlatActuel + 1) % plats.length
+        afficherContenuModal(indexPlatActuel)
+    })
+}
 
-btnNext.addEventListener('click', (e) => {
-    e.stopPropagation()
-    indexPlatActuel = (indexPlatActuel + 1) % plats.length
-    afficherContenuModal(indexPlatActuel)
-})
+if (btnPrev) {
+    btnPrev.addEventListener('click', e => {
+        e.stopPropagation()
+        indexPlatActuel = (indexPlatActuel - 1 + plats.length) % plats.length
+        afficherContenuModal(indexPlatActuel)
+    })
+}
 
-btnPrev.addEventListener('click', (e) => {
-    e.stopPropagation()
-    indexPlatActuel = (indexPlatActuel - 1 + plats.length) % plats.length
-    afficherContenuModal(indexPlatActuel)
-})
+if (btnPoissons) {
+    btnPoissons.addEventListener('click', () => {
+        appliquerStyleActif(btnPoissons)
+        afficherMenu(plats.filter(p => p.categorie === "poisson"))
+    })
+}
 
-btnPoissons.addEventListener('click', () => {
-    appliquerStyleActif(btnPoissons)
-    afficherMenu(plats.filter(p => p.categorie === "poisson"))
-})
+if (btnViandes) {
+    btnViandes.addEventListener('click', () => {
+        appliquerStyleActif(btnViandes)
+        afficherMenu(plats.filter(p => p.categorie === "viande"))
+    })
+}
 
-btnViandes.addEventListener('click', () => {
-    appliquerStyleActif(btnViandes)
-    afficherMenu(plats.filter(p => p.categorie === "viande"))
-})
-
-btnTous.addEventListener('click', () => {
-    appliquerStyleActif(btnTous)
-    afficherMenu(plats)
-})
+if (btnTous) {
+    btnTous.addEventListener('click', () => {
+        appliquerStyleActif(btnTous)
+        afficherMenu(plats)
+    })
+}
 
 if (soumissionForm) {
-    soumissionForm.addEventListener('submit', (e) => {
+    soumissionForm.addEventListener('submit', e => {
         e.preventDefault()
         const confirmation = document.getElementById('soumission')
-        confirmation.textContent = "Réservation réussie ! À très bientôt."
-        confirmation.classList.add('text-tropical-green', 'mt-4', 'font-bold')
+        if (confirmation) {
+            confirmation.textContent = "Réservation réussie !"
+        }
         soumissionForm.reset()
     })
 }
 
-updateBadge()
-appliquerStyleActif(btnTous)
 afficherMenu(plats)
+appliquerStyleActif(btnTous)

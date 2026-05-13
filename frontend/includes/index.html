@@ -12,6 +12,9 @@
 
 <body class="antialiased text-gray-800 bg-white">
 
+    <!-- notifs conteneur -->
+    <div id="toast-container" class="fixed top-24 right-6 z-[10000] flex flex-col gap-3"></div>
+
     <!-- header -->
     <header id="main-header"
         class="bg-white/90 backdrop-blur-md shadow-sm sticky top-0 z-50 transition-all duration-300">
@@ -35,8 +38,11 @@
                 <a href="commande.html" class="text-tropical-green hover:text-braise transition-colors relative"
                     title="Ma commande">
                     <i class="fa fa-shopping-basket text-2xl"></i>
-                    <span
-                        class="absolute -top-2 -right-2 bg-braise text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">0</span>
+
+                    <span id="cart-count"
+                        class="absolute -top-2 -right-2 bg-braise text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full hidden">
+                        0
+                    </span>
                 </a>
 
                 <button id="burger-menu" class="md:hidden text-tropical-green">
@@ -50,7 +56,7 @@
         <!-- hero -->
         <section class="relative min-h-[85vh] flex items-center justify-center text-center text-white">
             <div class="absolute inset-0 z-0">
-                <img src="" alt="Grillades" class="w-full h-full object-cover">
+                <img src="../assets/images/hero.jpg" alt="Grillades" class="w-full h-full object-cover">
                 <div class="absolute inset-0 bg-black/50"></div>
             </div>
             <div class="relative z-10 container mx-auto px-6">
@@ -86,7 +92,7 @@
                     </p>
                 </div>
                 <div class="rounded-super overflow-hidden shadow-2xl aspect-video bg-gray-200">
-                    <img src="" alt="Notre restaurant" class="w-full h-full object-cover">
+                    <img src="../assets/images/about.jpg" alt="Notre restaurant" class="w-full h-full object-cover">
                 </div>
             </div>
         </section>
@@ -94,7 +100,6 @@
         <!-- Menu -->
         <section class="py-24 bg-white" id="menu">
             <div class="container mx-auto px-6">
-                <!-- Filtres uniformisés -->
                 <div class="flex justify-center gap-4 mb-12">
                     <button id="btn-tous"
                         class="btn-filtre bg-braise text-white px-8 py-2 rounded-full font-bold shadow-md transition-all">Tous</button>
@@ -123,7 +128,7 @@
                 <div
                     class="max-w-2xl mx-auto bg-white p-10 rounded-super shadow-2xl text-gray-800 border border-white/20">
                     <h2 class="text-3xl font-bold text-center text-tropical-green mb-8">Réserver une table</h2>
-                    <form action="#" class="space-y-6">
+                    <form id="form-reservation" action="#" class="space-y-6">
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-2">Nom complet</label>
                             <input type="text" placeholder="Votre nom"
@@ -208,19 +213,8 @@
     <!-- Modal -->
     <div id="modal-overlay"
         class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden items-center justify-center p-4 z-[9999]">
-        <div class="bg-white rounded-3xl max-w-lg w-full overflow-hidden shadow-2xl relative">
-
-            <!-- bouton prec -->
-            <button id="prev-plat"
-                class="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-braise hover:text-white w-12 h-12 rounded-full flex items-center justify-center z-20 transition">
-                <i class="fa fa-chevron-left"></i>
-            </button>
-
-            <!-- bouton suiv -->
-            <button id="next-plat"
-                class="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-braise hover:text-white w-12 h-12 rounded-full flex items-center justify-center z-20 transition">
-                <i class="fa fa-chevron-right"></i>
-            </button>
+        <!-- CORRECTION : Ajout de max-h-[90vh] et overflow-y-auto -->
+        <div class="bg-white rounded-3xl max-w-lg w-full max-h-[90vh] overflow-y-auto shadow-2xl relative">
 
             <!-- Bouton fermeture -->
             <button id="close-modal"
@@ -229,8 +223,20 @@
             </button>
 
             <!-- Image du plat -->
-            <div class="h-64">
+            <div class="h-64 relative shrink-0">
+                <!-- bouton prec -->
+                <button id="prev-plat"
+                    class="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-braise hover:text-white w-12 h-12 rounded-full flex items-center justify-center z-20 transition">
+                    <i class="fa fa-chevron-left"></i>
+                </button>
+
                 <img src="" alt="" id="modal-img" class="w-full h-full object-cover">
+
+                <!-- bouton suiv -->
+                <button id="next-plat"
+                    class="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-braise hover:text-white w-12 h-12 rounded-full flex items-center justify-center z-20 transition">
+                    <i class="fa fa-chevron-right"></i>
+                </button>
             </div>
 
             <!-- Contenu -->
@@ -241,9 +247,12 @@
                 </div>
                 <p id="modal-desc" class="text-gray-600 leading-relaxed mb-8"></p>
 
+                <!-- accompagnement -->
+                <div id="options-accompagnement"></div>
+
                 <!-- bouton Commander -->
                 <button id="btn-commander-modal"
-                    class="w-full bg-tropical-green text-white font-bold py-4 rounded-xl hover:bg-braise transition-all shadow-lg flex items-center justify-center gap-2">
+                    class="w-full bg-tropical-green text-white font-bold py-4 rounded-xl hover:bg-braise transition-all shadow-lg flex items-center justify-center gap-2 mt-4">
                     <i class="fa fa-shopping-cart"></i>
                     Commander ce plat
                 </button>
@@ -251,7 +260,7 @@
         </div>
     </div>
 
-    <script defer src="../assets/js/main.js"></script>
+    <script src="../assets/js/main.js"></script>
 </body>
 
 </html>

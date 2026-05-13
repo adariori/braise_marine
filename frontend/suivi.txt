@@ -22,36 +22,20 @@ PLAT --(Appartenir)--> CATEGORIE : Chaque plat est rangé dans une case (ex: le 
 
 
 
-Étape 1 : Récupération et Rendu du Panier
-Actuellement, tes choix sont stockés dans le coffre-fort. Sur la page commande.html, tu dois effectuer le travail inverse.
+⚠️ Problèmes détectés
+Problème 1 — updateBadge() dans commande.js
+Dans commande.js, changerQuantite appelle :
+jsif (typeof updateBadge === "function") updateBadge()
+Mais updateBadge n't est pas défini dans commande.js. Il est dans main.js qui n'est pas chargé sur commande.html. Donc le badge ne se met pas à jour sur cette page.
 
-L'action : Au chargement de la page, tu vas "lire" le panier.
+Problème 2 — Le prix sauvegardé ne tient pas compte du supplément
+Dans main.js, ajouterAuPanier() sauvegarde bien prix: plat.prix + supplement. ✅
+Mais dans commande.js, calculerTotaux() fait :
+jsitem.prix * item.quantite
+Ça utilise le prix déjà calculé. ✅ C'est bon.
 
-La transformation : Tu vas utiliser JSON.parse() pour transformer ce texte en une liste d'objets manipulables.
+Problème 3 — Le modal est trop grand sur mobile
+Le modal a max-w-lg mais pas de max-h ni de overflow-y-auto. Si les accompagnements sont nombreux, le contenu peut dépasser l'écran sans scrollbar.
 
-L'affichage : Tu vas créer une boucle qui génère du HTML pour chaque ligne (ex: une petite carte avec l'image du plat, le nom de l'accompagnement choisi, la quantité et le prix).
-
-Étape 2 : Le Calcul du Total Général
-Une fois que tu as affiché les plats, il faut faire l'addition pour que le client sache combien il doit payer.
-
-Le but : Parcourir chaque élément du panier, multiplier le prix par la quantité, et afficher le résultat en gros en bas de page.
-
-Le détail : N'oublie pas d'ajouter une option pour supprimer un article ou modifier la quantité (boutons + et -) directement depuis cette page.
-
-Étape 3 : Le Formulaire de Livraison Intelligent
-C'est la partie "logique" de l'interface. Tu dois demander au client comment il veut récupérer sa commande.
-
-Le choix : Un sélecteur entre "Livraison à domicile" et "À emporter".
-
-Le comportement : * Si le client choisit Livraison, un champ "Adresse complète" apparaît.
-
-S'il choisit À emporter, le champ adresse disparaît pour ne pas encombrer l'écran inutilement.
-
-Étape 4 : La Logique d'Accompagnement (Options)
-C'est ici que tu améliores l'expérience dans ton Modal.
-
-Le visuel : Sous la description du plat, tu vas ajouter une zone "Choisissez votre accompagnement".
-
-Le choix : Utilise des boutons radio (on ne peut choisir qu'un seul accompagnement, ex: soit Riz, soit Alloco) ou des cases à cocher (si on peut en prendre plusieurs).
-
-La mise à jour : Dès que le client coche une case, le prix en bas du modal doit changer instantanément. Si le poisson est à 20€ et que l'Alloco est à 3€, le bouton doit afficher "Ajouter au panier - 23€".
+Problème 4 — commande.html n'a pas de badge panier
+Le header de commande.html n'a pas d'icône panier avec badge, contrairement à index.html. Ce n'est pas bloquant mais c'est une incohérence visuelle.
