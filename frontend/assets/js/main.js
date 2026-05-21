@@ -18,73 +18,7 @@ const soumissionForm = document.querySelector('#reservation form')
 let platSelectionne = null
 let indexPlatActuel = 0
 
-const plats = [
-    {
-        id: 1,
-        nom: "Poulet Braisé",
-        prix: 15,
-        image: "../assets/images/1.jpg",
-        description: "Accompagné d'allocos et sauce maison.",
-        categorie: "viande",
-        accompagnements: [
-            { nom: "Alloco", supplement_prix: 7 },
-            { nom: "Riz blanc", supplement_prix: 5 },
-            { nom: "Attiéké", supplement_prix: 2 }
-        ]
-    },
-    {
-        id: 2,
-        nom: "Poisson Braisé",
-        prix: 20,
-        image: "../assets/images/2.jpg",
-        description: "Poisson frais grillé au feu de bois.",
-        categorie: "poisson",
-        accompagnements: [
-            { nom: "Alloco", supplement_prix: 5 },
-            { nom: "Riz blanc", supplement_prix: 6 },
-            { nom: "Attiéké", supplement_prix: 2 }
-        ]
-    },
-    {
-        id: 3,
-        nom: "Côtelettes d'Agneau",
-        prix: 22,
-        image: "../assets/images/3.jpg",
-        description: "Agneau tendre mariné aux herbes tropicales.",
-        categorie: "viande",
-        accompagnements: [
-            { nom: "Alloco", supplement_prix: 4 },
-            { nom: "Riz blanc", supplement_prix: 1 },
-            { nom: "Attiéké", supplement_prix: 2 }
-        ]
-    },
-    {
-        id: 4,
-        nom: "Gambas Grillées",
-        prix: 25,
-        image: "../assets/images/4.jpg",
-        description: "Gambas géantes marinées au citron vert.",
-        categorie: "poisson",
-        accompagnements: [
-            { nom: "Alloco", supplement_prix: 14 },
-            { nom: "Riz blanc", supplement_prix: 12 },
-            { nom: "Attiéké", supplement_prix: 2 }
-        ]
-    },
-    {
-        id: 5,
-        nom: "Brochettes Mixtes",
-        prix: 18,
-        image: "../assets/images/5.jpg",
-        description: "Assortiment de viandes grillées.",
-        categorie: "viande",
-        accompagnements: [
-            { nom: "Alloco", supplement_prix: 1 },
-            { nom: "Riz blanc", supplement_prix: 3 },
-            { nom: "Attiéké", supplement_prix: 2 }
-        ]
-    }
-]
+let plats = []
 
 function obtenirPanier() {
     return JSON.parse(localStorage.getItem("panier")) || []
@@ -106,7 +40,7 @@ function genererOptionsAccompagnement(plat) {
     prixTotalCalculé = plat.prix + premierSupplement
 
     const modalPrix = document.querySelector('#modal-prix')
-    if (modalPrix) modalPrix.textContent = `${prixTotalCalculé}€`
+    if (modalPrix) modalPrix.textContent = `${prixTotalCalculé}FCFA`
 
     plat.accompagnements.forEach((acc, index) => {
         const div = document.createElement('div')
@@ -114,7 +48,7 @@ function genererOptionsAccompagnement(plat) {
 
         const texteSupplement = acc.supplement_prix === 0
             ? '<span class="text-green-600 font-medium">(inclus)</span>'
-            : `<span class="text-gray-400">(+${acc.supplement_prix}€)</span>`
+            : `<span class="text-gray-400">(+${acc.supplement_prix} FCFA)</span>`
 
         div.innerHTML = `
             <input type="radio" id="acc-${index}" name="accompagnement" value="${acc.nom}" data-sup="${acc.supplement_prix}" class="accent-braise w-4 h-4" ${index === 0 ? 'checked' : ''}>
@@ -127,7 +61,7 @@ function genererOptionsAccompagnement(plat) {
             input.checked = true
             prixTotalCalculé = plat.prix + acc.supplement_prix
             const modalPrix = document.querySelector('#modal-prix')
-            if (modalPrix) modalPrix.textContent = `${prixTotalCalculé}€`
+            if (modalPrix) modalPrix.textContent = `${prixTotalCalculé}FCFA`
         })
 
         conteneurOptions.appendChild(div)
@@ -173,7 +107,7 @@ function afficherContenuModal(index) {
     const img = document.querySelector('#modal-img')
 
     if (titre) titre.textContent = platSelectionne.nom
-    if (prix) prix.textContent = `${platSelectionne.prix}€`
+    if (prix) prix.textContent = `${platSelectionne.prix} FCFA`
     if (desc) desc.textContent = platSelectionne.description
 
     if (img) {
@@ -232,7 +166,7 @@ function afficherMenu(liste) {
             <div class="p-6">
                 <div class="flex justify-between items-center mb-4">
                     <h3 class="text-xl font-bold text-tropical-green">${plat.nom}</h3>
-                    <span class="text-braise font-bold text-lg">${plat.prix}€</span>
+                    <span class="text-braise font-bold text-lg">${plat.prix} FCFA</span>
                 </div>
                 <p class="text-gray-600 text-sm mb-2 italic">Cliquez pour voir les détails</p>
             </div>`
@@ -358,5 +292,10 @@ if (soumissionForm) {
     })
 }
 
-afficherMenu(plats)
-appliquerStyleActif(btnTous)
+fetch('http://localhost/GRTR/backend/api/plats.php')
+    .then(r => r.json())
+    .then(data => {
+        plats = data
+        afficherMenu(plats)
+        appliquerStyleActif(btnTous)
+    })

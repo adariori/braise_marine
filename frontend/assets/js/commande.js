@@ -35,7 +35,7 @@ function afficherPanier() {
             <div class="text-center py-10">
                 <i class="fa fa-shopping-basket text-4xl text-gray-200 mb-3"></i>
                 <p class="text-gray-500">Votre panier est vide</p>
-                <a href="index.html" class="text-braise font-bold mt-2 inline-block">Retourner au menu</a>
+                <a href="index.php" class="text-braise font-bold mt-2 inline-block">Retourner au menu</a>
             </div>`
         calculerTotaux()
         updateBadge()
@@ -54,7 +54,7 @@ function afficherPanier() {
                     <p class="text-xs text-gray-500 italic">
                         Accompagnement : ${item.accompagnement || 'Standard'}
                     </p>
-                    <p class="text-braise font-bold">${item.prix}€</p>
+                    <p class="text-braise font-bold">${item.prix}FCFA</p>
                 </div>
             </div>
 
@@ -78,13 +78,13 @@ function afficherPanier() {
 }
 
 window.changerQuantite = function (index, delta) {
-    const panier = obtenirPanier(); 
+    const panier = obtenirPanier();
     panier[index].quantite += delta;
-    
+
     if (panier[index].quantite <= 0) {
         return supprimerArticle(index);
     }
-    
+
     sauvegarderPanier(panier);
     afficherPanier();
 }
@@ -101,15 +101,9 @@ function calculerTotaux() {
 
     const sousTotal = panier.reduce((sum, item) => sum + (item.prix * item.quantite), 0);
 
-    const modeRadio = document.querySelector('input[name="mode"]:checked');
-    const mode = modeRadio ? modeRadio.value : 'livraison';
-
-    const fraisLivraison = mode === 'livraison' ? 5 : 0;
-    const totalFinal = sousTotal + fraisLivraison;
-
-    if (sousTotalEl) sousTotalEl.textContent = `${sousTotal.toFixed(2)}€`;
-    if (livraisonEl) livraisonEl.textContent = `${fraisLivraison.toFixed(2)}€`;
-    if (totalFinalEl) totalFinalEl.textContent = `${totalFinal.toFixed(2)}€`;
+    if (sousTotalEl) sousTotalEl.textContent = `${sousTotal.toFixed(2)} FCFA`;
+    if (livraisonEl) livraisonEl.textContent = `À définir`;
+    if (totalFinalEl) totalFinalEl.textContent = `${sousTotal.toFixed(2)} FCFA`;
 }
 
 document.querySelectorAll('input[name="mode"]').forEach(radio => {
@@ -144,7 +138,7 @@ if (formCommande) {
         alert(`Merci ${nom} ! Votre commande est validée.`)
 
         localStorage.removeItem("panier")
-        window.location.href = "index.html"
+        window.location.href = "index.php"
     })
 }
 
