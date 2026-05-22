@@ -284,11 +284,36 @@ if (btnTous) {
 if (soumissionForm) {
     soumissionForm.addEventListener('submit', e => {
         e.preventDefault()
-        const confirmation = document.getElementById('soumission')
-        if (confirmation) {
-            confirmation.textContent = "Réservation réussie !"
+
+        // recup donnee du formulaire
+        const nom = soumissionForm.querySelector('input[type="text"]').value
+        const nb_personnes = soumissionForm.querySelector('input[type="number"]').value
+        const date_heure = soumissionForm.querySelector('input[type="datetime-local"]').value
+
+        const donnees = {
+            nom_complet: nom,
+            nb_personnes: parseInt(nb_personnes),
+            date_heure: date_heure,
+            commentaire: null
         }
-        soumissionForm.reset()
+
+        fetch('http://localhost/GRTR/backend/api/reservations.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(donnees)
+        })
+        .then(r => r.json())
+        .then(reponse => {
+            const confirmation = document.getElementById('soumission')
+            if (reponse.succes) {
+                confirmation.textContent = "Réservation réussie ! À très bientôt."
+                confirmation.classList.add('text-tropical-green', 'font-bold')
+                soumissionForm.reset()
+            } else {
+                confirmation.textContent = "Erreur : " + reponse.erreur
+                confirmation.classList.add('text-red-500')
+            }
+        })
     })
 }
 

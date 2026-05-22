@@ -133,12 +133,48 @@ if (formCommande) {
             return
         }
 
-        const nom = e.target.querySelector('#nom-client')?.value || 'Client'
+        //recup donnee du formulaire
+        const nom = document.querySelector('#nom-client').value
+        const telephone = document.querySelector('#tel-client').value
+        const modeRadio = document.querySelector('input[name="mode"]:checked')
+        const mode = modeRadio ? modeRadio.value : 'livraison'
+        const adresse = document.querySelector('#adresse-client').value
 
-        alert(`Merci ${nom} ! Votre commande est validée.`)
+        //construction de l'obj a envoye
+        const donnees = {
+            client: {
+                nom_complet: nom,
+                telephone: telephone
+            },
+            commande: {
+                type: mode,
+                total_prix: panier.reduce((sum, item) => sum + (item.prix * item.quantite), 0),
+                adresse_livraison: adresse
+            },
+            lignes: panier.map(item => ({
+                id_plat: item.id,
+                id_acc: item.id_acc ?? null,
+                quantite: item.quantite,
+                prix_unitaire: item.prix
+            }))
+        }
 
-        localStorage.removeItem("panier")
-        window.location.href = "index.php"
+        //envoi a l'api
+        fetch('http://localhost/GRTR/backend/api/commandes.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(donnees)
+        })
+        .then(r => r.json())
+        .then(reponse => {
+                if (reponse.succes) {
+                    alert(`Merci ${nom} ! Votre commande #${reponse.id_commande} est validée. `)
+                    localStorage.removeItem("panier")
+                    window.location.href = "index.php"
+                } else {
+                    alert("Erreur : " + reponse.erreur)
+                }
+        })
     })
 }
 

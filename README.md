@@ -2,8 +2,15 @@
 ```
 GRTR
 ├─ backend
+│  ├─ api
+│  │  ├─ commandes.php
+│  │  ├─ plats.php
+│  │  └─ reservations.php
 │  ├─ base.sql
+│  ├─ config
+│  │  └─ connect.php
 │  ├─ schema_base_de_donnees.svg
+│  ├─ test.php
 │  └─ text.txt
 ├─ frontend
 │  ├─ assets
@@ -23,10 +30,12 @@ GRTR
 │  │     ├─ commande.js
 │  │     └─ main.js
 │  ├─ includes
+│  │  ├─ admin.php
 │  │  ├─ commande.php
 │  │  ├─ footer.php
 │  │  ├─ header.php
-│  │  └─ index.php
+│  │  ├─ index.php
+│  │  └─ login.php
 │  └─ suivi.txt
 ├─ package-lock.json
 ├─ package.json

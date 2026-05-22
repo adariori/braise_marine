@@ -10,23 +10,25 @@ Livreur → Commande (un livreur livre une commande)
 
 🔴 Priorité haute
 1. API Commandes
-Quand le client clique "Passer la commande", rien n'est encore enregistré en base. Il faut créer backend/api/commandes.php qui reçoit les données et les enregistre dans les tables Client, Commande et LigneCommande.
+Enregistrer les commandes en base de données.
 2. API Réservations
-Le formulaire de réservation affiche juste "Réservation réussie !" sans rien enregistrer. Il faut créer backend/api/reservations.php.
+Enregistrer les réservations en base de données.
 
 🟡 Priorité moyenne
-3. Paiement Stripe
-Intégrer Stripe pour que le client puisse payer en ligne avant que la commande soit validée.
+3. Page de connexion Admin
+Login sécurisé pour le patron uniquement.
 4. Page d'administration
-Une interface simple pour que le patron puisse :
 
 Voir les commandes reçues
-Gérer les plats (ajouter, modifier, supprimer)
+Gérer les plats
 Voir les réservations
 
 
-🟢 Priorité basse
-5. Suivi de commande
-Une page où le client peut voir le statut de sa commande en temps réel.
-6. Gestion des livreurs
-Assigner un livreur à une commande depuis l'interface admin.
+🟢 Priorité basse (selon besoins client)
+5. Stripe
+Paiement en ligne — à ajouter si le client le demande.
+6. Compte client
+Historique de commandes — à ajouter si le client le demande.
+
+
+pour qu'on ne se perde pas totalement en cas de perte de donnnee fait un petit resume de l'ensemble du projet et de ce qui a ete fait ou ce qui doit l'etre
