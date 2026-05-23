@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-//si connecte dirige vers login
+// Si non connecté, dirige vers login
 if (!isset($_SESSION['admin'])) {
     header('Location: login.php');
     exit;
@@ -9,7 +9,7 @@ if (!isset($_SESSION['admin'])) {
 
 require_once '../../backend/config/connect.php';
 
-// recup commandes
+// Récupération des commandes
 $commandes = $bdd->query("
     SELECT c.id_com, c.date_heure, c.type, c.total_prix, c.statut, c.adresse_livraison,
            cl.nom_complet, cl.telephone
@@ -18,7 +18,7 @@ $commandes = $bdd->query("
     ORDER BY c.date_heure DESC
 ")->fetchAll();
 
-// recup réservations
+// Récupération des réservations
 $reservations = $bdd->query("
     SELECT r.id_reser, r.date_heure, r.nb_personnes, r.statut, r.commentaire,
            cl.nom_complet, cl.telephone
@@ -41,7 +41,7 @@ $reservations = $bdd->query("
 
 <body class="antialiased bg-stone-50 text-gray-800">
 
-    <!-- header -->
+    <!-- Header -->
     <header class="bg-white shadow-sm sticky top-0 z-50">
         <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
             <span class="text-xl font-bold text-tropical-green">
@@ -55,10 +55,12 @@ $reservations = $bdd->query("
 
     <main class="container mx-auto px-6 py-12">
 
-        <!-- zone-commande -->
+        <!-- Zone Commandes -->
         <h2 class="text-3xl font-bold text-tropical-green mb-6">Commandes</h2>
-        <div class="bg-white rounded-super shadow-sm border border-gray-100 overflow-hidden mb-12">
-            <table class="w-full text-sm">
+
+        <!-- Desktop: Tableau -->
+        <div class="hidden md:block bg-white rounded-super shadow-sm border border-gray-100 overflow-x-auto mb-12">
+            <table class="w-full text-sm min-w-[800px]">
                 <thead class="bg-stone-50 text-gray-600 font-semibold">
                     <tr>
                         <th class="px-6 py-4 text-left">#</th>
@@ -73,32 +75,75 @@ $reservations = $bdd->query("
                 <tbody class="divide-y divide-gray-100">
                     <?php foreach ($commandes as $cmd) : ?>
                         <tr class="hover:bg-stone-50">
-                            <td class="px-6 py-4">#<?php echo $cmd['id_com'] ?></td>
-                            <td class="px-6 py-4 font-medium"><?php echo $cmd['nom_complet'] ?></td>
-                            <td class="px-6 py-4"><?php echo $cmd['telephone'] ?></td>
-                            <td class="px-6 py-4"><?php echo $cmd['type'] ?></td>
-                            <td class="px-6 py-4 font-bold text-braise"><?php echo $cmd['total_prix'] ?> FCFA</td>
+                            <td class="px-6 py-4">#<?php echo (int)$cmd['id_com'] ?></td>
+                            <td class="px-6 py-4 font-medium"><?php echo htmlspecialchars($cmd['nom_complet'], ENT_QUOTES, 'UTF-8') ?></td>
+                            <td class="px-6 py-4"><?php echo htmlspecialchars($cmd['telephone'], ENT_QUOTES, 'UTF-8') ?></td>
+                            <td class="px-6 py-4"><?php echo htmlspecialchars($cmd['type'], ENT_QUOTES, 'UTF-8') ?></td>
+                            <td class="px-6 py-4 font-bold text-braise"><?php echo number_format($cmd['total_prix'], 0, ',', ' ') ?> FCFA</td>
                             <td class="px-6 py-4">
-                                <select onchange="changerStatut('Commande', <?php echo $cmd['id_com'] ?>, this.value)"
-                                    class="border border-gray-200 rounded-xl px-3 py-1 text-sm focus:border-braise outline-none">
+                                <select onchange="changerStatut('Commande', <?php echo (int)$cmd['id_com'] ?>, this.value)"
+                                    class="border border-gray-200 rounded-xl px-3 py-1 text-sm focus:border-braise outline-none bg-white">
                                     <?php foreach (['en_attente', 'en_preparation', 'en_livraison', 'livree', 'annulee'] as $s) : ?>
-                                        <option value="<?php echo $s ?>" <?php echo $cmd['statut'] === $s ? 'selected' : '' ?>>
-                                            <?php echo $s ?>
+                                        <option value="<?php echo htmlspecialchars($s, ENT_QUOTES, 'UTF-8') ?>" <?php echo $cmd['statut'] === $s ? 'selected' : '' ?>>
+                                            <?php echo htmlspecialchars(str_replace('_', ' ', $s), ENT_QUOTES, 'UTF-8') ?>
                                         </option>
                                     <?php endforeach; ?>
                                 </select>
                             </td>
-                            <td class="px-6 py-4 text-gray-500"><?php echo $cmd['date_heure'] ?></td>
+                            <td class="px-6 py-4 text-gray-500"><?php echo htmlspecialchars($cmd['date_heure'], ENT_QUOTES, 'UTF-8') ?></td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
             </table>
         </div>
 
-        <!-- zone-reservation -->
+        <!-- Mobile: Cartes -->
+        <div class="md:hidden space-y-4 mb-12">
+            <?php foreach ($commandes as $cmd) : ?>
+                <div class="bg-white rounded-super shadow-sm border border-gray-100 p-4">
+                    <div class="flex justify-between items-start mb-4">
+                        <h3 class="font-bold text-lg text-tropical-green">#<?php echo (int)$cmd['id_com'] ?></h3>
+                        <span class="text-xs bg-stone-100 text-gray-600 px-2 py-1 rounded-full"><?php echo htmlspecialchars($cmd['date_heure'], ENT_QUOTES, 'UTF-8') ?></span>
+                    </div>
+                    <div class="space-y-2 text-sm mb-4">
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Client</span>
+                            <span class="font-medium"><?php echo htmlspecialchars($cmd['nom_complet'], ENT_QUOTES, 'UTF-8') ?></span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Téléphone</span>
+                            <span><?php echo htmlspecialchars($cmd['telephone'], ENT_QUOTES, 'UTF-8') ?></span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Type</span>
+                            <span class="font-medium"><?php echo htmlspecialchars($cmd['type'], ENT_QUOTES, 'UTF-8') ?></span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Total</span>
+                            <span class="font-bold text-braise"><?php echo number_format($cmd['total_prix'], 0, ',', ' ') ?> FCFA</span>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold mb-2">Statut</label>
+                        <select onchange="changerStatut('Commande', <?php echo (int)$cmd['id_com'] ?>, this.value)"
+                            class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:border-braise outline-none bg-white">
+                            <?php foreach (['en_attente', 'en_preparation', 'en_livraison', 'livree', 'annulee'] as $s) : ?>
+                                <option value="<?php echo htmlspecialchars($s, ENT_QUOTES, 'UTF-8') ?>" <?php echo $cmd['statut'] === $s ? 'selected' : '' ?>>
+                                    <?php echo htmlspecialchars(str_replace('_', ' ', $s), ENT_QUOTES, 'UTF-8') ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+
+        <!-- Zone Réservations -->
         <h2 class="text-3xl font-bold text-tropical-green mb-6">Réservations</h2>
-        <div class="bg-white rounded-super shadow-sm border border-gray-100">
-            <table class="w-full text-sm">
+
+        <!-- Desktop: Tableau -->
+        <div class="hidden md:block bg-white rounded-super shadow-sm border border-gray-100 overflow-x-auto mb-12">
+            <table class="w-full text-sm min-w-[800px]">
                 <thead class="bg-stone-50 text-gray-600 font-semibold">
                     <tr>
                         <th class="px-6 py-4 text-left">#</th>
@@ -112,32 +157,68 @@ $reservations = $bdd->query("
                 <tbody class="divide-y divide-gray-100">
                     <?php foreach ($reservations as $res) : ?>
                         <tr class="hover:bg-stone-50">
-                            <td class="px-6 py-4">#<?php echo $res['id_reser'] ?></td>
-                            <td class="px-6 py-4 font-medium"><?php echo $res['nom_complet'] ?></td>
-                            <td class="px-6 py-4"><?php echo $res['telephone'] ?></td>
-                            <td class="px-6 py-4"><?php echo $res['nb_personnes'] ?> pers.</td>
+                            <td class="px-6 py-4">#<?php echo (int)$res['id_reser'] ?></td>
+                            <td class="px-6 py-4 font-medium"><?php echo htmlspecialchars($res['nom_complet'], ENT_QUOTES, 'UTF-8') ?></td>
+                            <td class="px-6 py-4"><?php echo htmlspecialchars($res['telephone'], ENT_QUOTES, 'UTF-8') ?></td>
+                            <td class="px-6 py-4"><?php echo (int)$res['nb_personnes'] ?> pers.</td>
                             <td class="px-6 py-4">
-                                <select onchange="changerStatut('Reservation', <?php echo $res['id_reser'] ?>, this.value)"
-                                    class="border border-gray-200 rounded-xl px-3 py-1 text-sm focus:border-braise outline-none">
+                                <select onchange="changerStatut('Reservation', <?php echo (int)$res['id_reser'] ?>, this.value)"
+                                    class="border border-gray-200 rounded-xl px-3 py-1 text-sm focus:border-braise outline-none bg-white">
                                     <?php foreach (['en_attente', 'confirmee', 'annulee'] as $s) : ?>
-                                        <option value="<?php echo $s ?>" <?php echo $res['statut'] === $s ? 'selected' : '' ?>>
-                                            <?php echo $s ?>
+                                        <option value="<?php echo htmlspecialchars($s, ENT_QUOTES, 'UTF-8') ?>" <?php echo $res['statut'] === $s ? 'selected' : '' ?>>
+                                            <?php echo htmlspecialchars(str_replace('_', ' ', $s), ENT_QUOTES, 'UTF-8') ?>
                                         </option>
                                     <?php endforeach; ?>
                                 </select>
                             </td>
-                            <td class="px-6 py-4 text-gray-500"><?php echo $res['date_heure'] ?></td>
+                            <td class="px-6 py-4 text-gray-500"><?php echo htmlspecialchars($res['date_heure'], ENT_QUOTES, 'UTF-8') ?></td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
             </table>
         </div>
 
+        <!-- Mobile: Cartes -->
+        <div class="md:hidden space-y-4 mb-12">
+            <?php foreach ($reservations as $res) : ?>
+                <div class="bg-white rounded-super shadow-sm border border-gray-100 p-4">
+                    <div class="flex justify-between items-start mb-4">
+                        <h3 class="font-bold text-lg text-tropical-green">#<?php echo (int)$res['id_reser'] ?></h3>
+                        <span class="text-xs bg-stone-100 text-gray-600 px-2 py-1 rounded-full"><?php echo htmlspecialchars($res['date_heure'], ENT_QUOTES, 'UTF-8') ?></span>
+                    </div>
+                    <div class="space-y-2 text-sm mb-4">
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Client</span>
+                            <span class="font-medium"><?php echo htmlspecialchars($res['nom_complet'], ENT_QUOTES, 'UTF-8') ?></span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Téléphone</span>
+                            <span><?php echo htmlspecialchars($res['telephone'], ENT_QUOTES, 'UTF-8') ?></span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Personnes</span>
+                            <span class="font-medium"><?php echo (int)$res['nb_personnes'] ?> pers.</span>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold mb-2">Statut</label>
+                        <select onchange="changerStatut('Reservation', <?php echo (int)$res['id_reser'] ?>, this.value)"
+                            class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:border-braise outline-none bg-white">
+                            <?php foreach (['en_attente', 'confirmee', 'annulee'] as $s) : ?>
+                                <option value="<?php echo htmlspecialchars($s, ENT_QUOTES, 'UTF-8') ?>" <?php echo $res['statut'] === $s ? 'selected' : '' ?>>
+                                    <?php echo htmlspecialchars(str_replace('_', ' ', $s), ENT_QUOTES, 'UTF-8') ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
 
-        <!-- zone-plat -->
+        <!-- Zone Gestion des plats -->
         <h2 class="text-3xl font-bold text-tropical-green mb-6 mt-12">Gestion des plats</h2>
 
-        <!-- formulaire ajout/modif -->
+        <!-- Formulaire ajout/modif -->
         <div class="bg-white rounded-super shadow-sm border border-gray-100 p-8 mb-8">
             <h3 id="form-titre" class="text-xl font-bold mb-6">Ajouter un plat</h3>
             <form id="form-plat" class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -154,12 +235,12 @@ $reservations = $bdd->query("
                 </div>
                 <div>
                     <label class="block text-sm font-semibold mb-1">Catégorie</label>
-                    <select id="plat-categorie" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-braise outline-none transition">
+                    <select id="plat-categorie" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-braise outline-none transition bg-white">
                         <?php
                         $categories = $bdd->query("SELECT * FROM Categorie")->fetchAll();
                         foreach ($categories as $cat) :
                         ?>
-                            <option value="<?php echo $cat['id_categorie'] ?>"><?php echo $cat['libelle'] ?></option>
+                            <option value="<?php echo (int)$cat['id_categorie'] ?>"><?php echo htmlspecialchars($cat['libelle'], ENT_QUOTES, 'UTF-8') ?></option>
                         <?php endforeach; ?>
                     </select>
                 </div>
@@ -185,12 +266,13 @@ $reservations = $bdd->query("
             </form>
         </div>
 
-        <!--tab de plat-->
-        <div class="bg-white rounded-super shadow-sm border border-gray-100 overflow-hidden">
-            <table class="w-full text-sm">
+        <!-- Desktop : Tableau des plats -->
+        <div class="hidden md:block bg-white rounded-super shadow-sm border border-gray-100 overflow-x-auto">
+            <table class="w-full text-sm min-w-[700px]">
                 <thead class="bg-stone-50 text-gray-600 font-semibold">
                     <tr>
                         <th class="px-6 py-4 text-left">#</th>
+                        <th class="px-6 py-4 text-left">Image</th>
                         <th class="px-6 py-4 text-left">Nom</th>
                         <th class="px-6 py-4 text-left">Catégorie</th>
                         <th class="px-6 py-4 text-left">Prix</th>
@@ -198,149 +280,207 @@ $reservations = $bdd->query("
                     </tr>
                 </thead>
                 <tbody id="tableau-plats" class="divide-y divide-gray-100">
+                    <!-- Injecté par JS -->
                 </tbody>
             </table>
+        </div>
+
+        <!-- Mobile: Cartes des plats -->
+        <div id="cartes-plats" class="md:hidden space-y-4">
+            <!-- Injecté par JS -->
         </div>
 
     </main>
 
     <script>
-        function changerStatut(table, id, statut) {
-            fetch('http://localhost/GRTR/backend/api/statut.php', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        table,
-                        id,
-                        statut
-                    })
-                })
-                .then(r => r.json())
-                .then(reponse => {
-                    if (reponse.succes) {
-                        console.log('Statut mis à jour !')
-                    } else {
-                        alert('Erreur : ' + reponse.erreur)
-                    }
-                })
-        }
+    // Configuration de base pour l'API (centralisée)
+    const API_BASE_URL = '../../backend/api';
 
-        //chargement des plats
-        function chargerPlats() {
-            fetch('http://localhost/GRTR/backend/api/plats.php')
-                .then(r => r.json())
-                .then(plats => {
-                    const tbody = document.getElementById('tableau-plats')
-                    tbody.innerHTML = ''
-                    plats.forEach(plat => {
-                        tbody.innerHTML += `
-                    <tr class="hover:bg-stone-50">
-                        <td class="px-6 py-4">#${plat.id}</td>
-                        <td class="px-6 py-4 font-medium">${plat.nom}</td>
-                        <td class="px-6 py-4">${plat.categorie}</td>
-                        <td class="px-6 py-4 font-bold text-braise">${plat.prix} FCFA</td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-    <div class="flex gap-3">
-        <button onclick="modifierPlat(${JSON.stringify(plat).replace(/"/g, '&quot;')})"
-            class="bg-tropical-green text-white px-4 py-1 rounded-lg text-xs font-bold hover:brightness-110">
-            Modifier
-        </button>
-        <button onclick="supprimerPlat(${plat.id})"
-            class="bg-tropical-green text-white px-4 py-1 rounded-lg text-xs font-bold hover:brightness-110">
-            Supprimer
-        </button>
-    </div>
-</td>
-                    </tr>`
-                    })
-                })
-        }
+    // Variable globale pour stocker la liste locale des plats
+    let listeDesPlats = [];
 
-        //modif
-        function modifierPlat(plat) {
-            document.getElementById('form-titre').textContent = 'Modifier un plat'
-            document.getElementById('plat-id').value = plat.id
-            document.getElementById('plat-nom').value = plat.nom
-            document.getElementById('plat-prix').value = plat.prix
-            document.getElementById('plat-description').value = plat.description
-            document.getElementById('plat-image').value = plat.image
-            document.getElementById('btn-annuler').classList.remove('hidden')
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
+    // Sécurisation contre les failles XSS
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.toString()
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    }
+
+    function changerStatut(table, id, statut) {
+        fetch(`${API_BASE_URL}/statut.php`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ table, id: parseInt(id), statut })
             })
+            .then(r => r.json())
+            .then(reponse => {
+                if (reponse.succes) {
+                    console.log('Statut mis à jour !')
+                } else {
+                    alert('Erreur : ' + reponse.erreur)
+                }
+            }).catch(err => console.error("Erreur réseau :", err));
+    }
+
+    // Chargement des plats optimisé et sécurisé
+    function chargerPlats() {
+        fetch(`${API_BASE_URL}/plats.php`)
+            .then(r => r.json())
+            .then(plats => {
+                listeDesPlats = plats; 
+                
+                const tbody = document.getElementById('tableau-plats');
+                const cartes = document.getElementById('cartes-plats');
+                
+                let htmlTableau = '';
+                let htmlCartes = '';
+
+                plats.forEach(plat => {
+                    const platId = parseInt(plat.id);
+                    const imageSrc = plat.image ? escapeHtml(plat.image) : '../assets/images/default.jpg';
+                    const nomNettoye = escapeHtml(plat.nom);
+                    const catNettoye = escapeHtml(plat.categorie);
+                    const descNettoye = plat.description ? escapeHtml(plat.description) : 'Aucune description';
+                    const prixFormate = numberFormat(plat.prix);
+
+                    // Version Bureau (Tableau)
+                    htmlTableau += `
+                    <tr class="hover:bg-stone-50">
+                        <td class="px-6 py-4 whitespace-nowrap">#${platId}</td>
+                        <td class="px-6 py-2 whitespace-nowrap">
+                            <img src="${imageSrc}" alt="${nomNettoye}" class="w-12 h-12 rounded-lg object-cover border border-gray-100">
+                        </td>
+                        <td class="px-6 py-4 font-medium whitespace-nowrap">${nomNettoye}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">${catNettoye}</td>
+                        <td class="px-6 py-4 font-bold text-braise whitespace-nowrap">${prixFormate} FCFA</td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="flex items-center gap-2">
+                                <button onclick="modifierPlat(${platId})"
+                                    class="bg-tropical-green text-white px-3 py-1.5 rounded-lg text-xs font-bold hover:brightness-110 transition">
+                                    Modifier
+                                </button>
+                                <button onclick="supprimerPlat(${platId})"
+                                    class="bg-red-600 text-white px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-red-700 transition">
+                                    Supprimer
+                                </button>
+                            </div>
+                        </td>
+                    </tr>`;
+
+                    // Version Mobile (Cartes)
+                    htmlCartes += `
+                    <div class="bg-white rounded-super shadow-sm border border-gray-100 p-4">
+                        <div class="flex gap-4 mb-4">
+                            <img src="${imageSrc}" alt="${nomNettoye}" class="w-20 h-20 rounded-lg object-cover">
+                            <div class="flex-grow">
+                                <h3 class="font-bold text-lg text-tropical-green">${nomNettoye}</h3>
+                                <p class="text-xs text-gray-500">${catNettoye}</p>
+                                <p class="text-sm text-braise font-bold mt-2">${prixFormate} FCFA</p>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-600 mb-4">${descNettoye}</p>
+                        <div class="flex gap-2">
+                            <button onclick="modifierPlat(${platId})"
+                                class="flex-1 bg-tropical-green text-white px-3 py-2 rounded-lg text-xs font-bold hover:brightness-110">
+                                Modifier
+                            </button>
+                            <button onclick="supprimerPlat(${platId})"
+                                class="flex-1 bg-red-500 text-white px-3 py-2 rounded-lg text-xs font-bold hover:brightness-110">
+                                Supprimer
+                            </button>
+                        </div>
+                    </div>`;
+                });
+
+                tbody.innerHTML = htmlTableau;
+                cartes.innerHTML = htmlCartes;
+
+            }).catch(err => console.error("Erreur chargement plats :", err));
+    }
+
+    function numberFormat(num) {
+        return new Intl.NumberFormat('fr-FR').format(num);
+    }
+
+    function modifierPlat(id) {
+        const plat = listeDesPlats.find(p => p.id == id);
+        if (!plat) return;
+
+        document.getElementById('form-titre').textContent = 'Modifier un plat'
+        document.getElementById('plat-id').value = plat.id
+        document.getElementById('plat-nom').value = plat.nom
+        document.getElementById('plat-prix').value = plat.prix
+        document.getElementById('plat-description').value = plat.description || ''
+        document.getElementById('plat-image').value = plat.image || ''
+        document.getElementById('plat-categorie').value = plat.id_categorie || '' 
+        
+        document.getElementById('btn-annuler').classList.remove('hidden')
+        document.getElementById('form-titre').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    document.getElementById('btn-annuler').addEventListener('click', () => {
+        document.getElementById('form-plat').reset()
+        document.getElementById('plat-id').value = ''
+        document.getElementById('form-titre').textContent = 'Ajouter un plat'
+        document.getElementById('btn-annuler').classList.add('hidden')
+    })
+
+    function supprimerPlat(id) {
+        if (!confirm('Voulez-vous vraiment supprimer ce plat ?')) return
+        fetch(`${API_BASE_URL}/gerer_plats.php`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'supprimer', id_plat: parseInt(id) })
+            })
+            .then(r => r.json())
+            .then(reponse => {
+                if (reponse.succes) chargerPlats()
+                else alert('Erreur : ' + reponse.erreur)
+            }).catch(err => console.error("Erreur réseau :", err));
+    }
+
+    document.getElementById('form-plat').addEventListener('submit', e => {
+        e.preventDefault()
+        const id = document.getElementById('plat-id').value
+        const action = id ? 'modifier' : 'ajouter'
+
+        const donnees = {
+            action,
+            id_plat: id ? parseInt(id) : null,
+            nom: document.getElementById('plat-nom').value,
+            prix: parseFloat(document.getElementById('plat-prix').value),
+            description: document.getElementById('plat-description').value,
+            image_url: document.getElementById('plat-image').value,
+            id_categorie: parseInt(document.getElementById('plat-categorie').value)
         }
 
-        //annuler
-        document.getElementById('btn-annuler').addEventListener('click', () => {
-            document.getElementById('form-plat').reset()
-            document.getElementById('plat-id').value = ''
-            document.getElementById('form-titre').textContent = 'Ajouter un plat'
-            document.getElementById('btn-annuler').classList.add('hidden')
-        })
+        fetch(`${API_BASE_URL}/gerer_plats.php`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(donnees)
+            })
+            .then(r => r.json())
+            .then(reponse => {
+                if (reponse.succes) {
+                    chargerPlats()
+                    document.getElementById('form-plat').reset()
+                    document.getElementById('plat-id').value = ''
+                    document.getElementById('form-titre').textContent = 'Ajouter un plat'
+                    document.getElementById('btn-annuler').classList.add('hidden')
+                } else {
+                    alert('Erreur : ' + reponse.erreur)
+                }
+            }).catch(err => console.error("Erreur réseau :", err));
+    })
 
-        //supprimer
-        function supprimerPlat(id) {
-            if (!confirm('Supprimer ce plat ?')) return
-            fetch('http://localhost/GRTR/backend/api/gerer_plats.php', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        action: 'supprimer',
-                        id_plat: id
-                    })
-                })
-                .then(r => r.json())
-                .then(reponse => {
-                    if (reponse.succes) chargerPlats()
-                    else alert('Erreur : ' + reponse.erreur)
-                })
-        }
-
-        //soumission formulare
-        document.getElementById('form-plat').addEventListener('submit', e => {
-            e.preventDefault()
-            const id = document.getElementById('plat-id').value
-            const action = id ? 'modifier' : 'ajouter'
-
-            const donnees = {
-                action,
-                id_plat: id || null,
-                nom: document.getElementById('plat-nom').value,
-                prix: document.getElementById('plat-prix').value,
-                description: document.getElementById('plat-description').value,
-                image_url: document.getElementById('plat-image').value,
-                id_categorie: document.getElementById('plat-categorie').value
-            }
-
-            fetch('http://localhost/GRTR/backend/api/gerer_plats.php', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(donnees)
-                })
-                .then(r => r.json())
-                .then(reponse => {
-                    if (reponse.succes) {
-                        chargerPlats()
-                        document.getElementById('form-plat').reset()
-                        document.getElementById('plat-id').value = ''
-                        document.getElementById('form-titre').textContent = 'Ajouter un plat'
-                        document.getElementById('btn-annuler').classList.add('hidden')
-                    } else {
-                        alert('Erreur : ' + reponse.erreur)
-                    }
-                })
-        })
-
+    document.addEventListener('DOMContentLoaded', function() {
         chargerPlats()
-    </script>
+    })
+</script>
 
 </body>
-
 </html>
