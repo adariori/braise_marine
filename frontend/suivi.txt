@@ -8,145 +8,152 @@ Livreur → Commande (un livreur livre une commande)
 
 
 
-🔴 Priorité haute
-1. API Commandes
-Enregistrer les commandes en base de données.
-2. API Réservations
-Enregistrer les réservations en base de données.
+# Récap CORRIGÉ : Ce qui manque encore 📋
 
-🟡 Priorité moyenne
-3. Page de connexion Admin
-Login sécurisé pour le patron uniquement.
-4. Page d'administration
+## **1. STATISTIQUES** 🔴 À VÉRIFIER/AMÉLIORER
 
-Voir les commandes reçues
-Gérer les plats
-Voir les réservations
+### Actuellement (✅ Partiel)
+- ✅ CA total
+- ✅ Nombre commandes total
+- ✅ Commandes en cours
+- ✅ Clients uniques
+- ✅ CA aujourd'hui
+- ✅ Commandes aujourd'hui
+- ✅ Panier moyen
 
+### ❌ À AJOUTER
+- **Graphiques/Charts** → Évolution CA par jour/semaine/mois
+- **Plats populaires** → Top 5 plats les plus vendus
+- **Taux de conversion** → Commandes vs réservations
+- **Revenus par catégorie** → CA viande vs poisson vs grillade
+- **Heure de pointe** → Quand y'a le plus de commandes
+- **Commandes annulées** → Nombre et CA perdu
+- **Réservations confirmées** → Nombre et taux confirmation
+- **Temps moyen livraison** → Depuis commande jusqu'à livrée
+- **Client VIP** → Qui dépense le plus
+- **Comparaison période** → vs semaine précédente, vs mois précédent
 
-🟢 Priorité basse (selon besoins client)
-5. Stripe
-Paiement en ligne — à ajouter si le client le demande.
-6. Compte client
-Historique de commandes — à ajouter si le client le demande.
+### Côté API
+- ❌ **`backend/api/statistics_advanced.php`** → GET graphiques + stats détaillées
+  - CA par jour (derniers 30 jours)
+  - Plats populaires
+  - Revenus par catégorie
+  - Taux commandes vs réservations
+  - etc.
 
-
-*************************************************
-
-Parfait idée ! 📋 Voici le récap complet :
-
----
-
-## 🎯 PROJET : Grillades Tropicales — Site Restaurant
-
-### ✅ DÉJÀ FAIT
-
-**Frontend (pages client)**
-- ✅ Page d'accueil (`index.php`) — hero, menu, réservations, contact
-- ✅ Page panier/commande (`commande.php`) — choix mode livraison/retrait
-- ✅ Modal plats avec accompagnements et prix
-- ✅ Filtrage par catégorie (viandes/poissons)
-- ✅ Panier en `localStorage`
-- ✅ Devise en FCFA
-
-**Backend APIs**
-- ✅ `plats.php` — retourne tous les plats avec accompagnements
-- ✅ `commandes.php` — enregistre les commandes en base
-- ✅ `reservations.php` — enregistre les réservations en base
-- ✅ `statut.php` — met à jour le statut des commandes/réservations
-
-**Admin**
-- ✅ `login.php` — connexion sécurisée (identifiant: `admin`, mdp: `password`)
-- ✅ `admin.php` — tableau de bord avec :
-  - Commandes + changement de statut
-  - Réservations + changement de statut
-  - Gestion des plats (ajouter, modifier, supprimer)
-- ✅ `gerer_plats.php` — API pour gérer les plats
-
-**Base de données**
-- ✅ Table `Categorie` — viande, poisson, grillade
-- ✅ Table `Plat` — 5 plats seed
-- ✅ Table `Accompagnement` — 5 accompagnements seed
-- ✅ Table `PlatAccompagnement` — liaison plat-accompagnement
-- ✅ Table `Client` — données clients (nom, téléphone)
-- ✅ Table `Commande` — commandes avec statut
-- ✅ Table `LigneCommande` — détail des plats commandés
-- ✅ Table `Reservation` — réservations avec statut
-- ✅ Table `Admin` — identifiants admin
+### Côté Frontend
+- ❌ **Librairie charts** → Chart.js ou Recharts pour visualisation
+- ❌ **Section statistiques améliorée** → Avec tabs (global, détaillé, comparaison)
+- ❌ **Cartes métriques animées** → Avec tendance (↑↓)
 
 ---
 
-### 🔴 À FAIRE
+## **2. GESTION DES COMMANDES** 🔴 À FAIRE
 
-**Priorité haute**
-- ⏳ Bouton Supprimer visible (bug actuel — manque `</div>`)
+### Côté Admin
+- ❌ **Bouton "Voir détails"** → Afficher les articles commandés (LigneCommande)
+- ❌ **Bouton "Valider/Confirmer"** → Passer de "en_attente" à "en_preparation"
+- ❌ **Bouton "Supprimer"** → Annuler une commande
+- ❌ **Bouton "Marquer comme livrée"** → Passer à "livree"
+- ❌ **Vue détaillée** → Modal/Section affichant :
+  - Détails client (nom, téléphone, adresse si livraison)
+  - Liste complète des plats + accompagnements + quantités
+  - Total détaillé
+  - Date/heure commande
+  - Actions (valider, livrer, supprimer)
 
-**Priorité moyenne**
-- ⏳ Stripe — paiement en ligne (optionnel selon client)
-
-**Priorité basse (selon besoins client)**
-- ⏳ Responsive mobile pour l'admin
-- ⏳ Filtres historique/en cours pour commandes
-- ⏳ Page suivi commande client
-
----
-
-### 📂 STRUCTURE FICHIERS
-
-```
-GRTR/
-├── backend/
-│   ├── api/
-│   │   ├── plats.php ✅
-│   │   ├── commandes.php ✅
-│   │   ├── reservations.php ✅
-│   │   ├── statut.php ✅
-│   │   └── gerer_plats.php ✅
-│   ├── config/
-│   │   └── connect.php ✅
-│   └── base.sql ✅
-└── frontend/
-    ├── assets/
-    │   ├── css/ ✅
-    │   ├── images/ ✅
-    │   └── js/
-    │       ├── main.js ✅
-    │       └── commande.js ✅
-    └── includes/
-        ├── header.php ✅
-        ├── footer.php ✅
-        ├── index.php ✅
-        ├── commande.php ✅
-        ├── login.php ✅
-        └── admin.php ✅ (bug bouton supprimer)
-```
+### Côté API
+- ❌ **`backend/api/commandes_detail.php`** → GET détails d'une commande avec ses lignes
+- ❌ **`backend/api/gerer_commandes.php`** → POST (supprimer, valider, livrer)
 
 ---
 
-### 🔗 URLs
+## **3. GESTION DES RÉSERVATIONS** 🔴 À FAIRE
 
-- **Site public** : `http://localhost/GRTR/frontend/includes/index.php`
-- **Panier** : `http://localhost/GRTR/frontend/includes/commande.php`
-- **Admin login** : `http://localhost/GRTR/frontend/includes/login.php`
-- **Admin dashboard** : `http://localhost/GRTR/frontend/includes/admin.php`
+### Côté Admin
+- ❌ **Bouton "Voir détails"** → Afficher infos complètes réservation
+- ❌ **Bouton "Confirmer"** → Passer de "en_attente" à "confirmee"
+- ❌ **Bouton "Annuler"** → Passer à "annulee"
+- ❌ **Bouton "Supprimer"** → Supprimer la réservation
+- ❌ **Vue détaillée** → Modal affichant :
+  - Client (nom, téléphone)
+  - Nombre de personnes
+  - Date/heure réservation
+  - Commentaire si existe
+  - Actions
 
+### Côté API
+- ❌ **`backend/api/gerer_reservations.php`** → POST (supprimer, confirmer, annuler)
 
+---
 
-*****************************************************************************************************
+## **4. GESTION DES ACCOMPAGNEMENTS** 🟡 EN COURS
 
-Voici un récapitulatif simple et direct des améliorations apportées à ton code :
+### Côté Admin
+- ❌ **Tableau/Cartes accompagnements** → Afficher liste complète
+- ❌ **Bouton "Modifier"** → Éditer nom/prix
+- ❌ **Bouton "Supprimer"** → Supprimer accompagnement
+- ❌ **Section association** → Gérer quels accompagnements va avec quel plat
 
-🔒 Sécurité renforcée (Anti-Piratage)
-Protection CSRF : Ajout d'un jeton de sécurité unique (CSRF_TOKEN). Le JavaScript l'envoie désormais automatiquement lors de chaque action (changement de statut, ajout, modification ou suppression de plat) pour valider que la requête vient bien de ton admin et pas d'un site malveillant.
+### Côté API
+- ❌ **`backend/api/gerer_accompagnements.php`** → POST (ajouter, modifier, supprimer)
+- ❌ **`backend/api/accompagnements.php`** → GET liste accompagnements
+- ❌ **`backend/api/associer_accompagnements.php`** → POST (lier plat-accompagnement)
 
-Échappement des variables (Anti-XSS / Injection) : Toutes les variables affichées depuis la base de données (comme les noms, les numéros ou les prix) ont été nettoyées à l'aide de htmlspecialchars() ou forcées en nombres entiers (int). Cela empêche un client malveillant d'exécuter du code à ton insu sur la page d'administration.
+### Côté JS (admin.js)
+- ❌ Charger accompagnements
+- ❌ Modifier accompagnement
+- ❌ Supprimer accompagnement
+- ❌ Gérer associations plat-accompagnement
 
-⚙️ Optimisation du Code JavaScript
-Création d'une fonction d'échappement HTML dédiée : Ajout de la fonction escapeHtml() pour purifier dynamiquement les données textuelles reçues par l'API des plats (nom, description, catégorie) avant de les afficher sur l'écran.
+---
 
-Sécurisation des types : Forçage systématique des variables d'identifiants et de prix en entiers (parseInt) ou décimaux (parseFloat) juste avant leur transmission au serveur.
+## **5. FILTRES COMMANDES** 🟡 PARTIELLEMENT FAIT
 
-🧹 Propreté et Robustesse
-Uniformisation des boucles : Les structures de rendu PHP ont été harmonisées pour utiliser une syntaxe propre et lisible.
+### À Ajouter
+- ❌ **Onglets/Filtres** :
+  - "En attente"
+  - "En cours" (en_preparation + en_livraison)
+  - "Livrées"
+  - "Annulées"
+  - "Toutes"
+- ❌ **Filtre par date** (aujourd'hui, cette semaine, ce mois)
 
-Gestion du logout : Préparation du terrain pour un traitement sécurisé de la déconnexion via la session.
+---
+
+## **6. STRIPE PAYMENT** 🔴 À FAIRE
+
+### Frontend (Client)
+- ❌ Formulaire paiement dans commande.php
+- ❌ Intégration Stripe.js
+- ❌ Redirection post-paiement
+
+### Backend
+- ❌ **`backend/api/stripe_intent.php`** → Créer intent paiement
+- ❌ **`backend/api/stripe_webhook.php`** → Webhook pour confirmer paiement
+- ❌ Mettre à jour commande avec `stripe_payment_id`
+
+---
+
+## **7. AUTRES AMÉLIORATIONS** 🟡 OPTIONNELLES
+
+- ❌ **PDF Export** → Facture/reçu commande
+- ❌ **Email notifications** → Confirmation commande (voir si vraiment utile)
+- ❌ **Suivi commande client** → Page suivi avec lien unique
+- ❌ **Recherche** → Dans commandes, réservations, plats
+- ❌ **Pagination** → Pour listes longues
+- ❌ **Export CSV** → Statistiques, commandes
+
+---
+
+## **PRIORITÉ : Par ordre d'importance** 🎯
+
+1. **🔴 CRITIQUE** - Statistiques avancées (graphiques, top plats, tendances)
+2. **🔴 CRITIQUE** - Gestion complète commandes (voir détails, supprimer, valider)
+3. **🔴 CRITIQUE** - Gestion complète réservations (confirmer, annuler, supprimer)
+4. **🟡 IMPORTANT** - Gestion accompagnements
+5. **🟡 IMPORTANT** - Filtres commandes
+6. **🟡 BON À AVOIR** - Stripe payment
+7. **🟢 OPTIONNEL** - Autres améliorations
+
+---

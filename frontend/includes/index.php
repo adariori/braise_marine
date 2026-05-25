@@ -34,6 +34,17 @@
             </div>
         </section>
 
+        <!-- Annonces -->
+        <section class="py-16 bg-gradient-to-r from-braise to-amber-600">
+            <div class="container mx-auto px-6">
+                <h2 class="bg-braise text-white px-10 py-4 rounded-full font-bold text-lg shadow-lg hover:shadow-fire transition-all hover:scale-105">Annonces & Événements</h2>
+
+                <div id="conteneur-annonces" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Injecté par JS -->
+                </div>
+            </div>
+        </section>
+
         <!-- about -->
         <section class="py-20 bg-stone-50">
             <div class="container mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
@@ -144,6 +155,43 @@
                 </div>
             </div>
         </section>
+
+        <!-- Script annonces -->
+        <script>
+            // Charger les annonces
+            function chargerAnnonces() {
+                fetch('http://localhost/GRTR/backend/api/annonces.php')
+                    .then(r => r.json())
+                    .then(annonces => {
+                        const conteneur = document.getElementById('conteneur-annonces');
+
+                        if (annonces.length === 0) {
+                            conteneur.innerHTML = '<p class="text-white text-center col-span-full">Aucune annonce pour le moment</p>';
+                            return;
+                        }
+
+                        conteneur.innerHTML = annonces.map(annonce => `
+                    <div class="bg-white rounded-super shadow-lg overflow-hidden hover:shadow-2xl transition-all">
+                        ${annonce.image_url ? `<img src="${annonce.image_url}" alt="${annonce.titre}" class="w-full h-40 object-cover">` : ''}
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold text-tropical-green mb-2">${annonce.titre}</h3>
+                            <p class="text-gray-600 text-sm mb-4">${annonce.description}</p>
+                            ${annonce.date_debut || annonce.date_fin ? `
+                                <p class="text-xs text-gray-500">
+                                    ${annonce.date_debut ? `Du ${new Date(annonce.date_debut).toLocaleDateString('fr-FR')}` : ''}
+                                    ${annonce.date_fin ? ` au ${new Date(annonce.date_fin).toLocaleDateString('fr-FR')}` : ''}
+                                </p>
+                            ` : ''}
+                        </div>
+                    </div>
+                `).join('');
+                    })
+                    .catch(err => console.error("Erreur chargement annonces :", err));
+            }
+
+            // Charger au démarrage
+            document.addEventListener('DOMContentLoaded', chargerAnnonces);
+        </script>
 
     </main>
 
