@@ -52,6 +52,7 @@ GRTR
 ├─ frontend
 │  ├─ assets
 │  │  ├─ css
+│  │  │  ├─ input.css
 │  │  │  ├─ output.css
 │  │  │  └─ style.css
 │  │  ├─ images
@@ -77,6 +78,7 @@ GRTR
 │  └─ suivi.txt
 ├─ package-lock.json
 ├─ package.json
-└─ README.md
+├─ README.md
+└─ tailwind.config.js
 
 ```

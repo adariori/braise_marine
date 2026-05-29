@@ -7,10 +7,12 @@
     <title><?php echo $titre ?? 'Grillades Tropicales'; ?></title>
     <link rel="stylesheet" href="../assets/css/style.css" />
     <link rel="stylesheet" href="../assets/css/output.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 </head>
 
-<body class="antialiased text-gray-800 <?php echo $page === 'commande' ? 'bg-stone-50' : 'bg-white'; ?>">
+<body class="antialiased text-charcoal <?php echo $page === 'commande' ? 'bg-stone-50' : 'bg-white'; ?>">
 
     <?php if ($page === 'index') : ?>
         <div id="toast-container" class="fixed top-24 right-6 z-[10000] flex flex-col gap-3"></div>
@@ -20,8 +22,8 @@
         <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
 
             <div class="flex items-center space-x-2">
-                <img src="../assets/images/logo.png" alt="Logo" class="w-10 h-10">
-                <span class="text-xl font-bold tracking-tight text-tropical-green">
+                <img src="../assets/images/logo.png" alt="Logo Grillades Tropicales" class="w-10 h-10">
+                <span class="text-xl font-bold tracking-tight text-tropical-green font-display">
                     Grillades<span class="text-braise">Tropicales</span>
                 </span>
             </div>
@@ -35,24 +37,24 @@
                     </ul>
 
                     <!-- Icône panier -->
-                    <a href="commande.php" class="text-tropical-green hover:text-braise transition-colors relative" title="Ma commande">
-                        <i class="fa fa-shopping-basket text-2xl"></i>
+                    <a href="commande.php" class="text-tropical-green hover:text-braise transition-colors relative" title="Ma commande" aria-label="Voir mon panier">
+                        <i class="fas fa-shopping-basket text-2xl"></i>
                         <span id="cart-count" class="absolute -top-2 -right-2 bg-braise text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full hidden">0</span>
                     </a>
 
-                    <button id="burger-menu" class="md:hidden text-tropical-green">
-                        <i class="fa fa-bars text-2xl"></i>
+                    <button id="burger-menu" class="md:hidden text-tropical-green" aria-expanded="false" aria-controls="nav-links" aria-label="Menu de navigation">
+                        <i class="fas fa-bars text-2xl"></i>
                     </button>
                 </div>
 
             <?php else : ?>
                 <div class="flex items-center space-x-6">
                     <a href="index.php" class="text-tropical-green font-medium hover:text-braise transition">
-                        <i class="fa fa-arrow-left mr-2"></i>Retour au menu
+                        <i class="fas fa-arrow-left mr-2"></i>Retour au menu
                     </a>
                     <div class="relative">
-                        <a href="commande.php" class="p-2 block">
-                            <i class="fa fa-shopping-basket text-2xl text-tropical-green"></i>
+                        <a href="commande.php" class="p-2 block" aria-label="Voir mon panier">
+                            <i class="fas fa-shopping-basket text-2xl text-tropical-green"></i>
                             <span id="cart-count" class="absolute -top-1 -right-1 bg-braise text-white text-[10px] font-bold rounded-full h-5 w-5 flex items-center justify-center hidden">0</span>
                         </a>
                     </div>

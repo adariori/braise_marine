@@ -43,34 +43,45 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>Connexion Admin | Grillades Tropicales</title>
     <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="../assets/css/output.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 </head>
-<body class="antialiased bg-stone-50 flex items-center justify-center min-h-screen">
+<body class="antialiased bg-sand flex items-center justify-center min-h-screen">
 
     <div class="bg-white p-10 rounded-super shadow-2xl w-full max-w-md border border-gray-100">
-        <h1 class="text-3xl font-bold text-tropical-green text-center mb-8">
-            Espace Admin
-        </h1>
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-bold text-tropical-green font-display">
+                Espace Admin
+            </h1>
+            <p class="text-gray-500 text-sm mt-2">Grillades Tropicales</p>
+        </div>
 
         <?php if ($erreur) : ?>
-            <p class="text-red-500 text-center mb-4 font-medium"><?php echo $erreur ?></p>
+            <div class="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl text-center mb-6 font-medium text-sm" role="alert">
+                <i class="fas fa-exclamation-circle mr-2"></i><?php echo htmlspecialchars($erreur) ?>
+            </div>
         <?php endif; ?>
 
-        <form method="POST" class="space-y-4">
+        <form method="POST" class="space-y-5">
             <div>
-                <label class="block text-sm font-semibold mb-1">Identifiant</label>
-                <input type="text" name="username" required placeholder="admin"
-                    class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-braise outline-none transition">
+                <label for="username" class="block text-sm font-semibold text-gray-700 mb-2">Identifiant</label>
+                <input type="text" name="username" id="username" required placeholder="admin"
+                    class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-braise focus:ring-1 focus:ring-braise outline-none transition bg-stone-50">
             </div>
             <div>
-                <label class="block text-sm font-semibold mb-1">Mot de passe</label>
-                <input type="password" name="password" required placeholder="••••••••"
-                    class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-braise outline-none transition">
+                <label for="password" class="block text-sm font-semibold text-gray-700 mb-2">Mot de passe</label>
+                <input type="password" name="password" id="password" required placeholder="••••••••"
+                    class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-braise focus:ring-1 focus:ring-braise outline-none transition bg-stone-50">
             </div>
             <button type="submit"
-                class="w-full bg-braise text-white font-bold py-4 rounded-xl shadow-lg hover:brightness-110 transition-all mt-4">
-                Se connecter
+                class="w-full bg-braise text-white font-bold py-4 rounded-xl shadow-lg hover:shadow-fire transition-all btn-primary mt-6">
+                <i class="fas fa-lock mr-2"></i>Se connecter
             </button>
         </form>
+
+        <p class="text-center text-xs text-gray-400 mt-8">
+            © 2026 Grillades Tropicales — Accès réservé
+        </p>
     </div>
 
 </body>

@@ -1,11 +1,262 @@
-@import "tailwindcss";
+/* ==== BASE ==== */
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  line-height: 1.7;
+  color: #2D2A26;
+}
 
-@theme {
-    --color-braise: #E63946;
-    --color-tropical-green: #064E3B;
-    --color-amber-glow:#F2994A;
+/* Titres avec la police display */
+h1, h2, h3, 
+.font-display,
+#modal-titre {
+  font-family: 'Playfair Display', Georgia, serif;
+  letter-spacing: -0.02em;
+}
 
-    --shadow-fire:0 10px 40px -10px rgba(230, 57, 70, 0.5);
+/* ==== FOCUS VISIBLE POUR L'ACCESSIBILITÉ ==== */
+*:focus-visible {
+  outline: 3px solid #E8A837;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
 
-    --radius-super:2.5rem;
+/* ==== TRANSITIONS GLOBALES ==== */
+a, button, .btn-filtre, 
+#prev-plat, #next-plat, #close-modal {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ==== HEADER AMÉLIORÉ ==== */
+#main-header {
+  backdrop-filter: blur(20px);
+  background: rgba(255, 255, 255, 0.85);
+  border-bottom: 1px solid rgba(214, 69, 49, 0.08);
+}
+
+#main-header .container {
+  max-width: 1280px;
+}
+
+/* Logo hover effect */
+#main-header img {
+  transition: transform 0.3s ease;
+}
+#main-header:hover img {
+  transform: rotate(-5deg) scale(1.05);
+}
+
+/* Liens navigation */
+#nav-links a {
+  position: relative;
+  padding-bottom: 4px;
+}
+#nav-links a::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: #D64531;
+  transition: width 0.3s ease;
+}
+#nav-links a:hover::after {
+  width: 100%;
+}
+
+/* ==== HERO ==== */
+.hero-section h1 {
+  animation: fadeIn 0.8s ease-out;
+}
+.hero-section p {
+  animation: slideUp 0.8s ease-out 0.2s both;
+}
+.hero-section .hero-buttons {
+  animation: slideUp 0.8s ease-out 0.4s both;
+}
+
+/* ==== BOUTONS PRINCIPAUX ==== */
+.btn-primary, 
+#btn-commander-modal,
+#form-reservation button[type="submit"] {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.btn-primary:hover,
+#btn-commander-modal:hover,
+#form-reservation button[type="submit"]:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(214, 69, 49, 0.35);
+}
+
+.btn-primary:active,
+#btn-commander-modal:active,
+#form-reservation button[type="submit"]:active {
+  transform: translateY(0);
+}
+
+/* Effet ripple léger */
+.btn-primary::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+/* ==== CARTES (menu, annonces) ==== */
+#conteneur-annonces > div,
+#conteneur-grid > div {
+  background: white;
+  border-radius: 1.25rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+}
+
+#conteneur-annonces > div:hover,
+#conteneur-grid > div:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.10);
+}
+
+/* Images dans les cartes */
+#conteneur-annonces img,
+#conteneur-grid img {
+  transition: transform 0.5s ease;
+}
+#conteneur-annonces > div:hover img,
+#conteneur-grid > div:hover img {
+  transform: scale(1.05);
+}
+
+/* ==== BOUTONS FILTRE ==== */
+.btn-filtre {
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+.btn-filtre:hover {
+  border-color: #D64531;
+  color: #D64531;
+  transform: translateY(-1px);
+}
+.btn-filtre.bg-braise {
+  box-shadow: 0 4px 12px rgba(214, 69, 49, 0.3);
+}
+
+/* ==== FORMULAIRE RÉSERVATION ==== */
+#form-reservation input {
+  transition: all 0.2s ease;
+  background: #FAFAF8;
+}
+#form-reservation input:focus {
+  background: white;
+  box-shadow: 0 0 0 3px rgba(214, 69, 49, 0.1);
+  border-color: #D64531;
+}
+
+/* ==== MODAL AMÉLIORÉ ==== */
+#modal-overlay {
+  transition: opacity 0.3s ease;
+}
+#modal-overlay.flex {
+  animation: fadeIn 0.2s ease;
+}
+
+#modal-overlay .bg-white {
+  animation: modalIn 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+/* Scrollbar stylée dans le modal */
+#modal-overlay .overflow-y-auto::-webkit-scrollbar {
+  width: 6px;
+}
+#modal-overlay .overflow-y-auto::-webkit-scrollbar-track {
+  background: transparent;
+}
+#modal-overlay .overflow-y-auto::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 3px;
+}
+
+/* Boutons navigation modal */
+#prev-plat:hover,
+#next-plat:hover {
+  transform: translateY(-50%) scale(1.1);
+}
+
+/* ==== FOOTER ==== */
+footer {
+  background: linear-gradient(to bottom, #1a1817 0%, #0f0e0d 100%);
+}
+footer a {
+  transition: all 0.3s ease;
+  display: inline-block;
+}
+footer a:hover {
+  transform: translateY(-3px);
+  color: #E8A837;
+}
+
+/* ==== SECTION ABOUT ==== */
+#about img, 
+section img[alt="Notre restaurant"] {
+  transition: transform 0.6s ease;
+}
+#about:hover img,
+section:hover img[alt="Notre restaurant"] {
+  transform: scale(1.03);
+}
+
+/* ==== TOAST NOTIFICATIONS ==== */
+#toast-container > div {
+  animation: slideUp 0.4s ease;
+  backdrop-filter: blur(12px);
+}
+
+/* ==== RESPONSIVE ==== */
+@media (max-width: 768px) {
+  #form-reservation .bg-white {
+    padding: 1.5rem;
+  }
+  
+  h1 {
+    font-size: 2.5rem !important;
+  }
+  
+  #conteneur-grid {
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 640px) {
+  #modal-overlay .bg-white {
+    margin: 0.5rem;
+    border-radius: 1.25rem;
+  }
+  
+  .btn-filtre {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    font-size: 0.875rem;
+  }
+}
+
+/* ==== ACCESSIBILITÉ : CONTRASTE AMÉLIORÉ ==== */
+.text-gray-600 {
+  color: #4A423C;
+}
+
+/* ==== IMPRESSION ==== */
+@media print {
+  #main-header,
+  footer,
+  #modal-overlay {
+    display: none;
+  }
 }
