@@ -172,17 +172,33 @@ function uploadImage(file, inputId, imgId, previewId) {
 // ============================================
 // 5. GESTION DES STATUTS (Commandes/Réservations)
 // ============================================
-function changerStatut(table, id, statut) {
+function changerStatut(table, id, statut, selectElement) {
+    const originalValue = selectElement.value;
+    selectElement.disabled = true;
+    
     fetch(`${API_BASE_URL}/statut.php`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': getCsrfToken() },
         body: JSON.stringify({ table, id: parseInt(id), statut })
     })
-        .then(r => r.json())
-        .then(reponse => {
-            if (!reponse.succes) alert('Erreur : ' + reponse.erreur);
-        })
-        .catch(err => console.error("Erreur réseau :", err));
+    .then(r => r.json())
+    .then(reponse => {
+        if (reponse.succes) {
+            showNotification('Statut mis à jour', 'success');
+            // Optionnel : recharger la section ou mettre à jour localement
+        } else {
+            showNotification('Erreur : ' + reponse.erreur, 'error');
+            selectElement.value = originalValue;
+        }
+    })
+    .catch(err => {
+        console.error("Erreur réseau :", err);
+        showNotification('Erreur réseau', 'error');
+        selectElement.value = originalValue;
+    })
+    .finally(() => {
+        selectElement.disabled = false;
+    });
 }
 
 // ============================================

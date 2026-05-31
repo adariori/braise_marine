@@ -7,6 +7,11 @@ if (!isset($_SESSION['admin'])) {
     exit;
 }
 
+// Génération du token CSRF
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+
 require_once '../../backend/config/connect.php';
 
 // Récupération des commandes
@@ -37,6 +42,7 @@ $categories = $bdd->query("SELECT * FROM Categorie")->fetchAll();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="<?php echo $_SESSION['csrf_token']; ?>">
     <title>Admin | Grillades Tropicales</title>
     <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="../assets/css/output.css">
@@ -237,7 +243,7 @@ $categories = $bdd->query("SELECT * FROM Categorie")->fetchAll();
                                     </td>
                                     <td class="px-6 py-4 font-bold text-braise"><?php echo number_format($cmd['total_prix'], 0, ',', ' ') ?> FCFA</td>
                                     <td class="px-6 py-4">
-                                        <select onchange="changerStatut('Commande', <?php echo (int)$cmd['id_com'] ?>, this.value)"
+                                        <select onchange="changerStatut('Commande', <?php echo (int)$cmd['id_com'] ?>, this.value, this)"
                                             class="border border-gray-200 rounded-xl px-3 py-1 text-sm focus:border-braise focus:ring-1 focus:ring-braise outline-none bg-white transition">
                                             <?php foreach (['en_attente', 'en_preparation', 'en_livraison', 'livree', 'annulee'] as $s) : ?>
                                                 <option value="<?php echo htmlspecialchars($s, ENT_QUOTES, 'UTF-8') ?>" <?php echo $cmd['statut'] === $s ? 'selected' : '' ?>>
@@ -280,7 +286,7 @@ $categories = $bdd->query("SELECT * FROM Categorie")->fetchAll();
                             </div>
                             <div>
                                 <label class="block text-xs font-semibold text-gray-700 mb-2">Statut</label>
-                                <select onchange="changerStatut('Commande', <?php echo (int)$cmd['id_com'] ?>, this.value)"
+                                <select onchange="changerStatut('Commande', <?php echo (int)$cmd['id_com'] ?>, this.value, this)"
                                     class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:border-braise focus:ring-1 focus:ring-braise outline-none bg-white transition">
                                     <?php foreach (['en_attente', 'en_preparation', 'en_livraison', 'livree', 'annulee'] as $s) : ?>
                                         <option value="<?php echo htmlspecialchars($s, ENT_QUOTES, 'UTF-8') ?>" <?php echo $cmd['statut'] === $s ? 'selected' : '' ?>>
@@ -318,7 +324,7 @@ $categories = $bdd->query("SELECT * FROM Categorie")->fetchAll();
                                     <td class="px-6 py-4"><?php echo htmlspecialchars($res['telephone'], ENT_QUOTES, 'UTF-8') ?></td>
                                     <td class="px-6 py-4"><?php echo (int)$res['nb_personnes'] ?> pers.</td>
                                     <td class="px-6 py-4">
-                                        <select onchange="changerStatut('Reservation', <?php echo (int)$res['id_reser'] ?>, this.value)"
+                                        <select onchange="changerStatut('Reservation', <?php echo (int)$res['id_reser'] ?>, this.value, this)"
                                             class="border border-gray-200 rounded-xl px-3 py-1 text-sm focus:border-braise focus:ring-1 focus:ring-braise outline-none bg-white transition">
                                             <?php foreach (['en_attente', 'confirmee', 'annulee'] as $s) : ?>
                                                 <option value="<?php echo htmlspecialchars($s, ENT_QUOTES, 'UTF-8') ?>" <?php echo $res['statut'] === $s ? 'selected' : '' ?>>
@@ -357,7 +363,7 @@ $categories = $bdd->query("SELECT * FROM Categorie")->fetchAll();
                             </div>
                             <div>
                                 <label class="block text-xs font-semibold text-gray-700 mb-2">Statut</label>
-                                <select onchange="changerStatut('Reservation', <?php echo (int)$res['id_reser'] ?>, this.value)"
+                                <select onchange="changerStatut('Reservation', <?php echo (int)$res['id_reser'] ?>, this.value, this)"
                                     class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:border-braise focus:ring-1 focus:ring-braise outline-none bg-white transition">
                                     <?php foreach (['en_attente', 'confirmee', 'annulee'] as $s) : ?>
                                         <option value="<?php echo htmlspecialchars($s, ENT_QUOTES, 'UTF-8') ?>" <?php echo $res['statut'] === $s ? 'selected' : '' ?>>
@@ -399,7 +405,7 @@ $categories = $bdd->query("SELECT * FROM Categorie")->fetchAll();
                         </div>
                         <div>
                             <label for="plat-image-file" class="block text-sm font-semibold text-gray-700 mb-2">Image</label>
-                            <input type="file" id="plat-image-file" accept="image/*"
+                            <input type="file" id="plat-image-file" accept="image/jpeg,image/png,image/webp"
                                 class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-braise focus:ring-1 focus:ring-braise outline-none transition bg-stone-50">
                             <input type="hidden" id="plat-image">
                             <div id="plat-image-preview" class="mt-3 hidden">
@@ -464,7 +470,7 @@ $categories = $bdd->query("SELECT * FROM Categorie")->fetchAll();
                         </div>
                         <div>
                             <label for="annonce-image-file" class="block text-sm font-semibold text-gray-700 mb-2">Image</label>
-                            <input type="file" id="annonce-image-file" accept="image/*"
+                            <input type="file" id="annonce-image-file" accept="image/jpeg,image/png,image/webp"
                                 class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-braise focus:ring-1 focus:ring-braise outline-none transition bg-stone-50">
                             <input type="hidden" id="annonce-image">
                             <div id="annonce-image-preview" class="mt-3 hidden">
