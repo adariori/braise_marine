@@ -154,5 +154,3 @@ Le détail des chantiers en cours (statistiques avancées, gestion des commandes
 
 `Creative Commons BY-NC-ND 4.0` — © 2026 ARIORI OLOROUNKO Adéliyi Odjouola Moshood.
 Consultation autorisée à titre de référence uniquement. Toute réutilisation commerciale ou modification est interdite.
-
-Détails du processus d'authorship : voir [`SIGNATURE.md`](SIGNATURE.md).
