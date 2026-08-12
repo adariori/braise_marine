@@ -1,8 +1,10 @@
 {
   "builds": [
-    { "src": "backend/api/*.php", "use": "vercel-php@0.7.3" },
-    { "src": "backend/config/*.php", "use": "vercel-php@0.7.3" },
-    { "src": "frontend/includes/*.php", "use": "vercel-php@0.7.3" },
+    { "src": "backend/api/router.php", "use": "vercel-php@0.7.3" },
+    { "src": "frontend/includes/index.php", "use": "vercel-php@0.7.3" },
+    { "src": "frontend/includes/commande.php", "use": "vercel-php@0.7.3" },
+    { "src": "frontend/includes/login.php", "use": "vercel-php@0.7.3" },
+    { "src": "frontend/includes/admin.php", "use": "vercel-php@0.7.3" },
     { "src": "frontend/assets/**", "use": "@vercel/static" },
     { "src": "backend/uploads/**", "use": "@vercel/static" }
   ],
@@ -11,6 +13,7 @@
     { "src": "^/admin$", "dest": "/frontend/includes/admin.php" },
     { "src": "^/login$", "dest": "/frontend/includes/login.php" },
     { "src": "^/commande$", "dest": "/frontend/includes/commande.php" },
+    { "src": "^/backend/api/([a-zA-Z_]+)\\.php$", "dest": "/backend/api/router.php?file=$1" },
     { "src": "^/(.*)$", "dest": "/$1" }
   ]
 }

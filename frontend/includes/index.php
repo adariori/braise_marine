@@ -174,7 +174,7 @@
         <script>
             // Charger les annonces
             function chargerAnnonces() {
-                fetch('http://localhost/GRTR/backend/api/annonces.php')
+                fetch('../../backend/api/annonces.php')
                     .then(r => r.json())
                     .then(annonces => {
                         const conteneur = document.getElementById('conteneur-annonces');

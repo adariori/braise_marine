@@ -160,7 +160,7 @@ if (formCommande) {
         }
 
         //envoi a l'api
-        fetch('http://localhost/GRTR/backend/api/commandes.php', {
+        fetch('../../backend/api/commandes.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(donnees)
