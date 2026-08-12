@@ -1,3 +1,18 @@
+-- @author    ARIORI OLOROUNKO Adéliyi Odjouola Moshood
+-- @github    https://github.com/adariori
+-- @web       https://portefolio-nine-iota.vercel.app/
+-- @contact   adariori3@gmail.com
+-- @location  Cotonou, Benin
+--
+-- @project   Braise Marine
+-- @version   1.0.0
+-- @year      2026
+-- @stack     PHP, MySQL, Tailwind CSS, JavaScript
+--
+-- @license   Creative Commons BY-NC-ND 4.0
+--            © 2026 ARIORI OLOROUNKO Adéliyi Odjouola Moshood
+--            Consultation autorisée à titre de référence uniquement. Toute réutilisation commerciale ou modification est interdite.
+
 CREATE DATABASE IF NOT EXISTS braise_marine CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 USE braise_marine;
