@@ -33,6 +33,17 @@ if (!in_array($mimeType, $allowedMimes)) {
     exit;
 }
 
+// Sur Vercel, le filesystem est en lecture seule (sauf /tmp, qui n'est ni
+// public ni persistant) : il n'y a pas de stockage de fichiers durable.
+// On refuse explicitement plutôt que d'écrire un fichier qui disparaîtra
+// silencieusement. Brancher un stockage externe (Vercel Blob, Cloudinary,
+// S3...) pour activer l'upload en production.
+if (getenv('VERCEL')) {
+    http_response_code(501);
+    echo json_encode(['erreur' => "Upload d'image indisponible sur cet environnement : aucun stockage de fichiers persistant n'est configuré."]);
+    exit;
+}
+
 $uploadDir = __DIR__ . '/../uploads/';
 if (!is_dir($uploadDir)) {
     mkdir($uploadDir, 0755, true);
@@ -48,7 +59,10 @@ if (!move_uploaded_file($file['tmp_name'], $filepath)) {
     exit;
 }
 
-$webPath = '/GRTR/backend/uploads/' . $filename;
+// APP_BASE_PATH permet de préfixer les URLs si le site n'est pas servi à la
+// racine du domaine (ex: alias Apache local "/GRTR"). Vide par défaut (Vercel).
+$basePath = rtrim(getenv('APP_BASE_PATH') ?: '', '/');
+$webPath = $basePath . '/backend/uploads/' . $filename;
 
 echo json_encode([
     'succes' => true,

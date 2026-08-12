@@ -1,4 +1,9 @@
 {
+  "name": "braise-marine",
+  "private": true,
+  "scripts": {
+    "build": "tailwindcss -i frontend/assets/css/input.css -o frontend/assets/css/output.css --minify"
+  },
   "dependencies": {
     "@tailwindcss/cli": "^4.2.2",
     "tailwindcss": "^4.2.2"

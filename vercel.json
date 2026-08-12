@@ -1,0 +1,13 @@
+{
+  "buildCommand": "npm run build",
+  "functions": {
+    "backend/api/*.php": { "runtime": "vercel-php@0.7.3" },
+    "frontend/includes/*.php": { "runtime": "vercel-php@0.7.3" }
+  },
+  "rewrites": [
+    { "source": "/", "destination": "/frontend/includes/index.php" },
+    { "source": "/admin", "destination": "/frontend/includes/admin.php" },
+    { "source": "/login", "destination": "/frontend/includes/login.php" },
+    { "source": "/commande", "destination": "/frontend/includes/commande.php" }
+  ]
+}

@@ -1,4 +1,6 @@
 <?php
+// Vercel : seul /tmp est accessible en écriture, on y stocke les sessions.
+session_save_path(sys_get_temp_dir());
 session_start();
 
 // Si non connecté, dirige vers login
