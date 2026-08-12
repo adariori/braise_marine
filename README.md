@@ -100,3 +100,18 @@ Voir `backend/schema_base_de_donnees.svg` pour le schéma relationnel complet.
 ## Roadmap
 
 Le détail des chantiers en cours (statistiques avancées, gestion des commandes/réservations côté admin, paiement Stripe, etc.) est suivi dans [`frontend/suivi.txt`](frontend/suivi.txt).
+
+## Auteur
+
+**ARIORI OLOROUNKO Adéliyi Odjouola Moshood**
+- GitHub : [github.com/adariori](https://github.com/adariori)
+- Portfolio : [portefolio-nine-iota.vercel.app](https://portefolio-nine-iota.vercel.app/)
+- Contact : adariori3@gmail.com
+- Lieu : Cotonou, Bénin
+
+## Licence
+
+`Creative Commons BY-NC-ND 4.0` — © 2026 ARIORI OLOROUNKO Adéliyi Odjouola Moshood.
+Consultation autorisée à titre de référence uniquement. Toute réutilisation commerciale ou modification est interdite.
+
+Détails du processus d'authorship : voir [`SIGNATURE.md`](SIGNATURE.md).
