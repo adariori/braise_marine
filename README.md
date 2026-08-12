@@ -112,7 +112,10 @@ npm i -g vercel
 vercel        # preview
 vercel --prod # production
 ```
-`vercel.json` déclenche automatiquement `npm run build` (compilation Tailwind) avant déploiement.
+`vercel.json` utilise le schéma `builds`/`routes` (nécessaire car les PHP ne sont pas dans un
+dossier `api/` à la racine) : il n'y a pas de build step côté Vercel, le CSS compilé
+(`frontend/assets/css/output.css`) doit donc être à jour et commité **avant** de pousser —
+pense à relancer `npm run build` après toute modif de `input.css`.
 
 ## Fonctionnalités
 

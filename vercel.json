@@ -1,13 +1,16 @@
 {
-  "buildCommand": "npm run build",
-  "functions": {
-    "backend/api/*.php": { "runtime": "vercel-php@0.7.3" },
-    "frontend/includes/*.php": { "runtime": "vercel-php@0.7.3" }
-  },
-  "rewrites": [
-    { "source": "/", "destination": "/frontend/includes/index.php" },
-    { "source": "/admin", "destination": "/frontend/includes/admin.php" },
-    { "source": "/login", "destination": "/frontend/includes/login.php" },
-    { "source": "/commande", "destination": "/frontend/includes/commande.php" }
+  "builds": [
+    { "src": "backend/api/*.php", "use": "vercel-php@0.7.3" },
+    { "src": "backend/config/*.php", "use": "vercel-php@0.7.3" },
+    { "src": "frontend/includes/*.php", "use": "vercel-php@0.7.3" },
+    { "src": "frontend/assets/**", "use": "@vercel/static" },
+    { "src": "backend/uploads/**", "use": "@vercel/static" }
+  ],
+  "routes": [
+    { "src": "^/$", "dest": "/frontend/includes/index.php" },
+    { "src": "^/admin$", "dest": "/frontend/includes/admin.php" },
+    { "src": "^/login$", "dest": "/frontend/includes/login.php" },
+    { "src": "^/commande$", "dest": "/frontend/includes/commande.php" },
+    { "src": "^/(.*)$", "dest": "/$1" }
   ]
 }
