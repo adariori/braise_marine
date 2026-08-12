@@ -1,6 +1,6 @@
 <?php
 $page = 'commande';
-$titre = 'Ma Commande | Grillades Tropicales';
+$titre = 'Ma Commande | Braise Marine';
 include 'header.php';
 ?>
 

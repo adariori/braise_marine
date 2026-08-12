@@ -1,6 +1,6 @@
 <?php
     $page = 'index';
-    $titre = 'GRILLADES TROPICALES | Le Goût du Feu';
+    $titre = 'BRAISE MARINE | Le Goût du Feu';
     include 'header.php';
     ?>
 
@@ -53,7 +53,7 @@
                     </p>
                 </div>
                 <div class="rounded-super overflow-hidden shadow-2xl aspect-video bg-gray-200">
-                    <img src="../assets/images/about.jpg" alt="Notre restaurant" class="w-full h-full object-cover" loading="lazy">
+                    <img src="../assets/images/about.png" alt="Notre restaurant" class="w-full h-full object-cover" loading="lazy">
                 </div>
             </div>
         </section>
@@ -149,7 +149,7 @@
                     <iframe
                         src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3830.4!2d-61.4!3d16.2!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTbCsDEyJzAwLjAiTiA2McKwMjQnMDAuMCJX!5e0!3m2!1sfr!2sfr!4v123456789"
                         width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"
-                        title="Carte Google Maps de Grillades Tropicales"></iframe>
+                        title="Carte Google Maps de Braise Marine"></iframe>
                 </div>
             </div>
         </section>

@@ -1,6 +1,6 @@
-CREATE DATABASE IF NOT EXISTS grillades_tropicales CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE DATABASE IF NOT EXISTS braise_marine CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
-USE grillades_tropicales;
+USE braise_marine;
 
 CREATE TABLE Categorie (
     id_categorie INT AUTO_INCREMENT PRIMARY KEY,

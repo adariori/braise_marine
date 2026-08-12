@@ -1,6 +1,6 @@
 <?php
 define("hostname", "localhost");
-define("database", "grillades_tropicales");
+define("database", "braise_marine");
 define("username", "root");
 define("password", "");
 

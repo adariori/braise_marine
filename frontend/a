@@ -1,0 +1,2879 @@
+<?php
+session_start();
+
+//deconnexion
+if (isset($_GET['logout'])) {
+    session_destroy();
+    header('Location: login.php');
+    exit;
+}
+
+if (isset($_SESSION['admin'])) {
+    header('Location: admin.php');
+    exit;
+}
+
+$erreur = '';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    require_once '../../backend/config/connect.php';
+    
+    $username = $_POST['username'] ?? '';
+    $password = $_POST['password'] ?? '';
+
+    $stmt = $bdd->prepare("SELECT * FROM Admin WHERE username = ?");
+    $stmt->execute([$username]);
+    $admin = $stmt->fetch();
+
+    if ($admin && password_verify($password, $admin['password'])) {
+        $_SESSION['admin'] = true;
+        header('Location: admin.php');
+        exit;
+    } else {
+        $erreur = "Identifiant ou mot de passe incorrect.";
+    }
+}
+?>
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion Admin | Braise Marine</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/output.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+</head>
+<body class="antialiased bg-sand flex items-center justify-center min-h-screen">
+
+    <div class="bg-white p-10 rounded-super shadow-2xl w-full max-w-md border border-gray-100">
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-bold text-tropical-green font-display">
+                Espace Admin
+            </h1>
+            <p class="text-gray-500 text-sm mt-2">Braise Marine</p>
+        </div>
+
+        <?php if ($erreur) : ?>
+            <div class="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl text-center mb-6 font-medium text-sm" role="alert">
+                <i class="fas fa-exclamation-circle mr-2"></i><?php echo htmlspecialchars($erreur) ?>
+            </div>
+        <?php endif; ?>
+
+        <form method="POST" class="space-y-5">
+            <div>
+                <label for="username" class="block text-sm font-semibold text-gray-700 mb-2">Identifiant</label>
+                <input type="text" name="username" id="username" required placeholder="admin"
+                    class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-braise focus:ring-1 focus:ring-braise outline-none transition bg-stone-50">
+            </div>
+            <div>
+                <label for="password" class="block text-sm font-semibold text-gray-700 mb-2">Mot de passe</label>
+                <input type="password" name="password" id="password" required placeholder="••••••••"
+                    class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-braise focus:ring-1 focus:ring-braise outline-none transition bg-stone-50">
+            </div>
+            <button type="submit"
+                class="w-full bg-braise text-white font-bold py-4 rounded-xl shadow-lg hover:shadow-fire transition-all btn-primary mt-6">
+                <i class="fas fa-lock mr-2"></i>Se connecter
+            </button>
+        </form>
+
+        <p class="text-center text-xs text-gray-400 mt-8">
+            © 2026 Braise Marine — Accès réservé
+        </p>
+    </div>
+
+</body>
+</html><?php
+    $page = 'index';
+    $titre = 'BRAISE MARINE | Le Goût du Feu';
+    include 'header.php';
+    ?>
+
+
+    <main>
+        <!-- hero -->
+        <section class="hero-section relative min-h-[85vh] flex items-center justify-center text-center text-white" style="background-image: url('../assets/images/hero.jpg');">
+            <div class="absolute inset-0 bg-gradient-to-b from-black/40 to-black/70"></div>
+            <div class="relative z-10 container mx-auto px-6">
+                <h1 class="text-5xl md:text-7xl font-bold mb-6 tracking-tight font-display">
+                    Le Goût Authentique des <span class="text-amber-glow">Tropiques</span>
+                </h1>
+                <p class="text-lg md:text-xl mb-10 max-w-2xl mx-auto text-gray-100">
+                    Découvrez nos grillades au feu de bois, marinées avec passion et servies face à la mer.
+                </p>
+
+                <div class="hero-buttons flex flex-col md:flex-row justify-center gap-4">
+                    <button
+                        class="bg-braise text-white px-10 py-4 rounded-full font-bold text-lg shadow-lg hover:shadow-fire transition-all hover:scale-105 btn-primary"
+                        id="voir_menu">
+                        Voir le menu
+                    </button>
+                    <a href="#reservation"
+                        class="bg-transparent border-2 border-white hover:bg-white hover:text-tropical-green text-white px-10 py-4 rounded-full font-bold text-lg transition-all text-center">
+                        Réserver une table
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Annonces -->
+        <section class="py-16 bg-gradient-to-r from-braise to-amber-600">
+            <div class="container mx-auto px-6">
+                <h2 class="text-3xl md:text-4xl font-bold text-white mb-10 font-display">Annonces & Événements</h2>
+
+                <div id="conteneur-annonces" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Injecté par JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- about -->
+        <section id="about" class="py-20 bg-sand">
+            <div class="container mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
+                <div>
+                    <h2 class="text-4xl md:text-5xl font-bold text-tropical-green mb-6 font-display">L'Art de la Braise</h2>
+                    <p class="text-gray-600 leading-relaxed text-lg">
+                        Nous sommes un restaurant de grillades tropicales situé à la plage. Nous proposons une cuisine
+                        délicieuse et des plats préparés avec les meilleurs ingrédients locaux.
+                    </p>
+                </div>
+                <div class="rounded-super overflow-hidden shadow-2xl aspect-video bg-gray-200">
+                    <img src="../assets/images/about.jpg" alt="Notre restaurant" class="w-full h-full object-cover" loading="lazy">
+                </div>
+            </div>
+        </section>
+
+        <!-- Menu -->
+        <section class="py-24 bg-white" id="menu">
+            <div class="container mx-auto px-6">
+                <div class="flex justify-center gap-4 mb-12">
+                    <button id="btn-tous"
+                        class="btn-filtre bg-braise text-white px-8 py-2 rounded-full font-bold shadow-md transition-all" aria-pressed="true">Tous</button>
+                    <button id="btn-viandes"
+                        class="btn-filtre bg-white border border-gray-200 text-gray-700 px-8 py-2 rounded-full hover:border-braise transition-all" aria-pressed="false">Viandes</button>
+                    <button id="btn-poissons"
+                        class="btn-filtre bg-white border border-gray-200 text-gray-700 px-8 py-2 rounded-full hover:border-braise transition-all" aria-pressed="false">Poissons</button>
+                </div>
+
+                <h2 class="text-4xl md:text-5xl font-bold text-center text-stone-900 mb-4 font-display" id="notre-menu">
+                    Notre Menu
+                </h2>
+                <div class="w-24 h-1 bg-braise mx-auto mb-10 rounded-full"></div>
+
+                <p id="nbr_plat" class="text-center mb-8 text-gray-500 italic"></p>
+
+                <div id="conteneur-grid"
+                    class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 justify-items-center">
+                </div>
+            </div>
+        </section>
+
+        <!-- Reservation -->
+        <section class="py-20 bg-tropical-green" id="reservation">
+            <div class="container mx-auto px-6">
+                <div
+                    class="max-w-2xl mx-auto bg-white p-10 rounded-super shadow-2xl text-gray-800 border border-white/20">
+                    <h2 class="text-3xl md:text-4xl font-bold text-center text-tropical-green mb-8 font-display">Réserver une table</h2>
+                    <form id="form-reservation" action="#" class="space-y-6">
+                        <div>
+                            <label for="nom-resa" class="block text-sm font-semibold text-gray-700 mb-2">Nom complet</label>
+                            <input type="text" id="nom-resa" placeholder="Votre nom"
+                                class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-braise focus:ring-1 focus:ring-braise outline-none transition"
+                                required>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="convives-resa" class="block text-sm font-semibold text-gray-700 mb-2">Convives</label>
+                                <input type="number" id="convives-resa" placeholder="Nombre de personnes"
+                                    class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-braise outline-none">
+                            </div>
+                            <div>
+                                <label for="date-resa" class="block text-sm font-semibold text-gray-700 mb-2">Date & Heure</label>
+                                <input type="datetime-local" id="date-resa"
+                                    class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-braise outline-none"
+                                    required>
+                            </div>
+                        </div>
+                        <button type="submit"
+                            class="w-full bg-braise text-white font-bold py-4 rounded-xl shadow-lg hover:shadow-fire transition-all btn-primary">
+                            Confirmer la réservation
+                        </button>
+                        <p id="soumission" class="text-center font-medium text-tropical-green"></p>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- infos -->
+        <section class="py-24 bg-white" id="contact">
+            <div class="container mx-auto px-6 grid md:grid-cols-2 gap-16">
+                <div class="flex flex-col justify-center">
+                    <h2 class="text-4xl md:text-5xl font-bold text-tropical-green mb-8 font-display">Nous trouver</h2>
+                    <div class="space-y-6 text-gray-600">
+                        <div class="flex items-start space-x-4">
+                            <div class="bg-stone-100 p-4 rounded-full text-braise">
+                                <i class="fas fa-location-dot text-xl"></i>
+                            </div>
+                            <p class="text-lg">Route de la Plage, 97190 Le Gosier, Guadeloupe</p>
+                        </div>
+                        <div class="flex items-start space-x-4">
+                            <div class="bg-stone-100 p-4 rounded-full text-braise">
+                                <i class="fas fa-phone text-xl"></i>
+                            </div>
+                            <p class="text-lg">+229 XX XX XX XX</p>
+                        </div>
+                        <div class="flex items-start space-x-4">
+                            <div class="bg-stone-100 p-4 rounded-full text-braise">
+                                <i class="fas fa-clock text-xl"></i>
+                            </div>
+                            <p class="text-lg">Ouvert 7j/7 : 12h-15h / 19h-23h</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="h-[400px] rounded-super overflow-hidden shadow-2xl border-8 border-sand">
+                    <iframe
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3830.4!2d-61.4!3d16.2!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTbCsDEyJzAwLjAiTiA2McKwMjQnMDAuMCJX!5e0!3m2!1sfr!2sfr!4v123456789"
+                        width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"
+                        title="Carte Google Maps de Braise Marine"></iframe>
+                </div>
+            </div>
+        </section>
+
+        <!-- Script annonces -->
+        <script>
+            // Charger les annonces
+            function chargerAnnonces() {
+                fetch('http://localhost/GRTR/backend/api/annonces.php')
+                    .then(r => r.json())
+                    .then(annonces => {
+                        const conteneur = document.getElementById('conteneur-annonces');
+
+                        if (annonces.length === 0) {
+                            conteneur.innerHTML = '<p class="text-white text-center col-span-full">Aucune annonce pour le moment</p>';
+                            return;
+                        }
+
+                        conteneur.innerHTML = annonces.map(annonce => `
+                    <div class="bg-white rounded-super shadow-lg overflow-hidden hover:shadow-2xl transition-all">
+                        ${annonce.image_url ? `<img src="${annonce.image_url}" alt="${annonce.titre}" class="w-full h-40 object-cover">` : ''}
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold text-tropical-green mb-2">${annonce.titre}</h3>
+                            <p class="text-gray-600 text-sm mb-4">${annonce.description}</p>
+                            ${annonce.date_debut || annonce.date_fin ? `
+                                <p class="text-xs text-gray-500">
+                                    ${annonce.date_debut ? `Du ${new Date(annonce.date_debut).toLocaleDateString('fr-FR')}` : ''}
+                                    ${annonce.date_fin ? ` au ${new Date(annonce.date_fin).toLocaleDateString('fr-FR')}` : ''}
+                                </p>
+                            ` : ''}
+                        </div>
+                    </div>
+                `).join('');
+                                    })
+                                    .catch(err => console.error("Erreur chargement annonces :", err));
+                            }
+
+                            // Charger au démarrage
+                            document.addEventListener('DOMContentLoaded', chargerAnnonces);
+                        </script>
+
+    </main>
+
+    <!-- footer -->
+    <?php include 'footer.php'; ?>
+
+    <!-- Modal -->
+    <div id="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-titre"
+        class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden items-center justify-center p-4 z-[9999]">
+        <div class="bg-white rounded-3xl max-w-lg w-full max-h-[90vh] overflow-y-auto shadow-2xl relative">
+
+            <!-- Bouton fermeture -->
+            <button id="close-modal"
+                class="absolute top-4 right-4 bg-white/90 hover:bg-braise hover:text-white w-10 h-10 rounded-full flex items-center justify-center transition z-10 text-xl shadow-soft"
+                aria-label="Fermer la fenêtre">
+                <i class="fas fa-times"></i>
+            </button>
+
+            <!-- Image du plat -->
+            <div class="h-64 relative shrink-0">
+                <!-- bouton prec -->
+                <button id="prev-plat"
+                    class="absolute left-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-braise hover:text-white w-12 h-12 rounded-full flex items-center justify-center z-20 transition shadow-soft"
+                    aria-label="Plat précédent">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+
+                <img src="" alt="" id="modal-img" class="w-full h-full object-cover">
+
+                <!-- bouton suiv -->
+                <button id="next-plat"
+                    class="absolute right-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-braise hover:text-white w-12 h-12 rounded-full flex items-center justify-center z-20 transition shadow-soft"
+                    aria-label="Plat suivant">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+
+            <!-- Contenu -->
+            <div class="p-8">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 id="modal-titre" class="text-3xl font-bold text-tropical-green font-display"></h2>
+                    <span id="modal-prix" class="text-2xl font-bold text-braise"></span>
+                </div>
+                <p id="modal-desc" class="text-gray-600 leading-relaxed mb-8"></p>
+
+                <!-- accompagnement -->
+                <div id="options-accompagnement"></div>
+
+                <!-- bouton Commander -->
+                <button id="btn-commander-modal"
+                    class="w-full bg-tropical-green text-white font-bold py-4 rounded-xl hover:bg-braise transition-all shadow-lg flex items-center justify-center gap-2 mt-4 btn-primary">
+                    <i class="fas fa-cart-shopping"></i>
+                    Commander ce plat
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../assets/js/main.js"></script><!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?php echo $titre ?? 'Braise Marine'; ?></title>
+    <link rel="stylesheet" href="../assets/css/style.css" />
+    <link rel="stylesheet" href="../assets/css/output.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+</head>
+
+<body class="antialiased text-charcoal <?php echo $page === 'commande' ? 'bg-stone-50' : 'bg-white'; ?>">
+
+    <?php if ($page === 'index') : ?>
+        <div id="toast-container" class="fixed top-24 right-6 z-[10000] flex flex-col gap-3"></div>
+    <?php endif; ?>
+
+    <header id="main-header" class="bg-white/90 backdrop-blur-md shadow-sm sticky top-0 z-50 transition-all duration-300">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+
+            <div class="flex items-center space-x-2">
+                <img src="../assets/images/logo.png" alt="Logo Braise Marine" class="w-10 h-10">
+                <span class="text-xl font-bold tracking-tight text-tropical-green font-display">
+                    Braise<span class="text-braise">Marine</span>
+                </span>
+            </div>
+
+            <?php if ($page === 'index') : ?>
+                <div class="flex items-center space-x-6">
+                    <ul id="nav-links" class="hidden md:flex space-x-8 font-medium text-gray-700">
+                        <li class="hover:text-braise cursor-pointer transition"><a href="#menu">La Carte</a></li>
+                        <li class="hover:text-braise cursor-pointer transition"><a href="#reservation">Réservations</a></li>
+                        <li class="hover:text-braise cursor-pointer transition"><a href="#contact">Contact</a></li>
+                    </ul>
+
+                    <!-- Icône panier -->
+                    <a href="commande.php" class="text-tropical-green hover:text-braise transition-colors relative" title="Ma commande" aria-label="Voir mon panier">
+                        <i class="fas fa-shopping-basket text-2xl"></i>
+                        <span id="cart-count" class="absolute -top-2 -right-2 bg-braise text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full hidden">0</span>
+                    </a>
+
+                    <button id="burger-menu" class="md:hidden text-tropical-green" aria-expanded="false" aria-controls="nav-links" aria-label="Menu de navigation">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </div>
+
+            <?php else : ?>
+                <div class="flex items-center space-x-6">
+                    <a href="index.php" class="text-tropical-green font-medium hover:text-braise transition">
+                        <i class="fas fa-arrow-left mr-2"></i>Retour au menu
+                    </a>
+                    <div class="relative">
+                        <a href="commande.php" class="p-2 block" aria-label="Voir mon panier">
+                            <i class="fas fa-shopping-basket text-2xl text-tropical-green"></i>
+                            <span id="cart-count" class="absolute -top-1 -right-1 bg-braise text-white text-[10px] font-bold rounded-full h-5 w-5 flex items-center justify-center hidden">0</span>
+                        </a>
+                    </div>
+                </div>
+            <?php endif; ?>
+
+        </nav>
+    </header><footer class="bg-stone-900 text-stone-400 py-20">
+    <div class="container mx-auto px-6 text-center">
+        <div class="mb-8">
+            <span class="text-3xl font-bold text-white font-display">Braise<span class="text-braise">Marine</span></span>
+        </div>
+        <div class="flex justify-center space-x-8 mb-10">
+            <a href="#" class="hover:text-braise transition text-2xl" aria-label="Facebook Braise Marine"><i class="fab fa-facebook"></i></a>
+            <a href="#" class="hover:text-braise transition text-2xl" aria-label="Instagram Braise Marine"><i class="fab fa-instagram"></i></a>
+        </div>
+        <p class="text-sm border-t border-stone-800 pt-10 text-stone-500">
+            © 2026 Braise Marine. Fait avec passion pour les amoureux de la braise.
+        </p>
+    </div>
+</footer><?php
+$page = 'commande';
+$titre = 'Ma Commande | Braise Marine';
+include 'header.php';
+?>
+
+<main class="container mx-auto px-6 py-12">
+    <h1 class="text-4xl md:text-5xl font-bold text-tropical-green mb-10 text-center font-display">Finaliser ma commande</h1>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+
+        <div class="lg:col-span-2 space-y-6">
+            <div class="bg-white p-8 rounded-super shadow-card border border-gray-100">
+                <h2 class="text-2xl font-bold mb-6 flex items-center font-display">
+                    <i class="fas fa-shopping-basket text-braise mr-3"></i>Panier
+                </h2>
+
+                <div id="panier-liste" class="divide-y divide-gray-100">
+                </div>
+            </div>
+
+            <div class="bg-white p-8 rounded-super shadow-card border border-gray-100">
+                <h2 class="text-2xl font-bold mb-6 font-display">Mode de récupération</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <label
+                        class="relative flex items-center p-4 border-2 border-braise bg-amber-50 rounded-xl cursor-pointer mode-option transition hover:shadow-soft">
+                        <input type="radio" name="mode" value="livraison" class="mr-3 accent-braise" checked>
+                        <div>
+                            <span class="block font-bold">Livraison à domicile</span>
+                            <span class="text-sm text-gray-500">Arrivée estimée : 30-45 min</span>
+                        </div>
+                    </label>
+                    <label
+                        class="relative flex items-center p-4 border-2 border-gray-100 rounded-xl cursor-pointer hover:border-tropical-green transition mode-option hover:shadow-soft">
+                        <input type="radio" name="mode" value="retrait" class="mr-3 accent-tropical-green">
+                        <div>
+                            <span class="block font-bold">Retrait sur place (Click & Collect)</span>
+                            <span class="text-sm text-gray-500">Prêt dans 15 min</span>
+                        </div>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="lg:col-span-1">
+            <div class="bg-white p-8 rounded-super shadow-card sticky top-28 border border-gray-100">
+                <h2 class="text-2xl font-bold mb-6 text-tropical-green font-display">Mes coordonnées</h2>
+                <form id="form-commande" class="space-y-4">
+                    <div>
+                        <label for="nom-client" class="block text-sm font-semibold text-gray-700 mb-2">Nom complet</label>
+                        <input type="text" id="nom-client" name="nom-client" required placeholder="John Doe"
+                            class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-braise focus:ring-1 focus:ring-braise outline-none transition bg-stone-50">
+                    </div>
+                    <div>
+                        <label for="tel-client" class="block text-sm font-semibold text-gray-700 mb-2">Téléphone</label>
+                        <input type="tel" id="tel-client" name="tel-client" required placeholder="+229 XX XX XX XX"
+                            class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-braise focus:ring-1 focus:ring-braise outline-none transition bg-stone-50">
+                    </div>
+                    <div id="zone-adresse">
+                        <label for="adresse-client" class="block text-sm font-semibold text-gray-700 mb-2">Adresse de livraison</label>
+                        <textarea id="adresse-client" name="adresse-client" rows="2" placeholder="Quartier, Rue, Maison..."
+                            class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-braise focus:ring-1 focus:ring-braise outline-none transition bg-stone-50"></textarea>
+                    </div>
+                    <div>
+                        <label for="instructions" class="block text-sm font-semibold text-gray-700 mb-2">Instructions spéciales</label>
+                        <input type="text" id="instructions" name="instructions" placeholder="Ex: Pas de piment, Allergies..."
+                            class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-braise focus:ring-1 focus:ring-braise outline-none transition bg-stone-50">
+                    </div>
+
+                    <div class="border-t border-gray-100 pt-6 mt-6 space-y-2">
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Sous-total</span>
+                            <span id="sous-total" class="font-bold">0.00€</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Frais de livraison</span>
+                            <span id="frais-livraison" class="font-bold">5.00€</span>
+                        </div>
+                        <div
+                            class="flex justify-between text-xl font-black text-tropical-green pt-2 border-t border-stone-50">
+                            <span>Total à payer</span>
+                            <span id="total-final">0.00€</span>
+                        </div>
+                    </div>
+
+                    <button type="submit"
+                        class="w-full bg-braise text-white font-bold py-4 rounded-xl shadow-lg hover:shadow-fire transition-all mt-6 btn-primary">
+                        <i class="fas fa-check-circle mr-2"></i>Passer la commande
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- footer -->
+<?php include 'footer.php'; ?>
+
+<script src="../assets/js/commande.js"></script><?php
+session_start();
+
+// Si non connecté, dirige vers login
+if (!isset($_SESSION['admin'])) {
+    header('Location: login.php');
+    exit;
+}
+
+// Génération du token CSRF
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+
+require_once '../../backend/config/connect.php';
+
+// Récupération des commandes
+$commandes = $bdd->query("
+    SELECT c.id_com, c.date_heure, c.type, c.total_prix, c.statut, c.adresse_livraison,
+           cl.nom_complet, cl.telephone
+    FROM Commande c
+    JOIN Client cl ON c.id_client = cl.id_client
+    ORDER BY c.date_heure DESC
+")->fetchAll();
+
+// Récupération des réservations
+$reservations = $bdd->query("
+    SELECT r.id_reser, r.date_heure, r.nb_personnes, r.statut, r.commentaire,
+           cl.nom_complet, cl.telephone
+    FROM Reservation r
+    JOIN Client cl ON r.id_client = cl.id_client
+    ORDER BY r.date_heure DESC
+")->fetchAll();
+
+// Récupération des catégories pour les plats
+$categories = $bdd->query("SELECT * FROM Categorie")->fetchAll();
+?>
+
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="<?php echo $_SESSION['csrf_token']; ?>">
+    <title>Admin | Braise Marine</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/output.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+</head>
+
+<body class="antialiased bg-sand text-charcoal">
+
+    <header class="bg-white/90 backdrop-blur-md shadow-sm sticky top-0 z-50">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <span class="text-xl font-bold text-tropical-green font-display">
+                Braise<span class="text-braise">Marine</span> <span class="text-gray-400 text-sm font-normal">— Admin</span>
+            </span>
+            <a href="login.php?logout=1" class="text-red-500 font-medium hover:text-red-600 transition flex items-center gap-2">
+                <i class="fas fa-sign-out-alt"></i>Se déconnecter
+            </a>
+        </nav>
+    </header>
+
+    <!-- Layout avec sidebar collée à droite -->
+    <div class="flex min-h-screen">
+
+        <!-- SIDEBAR - Collée à droite sur toute la hauteur -->
+        <aside class="w-80 bg-white border-l border-gray-200 shadow-soft sticky top-0 h-screen overflow-y-auto">
+            <div class="p-5 border-b border-gray-100">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-tropical-green flex items-center justify-center">
+                        <i class="fas fa-bolt text-white"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-charcoal text-sm font-display">Menu Admin</h3>
+                        <p class="text-xs text-gray-500">Gestion complète</p>
+                    </div>
+                </div>
+            </div>
+
+            <ul class="p-3 space-y-1">
+                <li>
+                    <button onclick="afficherSection('statistiques')"
+                        class="nav-btn w-full text-left px-4 py-3 rounded-xl transition-all duration-200 flex items-center gap-3 text-gray-700 hover:text-braise hover:bg-orange-50 group">
+                        <i class="fas fa-chart-bar text-braise w-5 text-center"></i>
+                        <span class="font-medium text-sm">Tableau de bord</span>
+                    </button>
+                </li>
+                <li>
+                    <button onclick="afficherSection('commandes')"
+                        class="nav-btn w-full text-left px-4 py-3 rounded-xl transition-all duration-200 flex items-center gap-3 text-gray-700 hover:text-braise hover:bg-orange-50 group">
+                        <i class="fas fa-receipt text-braise w-5 text-center"></i>
+                        <span class="font-medium text-sm">Commandes</span>
+                    </button>
+                </li>
+                <li>
+                    <button onclick="afficherSection('reservations')"
+                        class="nav-btn w-full text-left px-4 py-3 rounded-xl transition-all duration-200 flex items-center gap-3 text-gray-700 hover:text-braise hover:bg-orange-50 group">
+                        <i class="fas fa-calendar-check text-braise w-5 text-center"></i>
+                        <span class="font-medium text-sm">Réservations</span>
+                    </button>
+                </li>
+                <li>
+                    <button onclick="afficherSection('plats')"
+                        class="nav-btn w-full text-left px-4 py-3 rounded-xl transition-all duration-200 flex items-center gap-3 text-gray-700 hover:text-braise hover:bg-orange-50 group">
+                        <i class="fas fa-utensils text-braise w-5 text-center"></i>
+                        <span class="font-medium text-sm">Carte & Plats</span>
+                    </button>
+                </li>
+                <li>
+                    <button onclick="afficherSection('accompagnements')"
+                        class="nav-btn w-full text-left px-4 py-3 rounded-xl transition-all duration-200 flex items-center gap-3 text-gray-700 hover:text-braise hover:bg-orange-50 group">
+                        <i class="fas fa-carrot text-braise w-5 text-center"></i>
+                        <span class="font-medium text-sm">Accompagnements</span>
+                    </button>
+                </li>
+                <li>
+                    <button onclick="afficherSection('annonces')"
+                        class="nav-btn w-full text-left px-4 py-3 rounded-xl transition-all duration-200 flex items-center gap-3 text-gray-700 hover:text-braise hover:bg-orange-50 group">
+                        <i class="fas fa-bullhorn text-braise w-5 text-center"></i>
+                        <span class="font-medium text-sm">Annonces</span>
+                    </button>
+                </li>
+            </ul>
+
+            <div class="p-4 border-t border-gray-100 mt-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-full bg-tropical-green flex items-center justify-center">
+                        <i class="fas fa-user text-white text-sm"></i>
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-xs font-semibold text-gray-700">Administrateur</p>
+                        <p class="text-xs text-gray-500">Connecté</p>
+                    </div>
+                    <div class="w-2 h-2 rounded-full bg-emerald-500"></div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- CONTENU PRINCIPAL  -->
+        <main class="flex-1 px-6 py-8">
+
+            <!-- SECTION STATISTIQUES (ACCUEIL PAR DÉFAUT - EN PREMIER) -->
+            <section id="section-statistiques" class="section-content">
+                <h2 class="text-3xl font-bold text-tropical-green mb-6 font-display">Statistiques</h2>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+                    <div class="bg-white rounded-super shadow-card border border-gray-100 p-6 hover:shadow-card-hover transition">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-gray-500 text-sm mb-1">Chiffre d'affaires</p>
+                                <p class="text-3xl font-bold text-braise" id="stat-ca">0 FCFA</p>
+                            </div>
+                            <div class="w-10 h-10 rounded-xl bg-red-50 flex items-center justify-center">
+                                <i class="fas fa-coins text-braise"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-super shadow-card border border-gray-100 p-6 hover:shadow-card-hover transition">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-gray-500 text-sm mb-1">Commandes totales</p>
+                                <p class="text-3xl font-bold text-tropical-green" id="stat-commandes">0</p>
+                            </div>
+                            <div class="w-10 h-10 rounded-xl bg-green-50 flex items-center justify-center">
+                                <i class="fas fa-shopping-bag text-tropical-green"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-super shadow-card border border-gray-100 p-6 hover:shadow-card-hover transition">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-gray-500 text-sm mb-1">En cours</p>
+                                <p class="text-3xl font-bold text-orange-500" id="stat-en-cours">0</p>
+                            </div>
+                            <div class="w-10 h-10 rounded-xl bg-orange-50 flex items-center justify-center">
+                                <i class="fas fa-clock text-orange-500"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-super shadow-card border border-gray-100 p-6 hover:shadow-card-hover transition">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-gray-500 text-sm mb-1">Clients uniques</p>
+                                <p class="text-3xl font-bold text-purple-600" id="stat-clients">0</p>
+                            </div>
+                            <div class="w-10 h-10 rounded-xl bg-purple-50 flex items-center justify-center">
+                                <i class="fas fa-users text-purple-600"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-white rounded-super shadow-card border border-gray-100 p-6">
+                        <p class="text-gray-500 text-sm mb-2">Commandes aujourd'hui</p>
+                        <p class="text-2xl font-bold text-tropical-green" id="stat-jour">0</p>
+                    </div>
+                    <div class="bg-white rounded-super shadow-card border border-gray-100 p-6">
+                        <p class="text-gray-500 text-sm mb-2">CA aujourd'hui</p>
+                        <p class="text-2xl font-bold text-braise" id="stat-ca-jour">0 FCFA</p>
+                    </div>
+                    <div class="bg-white rounded-super shadow-card border border-gray-100 p-6">
+                        <p class="text-gray-500 text-sm mb-2">Panier moyen</p>
+                        <p class="text-2xl font-bold text-green-600" id="stat-panier">0 FCFA</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION COMMANDES -->
+            <section id="section-commandes" class="section-content hidden">
+                <h2 class="text-3xl font-bold text-tropical-green mb-6 font-display">Commandes</h2>
+
+                <div class="hidden md:block bg-white rounded-super shadow-card border border-gray-100 overflow-x-auto mb-12">
+                    <table class="w-full text-sm min-w-[800px]">
+                        <thead class="bg-stone-50 text-gray-600 font-semibold">
+                            <tr>
+                                <th class="px-6 py-4 text-left">#</th>
+                                <th class="px-6 py-4 text-left">Client</th>
+                                <th class="px-6 py-4 text-left">Téléphone</th>
+                                <th class="px-6 py-4 text-left">Type</th>
+                                <th class="px-6 py-4 text-left">Total</th>
+                                <th class="px-6 py-4 text-left">Statut</th>
+                                <th class="px-6 py-4 text-left">Date</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100">
+                            <?php foreach ($commandes as $cmd) : ?>
+                                <tr class="hover:bg-stone-50 transition">
+                                    <td class="px-6 py-4 font-medium">#<?php echo (int)$cmd['id_com'] ?></td>
+                                    <td class="px-6 py-4"><?php echo htmlspecialchars($cmd['nom_complet'], ENT_QUOTES, 'UTF-8') ?></td>
+                                    <td class="px-6 py-4"><?php echo htmlspecialchars($cmd['telephone'], ENT_QUOTES, 'UTF-8') ?></td>
+                                    <td class="px-6 py-4">
+                                        <span class="px-2 py-1 rounded-full text-xs font-medium <?php echo $cmd['type'] === 'livraison' ? 'bg-blue-50 text-blue-600' : 'bg-green-50 text-green-600' ?>">
+                                            <?php echo htmlspecialchars($cmd['type'], ENT_QUOTES, 'UTF-8') ?>
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 font-bold text-braise"><?php echo number_format($cmd['total_prix'], 0, ',', ' ') ?> FCFA</td>
+                                    <td class="px-6 py-4">
+                                        <select onchange="changerStatut('Commande', <?php echo (int)$cmd['id_com'] ?>, this.value, this)"
+                                            class="border border-gray-200 rounded-xl px-3 py-1 text-sm focus:border-braise focus:ring-1 focus:ring-braise outline-none bg-white transition">
+                                            <?php foreach (['en_attente', 'en_preparation', 'en_livraison', 'livree', 'annulee'] as $s) : ?>
+                                                <option value="<?php echo htmlspecialchars($s, ENT_QUOTES, 'UTF-8') ?>" <?php echo $cmd['statut'] === $s ? 'selected' : '' ?>>
+                                                    <?php echo htmlspecialchars(str_replace('_', ' ', $s), ENT_QUOTES, 'UTF-8') ?>
+                                                </option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                    </td>
+                                    <td class="px-6 py-4 text-gray-500 text-xs"><?php echo htmlspecialchars($cmd['date_heure'], ENT_QUOTES, 'UTF-8') ?></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="md:hidden space-y-4 mb-12">
+                    <?php foreach ($commandes as $cmd) : ?>
+                        <div class="bg-white rounded-super shadow-card border border-gray-100 p-5">
+                            <div class="flex justify-between items-start mb-4">
+                                <h3 class="font-bold text-lg text-tropical-green font-display">#<?php echo (int)$cmd['id_com'] ?></h3>
+                                <span class="text-xs bg-stone-100 text-gray-600 px-3 py-1 rounded-full"><?php echo htmlspecialchars($cmd['date_heure'], ENT_QUOTES, 'UTF-8') ?></span>
+                            </div>
+                            <div class="space-y-2 text-sm mb-4">
+                                <div class="flex justify-between">
+                                    <span class="text-gray-500">Client</span>
+                                    <span class="font-medium"><?php echo htmlspecialchars($cmd['nom_complet'], ENT_QUOTES, 'UTF-8') ?></span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-500">Téléphone</span>
+                                    <span><?php echo htmlspecialchars($cmd['telephone'], ENT_QUOTES, 'UTF-8') ?></span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-500">Type</span>
+                                    <span class="px-2 py-0.5 rounded-full text-xs font-medium <?php echo $cmd['type'] === 'livraison' ? 'bg-blue-50 text-blue-600' : 'bg-green-50 text-green-600' ?>"><?php echo htmlspecialchars($cmd['type'], ENT_QUOTES, 'UTF-8') ?></span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-500">Total</span>
+                                    <span class="font-bold text-braise"><?php echo number_format($cmd['total_prix'], 0, ',', ' ') ?> FCFA</span>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-700 mb-2">Statut</label>
+                                <select onchange="changerStatut('Commande', <?php echo (int)$cmd['id_com'] ?>, this.value, this)"
+                                    class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:border-braise focus:ring-1 focus:ring-braise outline-none bg-white transition">
+                                    <?php foreach (['en_attente', 'en_preparation', 'en_livraison', 'livree', 'annulee'] as $s) : ?>
+                                        <option value="<?php echo htmlspecialchars($s, ENT_QUOTES, 'UTF-8') ?>" <?php echo $cmd['statut'] === $s ? 'selected' : '' ?>>
+                                            <?php echo htmlspecialchars(str_replace('_', ' ', $s), ENT_QUOTES, 'UTF-8') ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            </section>
+
+            <!-- SECTION RÉSERVATIONS -->
+            <section id="section-reservations" class="section-content hidden">
+                <h2 class="text-3xl font-bold text-tropical-green mb-6 font-display">Réservations</h2>
+
+                <div class="hidden md:block bg-white rounded-super shadow-card border border-gray-100 overflow-x-auto mb-12">
+                    <table class="w-full text-sm min-w-[800px]">
+                        <thead class="bg-stone-50 text-gray-600 font-semibold">
+                            <tr>
+                                <th class="px-6 py-4 text-left">#</th>
+                                <th class="px-6 py-4 text-left">Client</th>
+                                <th class="px-6 py-4 text-left">Téléphone</th>
+                                <th class="px-6 py-4 text-left">Personnes</th>
+                                <th class="px-6 py-4 text-left">Statut</th>
+                                <th class="px-6 py-4 text-left">Date</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100">
+                            <?php foreach ($reservations as $res) : ?>
+                                <tr class="hover:bg-stone-50 transition">
+                                    <td class="px-6 py-4 font-medium">#<?php echo (int)$res['id_reser'] ?></td>
+                                    <td class="px-6 py-4"><?php echo htmlspecialchars($res['nom_complet'], ENT_QUOTES, 'UTF-8') ?></td>
+                                    <td class="px-6 py-4"><?php echo htmlspecialchars($res['telephone'], ENT_QUOTES, 'UTF-8') ?></td>
+                                    <td class="px-6 py-4"><?php echo (int)$res['nb_personnes'] ?> pers.</td>
+                                    <td class="px-6 py-4">
+                                        <select onchange="changerStatut('Reservation', <?php echo (int)$res['id_reser'] ?>, this.value, this)"
+                                            class="border border-gray-200 rounded-xl px-3 py-1 text-sm focus:border-braise focus:ring-1 focus:ring-braise outline-none bg-white transition">
+                                            <?php foreach (['en_attente', 'confirmee', 'annulee'] as $s) : ?>
+                                                <option value="<?php echo htmlspecialchars($s, ENT_QUOTES, 'UTF-8') ?>" <?php echo $res['statut'] === $s ? 'selected' : '' ?>>
+                                                    <?php echo htmlspecialchars(str_replace('_', ' ', $s), ENT_QUOTES, 'UTF-8') ?>
+                                                </option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                    </td>
+                                    <td class="px-6 py-4 text-gray-500 text-xs"><?php echo htmlspecialchars($res['date_heure'], ENT_QUOTES, 'UTF-8') ?></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="md:hidden space-y-4 mb-12">
+                    <?php foreach ($reservations as $res) : ?>
+                        <div class="bg-white rounded-super shadow-card border border-gray-100 p-5">
+                            <div class="flex justify-between items-start mb-4">
+                                <h3 class="font-bold text-lg text-tropical-green font-display">#<?php echo (int)$res['id_reser'] ?></h3>
+                                <span class="text-xs bg-stone-100 text-gray-600 px-3 py-1 rounded-full"><?php echo htmlspecialchars($res['date_heure'], ENT_QUOTES, 'UTF-8') ?></span>
+                            </div>
+                            <div class="space-y-2 text-sm mb-4">
+                                <div class="flex justify-between">
+                                    <span class="text-gray-500">Client</span>
+                                    <span class="font-medium"><?php echo htmlspecialchars($res['nom_complet'], ENT_QUOTES, 'UTF-8') ?></span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-500">Téléphone</span>
+                                    <span><?php echo htmlspecialchars($res['telephone'], ENT_QUOTES, 'UTF-8') ?></span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-500">Personnes</span>
+                                    <span class="font-medium"><?php echo (int)$res['nb_personnes'] ?> pers.</span>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-700 mb-2">Statut</label>
+                                <select onchange="changerStatut('Reservation', <?php echo (int)$res['id_reser'] ?>, this.value, this)"
+                                    class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:border-braise focus:ring-1 focus:ring-braise outline-none bg-white transition">
+                                    <?php foreach (['en_attente', 'confirmee', 'annulee'] as $s) : ?>
+                                        <option value="<?php echo htmlspecialchars($s, ENT_QUOTES, 'UTF-8') ?>" <?php echo $res['statut'] === $s ? 'selected' : '' ?>>
+                                            <?php echo htmlspecialchars(str_replace('_', ' ', $s), ENT_QUOTES, 'UTF-8') ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            </section>
+
+            <!-- SECTION PLATS -->
+            <section id="section-plats" class="section-content hidden">
+                <h2 class="text-3xl font-bold text-tropical-green mb-6 font-display">Gestion des plats</h2>
+
+                <div class="bg-white rounded-super shadow-card border border-gray-100 p-8 mb-8">
+                    <h3 id="form-titre" class="text-xl font-bold mb-6 font-display">Ajouter un plat</h3>
+                    <form id="form-plat" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <input type="hidden" id="plat-id">
+                        <div>
+                            <label for="plat-nom" class="block text-sm font-semibold text-gray-700 mb-2">Nom du plat</label>
+                            <input type="text" id="plat-nom" required placeholder="Ex: Poulet Braisé"
+                                class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-braise focus:ring-1 focus:ring-braise outline-none transition bg-stone-50">
+                        </div>
+                        <div>
+                            <label for="plat-prix" class="block text-sm font-semibold text-gray-700 mb-2">Prix (FCFA)</label>
+                            <input type="number" id="plat-prix" required placeholder="Ex: 3500"
+                                class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-braise focus:ring-1 focus:ring-braise outline-none transition bg-stone-50">
+                        </div>
+                        <div>
+                            <label for="plat-categorie" class="block text-sm font-semibold text-gray-700 mb-2">Catégorie</label>
+                            <select id="plat-categorie" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-braise focus:ring-1 focus:ring-braise outline-none transition bg-white">
+                                <?php foreach ($categories as $cat) : ?>
+                                    <option value="<?php echo (int)$cat['id_categorie'] ?>"><?php echo htmlspecialchars($cat['libelle'], ENT_QUOTES, 'UTF-8') ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="plat-image-file" class="block text-sm font-semibold text-gray-700 mb-2">Image</label>
+                            <input type="file" id="plat-image-file" accept="image/jpeg,image/png,image/webp"
+                                class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-braise focus:ring-1 focus:ring-braise outline-none transition bg-stone-50">
+                            <input type="hidden" id="plat-image">
+                            <div id="plat-image-preview" class="mt-3 hidden">
+                                <img id="plat-preview-img" src="" alt="Aperçu" class="w-32 h-32 rounded-lg object-cover border border-gray-200">
+                            </div>
+                        </div>
+                        <div class="md:col-span-2">
+                            <label for="plat-description" class="block text-sm font-semibold text-gray-700 mb-2">Description</label>
+                            <textarea id="plat-description" rows="2" placeholder="Description du plat..."
+                                class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-braise focus:ring-1 focus:ring-braise outline-none transition bg-stone-50"></textarea>
+                        </div>
+                        <div class="md:col-span-2 flex gap-4">
+                            <button type="submit"
+                                class="bg-braise text-white font-bold py-3 px-8 rounded-xl hover:shadow-fire transition btn-primary">
+                                <i class="fas fa-save mr-2"></i>Enregistrer
+                            </button>
+                            <button type="button" id="btn-annuler" class="hidden bg-gray-200 text-gray-700 font-bold py-3 px-8 rounded-xl hover:bg-gray-300 transition">
+                                Annuler
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="hidden md:block bg-white rounded-super shadow-card border border-gray-100 overflow-x-auto">
+                    <table class="w-full text-sm min-w-[700px]">
+                        <thead class="bg-stone-50 text-gray-600 font-semibold">
+                            <tr>
+                                <th class="px-6 py-4 text-left">#</th>
+                                <th class="px-6 py-4 text-left">Image</th>
+                                <th class="px-6 py-4 text-left">Nom</th>
+                                <th class="px-6 py-4 text-left">Catégorie</th>
+                                <th class="px-6 py-4 text-left">Prix</th>
+                                <th class="px-6 py-4 text-left">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableau-plats" class="divide-y divide-gray-100">
+                        </tbody>
+                    </table>
+                </div>
+
+                <div id="cartes-plats" class="md:hidden space-y-4">
+                </div>
+            </section>
+
+            <!-- SECTION ANNONCES -->
+            <section id="section-annonces" class="section-content hidden">
+                <h2 class="text-3xl font-bold text-tropical-green mb-6 font-display">Gestion des annonces</h2>
+
+                <div class="bg-white rounded-super shadow-card border border-gray-100 p-8 mb-8">
+                    <h3 id="form-annonce-titre" class="text-xl font-bold mb-6 font-display">Ajouter une annonce</h3>
+                    <form id="form-annonce" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <input type="hidden" id="annonce-id">
+                        <div class="md:col-span-2">
+                            <label for="annonce-titre" class="block text-sm font-semibold text-gray-700 mb-2">Titre</label>
+                            <input type="text" id="annonce-titre" required placeholder="Ex: Grand événement ce weekend"
+                                class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-braise focus:ring-1 focus:ring-braise outline-none transition bg-stone-50">
+                        </div>
+                        <div class="md:col-span-2">
+                            <label for="annonce-description" class="block text-sm font-semibold text-gray-700 mb-2">Description</label>
+                            <textarea id="annonce-description" rows="3" placeholder="Détails de l'annonce..."
+                                class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-braise focus:ring-1 focus:ring-braise outline-none transition bg-stone-50"></textarea>
+                        </div>
+                        <div>
+                            <label for="annonce-image-file" class="block text-sm font-semibold text-gray-700 mb-2">Image</label>
+                            <input type="file" id="annonce-image-file" accept="image/jpeg,image/png,image/webp"
+                                class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-braise focus:ring-1 focus:ring-braise outline-none transition bg-stone-50">
+                            <input type="hidden" id="annonce-image">
+                            <div id="annonce-image-preview" class="mt-3 hidden">
+                                <img id="annonce-preview-img" src="" alt="Aperçu" class="w-32 h-32 rounded-lg object-cover border border-gray-200">
+                            </div>
+                        </div>
+                        <div>
+                            <label for="annonce-date-debut" class="block text-sm font-semibold text-gray-700 mb-2">Date de début</label>
+                            <input type="date" id="annonce-date-debut"
+                                class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-braise focus:ring-1 focus:ring-braise outline-none transition bg-stone-50">
+                        </div>
+                        <div>
+                            <label for="annonce-date-fin" class="block text-sm font-semibold text-gray-700 mb-2">Date de fin</label>
+                            <input type="date" id="annonce-date-fin"
+                                class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-braise focus:ring-1 focus:ring-braise outline-none transition bg-stone-50">
+                        </div>
+                        <div class="md:col-span-2 flex gap-4">
+                            <button type="submit"
+                                class="bg-braise text-white font-bold py-3 px-8 rounded-xl hover:shadow-fire transition btn-primary">
+                                <i class="fas fa-save mr-2"></i>Enregistrer
+                            </button>
+                            <button type="button" id="btn-annuler-annonce" class="hidden bg-gray-200 text-gray-700 font-bold py-3 px-8 rounded-xl hover:bg-gray-300 transition">
+                                Annuler
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="hidden md:block bg-white rounded-super shadow-card border border-gray-100 overflow-x-auto">
+                    <table class="w-full text-sm min-w-[700px]">
+                        <thead class="bg-stone-50 text-gray-600 font-semibold">
+                            <tr>
+                                <th class="px-6 py-4 text-left">#</th>
+                                <th class="px-6 py-4 text-left">Titre</th>
+                                <th class="px-6 py-4 text-left">Date début</th>
+                                <th class="px-6 py-4 text-left">Date fin</th>
+                                <th class="px-6 py-4 text-left">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableau-annonces" class="divide-y divide-gray-100">
+                        </tbody>
+                    </table>
+                </div>
+
+                <div id="cartes-annonces" class="md:hidden space-y-4">
+                </div>
+            </section>
+
+            <!-- SECTION ACCOMPAGNEMENTS -->
+            <section id="section-accompagnements" class="section-content hidden">
+                <h2 class="text-3xl font-bold text-tropical-green mb-6 font-display">Gestion des accompagnements</h2>
+
+                <!-- Formulaire ajout/modification accompagnement -->
+                <div class="bg-white rounded-super shadow-card border border-gray-100 p-8 mb-8">
+                    <h4 id="form-accompagnement-titre" class="text-xl font-bold mb-6 font-display">Ajouter un accompagnement</h4>
+                    <form id="form-accompagnement" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <input type="hidden" id="accompagnement-id">
+                        <div>
+                            <label for="accompagnement-nom" class="block text-sm font-semibold text-gray-700 mb-2">Nom de l'accompagnement</label>
+                            <input type="text" id="accompagnement-nom" required placeholder="Ex: Frites maison"
+                                class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-braise focus:ring-1 focus:ring-braise outline-none transition bg-stone-50">
+                        </div>
+                        <div>
+                            <label for="accompagnement-prix" class="block text-sm font-semibold text-gray-700 mb-2">Prix supplément (FCFA)</label>
+                            <input type="number" id="accompagnement-prix" required placeholder="Ex: 500"
+                                class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-braise focus:ring-1 focus:ring-braise outline-none transition bg-stone-50">
+                        </div>
+                        <div class="md:col-span-2 flex gap-4">
+                            <button type="submit"
+                                class="bg-braise text-white font-bold py-3 px-8 rounded-xl hover:shadow-fire transition btn-primary">
+                                <i class="fas fa-save mr-2"></i>Enregistrer
+                            </button>
+                            <button type="button" id="btn-annuler-accompagnement" class="hidden bg-gray-200 text-gray-700 font-bold py-3 px-8 rounded-xl hover:bg-gray-300 transition">
+                                Annuler
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Liste des accompagnements -->
+                <div class="hidden md:block bg-white rounded-super shadow-card border border-gray-100 overflow-x-auto mb-8">
+                    <table class="w-full text-sm min-w-[700px]">
+                        <thead class="bg-stone-50 text-gray-600 font-semibold">
+                            <tr>
+                                <th class="px-6 py-4 text-left">#</th>
+                                <th class="px-6 py-4 text-left">Nom</th>
+                                <th class="px-6 py-4 text-left">Prix</th>
+                                <th class="px-6 py-4 text-left">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableau-accompagnements" class="divide-y divide-gray-100">
+                        </tbody>
+                    </table>
+                </div>
+
+                <div id="cartes-accompagnements" class="md:hidden space-y-4 mb-8">
+                </div>
+
+                <!-- SECTION ASSOCIATION PLAT-ACCOMPAGNEMENTS  -->
+                <div class="mt-12 border-t-2 border-gray-200 pt-8">
+                    <h3 class="text-2xl font-bold text-tropical-green mb-6 font-display">Associer des accompagnements à un plat</h3>
+
+                    <div class="bg-white rounded-super shadow-card border border-gray-100 p-8">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                            <div>
+                                <label for="plat-accompagnement-select" class="block text-sm font-semibold text-gray-700 mb-2">Choisir un plat</label>
+                                <select id="plat-accompagnement-select" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-braise focus:ring-1 focus:ring-braise outline-none transition bg-white">
+                                    <option value="">-- Sélectionner un plat --</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div id="accompagnements-disponibles" class="mt-6">
+                            <p class="text-sm text-gray-500 mb-4">Accompagnements disponibles pour ce plat :</p>
+                            <div id="liste-accompagnements-plat" class="space-y-2 max-h-96 overflow-y-auto border border-gray-200 rounded-xl p-4 bg-stone-50">
+                                <!-- Les accompagnements seront chargés ici dynamiquement -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+    </div>
+
+    <script src="../assets/js/admin.js"></script>
+
+</body>
+
+</html>const voirmenu = document.querySelector('#voir_menu')
+const menu = document.querySelector('#notre-menu')
+const navlinks = document.querySelector('#nav-links')
+const burgerMenu = document.querySelector('#burger-menu')
+const mainheader = document.querySelector("#main-header")
+const nbrplat = document.getElementById('nbr_plat')
+const btnTous = document.querySelector("#btn-tous")
+const btnViandes = document.querySelector("#btn-viandes")
+const btnPoissons = document.querySelector("#btn-poissons")
+const allbtn = document.querySelectorAll('.btn-filtre')
+const modal = document.querySelector('#modal-overlay')
+const btnCommanderModal = document.querySelector('#btn-commander-modal')
+const btnPrev = document.querySelector('#prev-plat')
+const btnNext = document.querySelector('#next-plat')
+const closeModal = document.querySelector('#close-modal')
+const soumissionForm = document.querySelector('#reservation form')
+
+let platSelectionne = null
+let indexPlatActuel = 0
+
+let plats = []
+
+function obtenirPanier() {
+    return JSON.parse(localStorage.getItem("panier")) || []
+}
+
+function sauvegarderPanier(panier) {
+    localStorage.setItem("panier", JSON.stringify(panier))
+}
+
+let prixTotalCalculé = 0
+
+function genererOptionsAccompagnement(plat) {
+    const conteneurOptions = document.querySelector('#options-accompagnement')
+    if (!conteneurOptions) return
+
+    conteneurOptions.innerHTML = `<p class="font-bold text-gray-700 mb-2">Choisissez votre accompagnement :</p>`
+
+    const premierSupplement = plat.accompagnements[0]?.supplement_prix || 0
+    prixTotalCalculé = plat.prix + premierSupplement
+
+    const modalPrix = document.querySelector('#modal-prix')
+    if (modalPrix) modalPrix.textContent = `${prixTotalCalculé}FCFA`
+
+    plat.accompagnements.forEach((acc, index) => {
+        const div = document.createElement('div')
+        div.className = "flex items-center space-x-3 mb-2 p-3 border rounded-xl hover:border-braise hover:bg-stone-50 cursor-pointer transition-all"
+
+        const texteSupplement = acc.supplement_prix === 0
+            ? '<span class="text-green-600 font-medium">(inclus)</span>'
+            : `<span class="text-gray-400">(+${acc.supplement_prix} FCFA)</span>`
+
+        div.innerHTML = `
+            <input type="radio" id="acc-${index}" name="accompagnement" value="${acc.nom}" data-sup="${acc.supplement_prix}" class="accent-braise w-4 h-4" ${index === 0 ? 'checked' : ''}>
+            <label for="acc-${index}" class="flex-grow cursor-pointer text-gray-700 font-medium flex justify-between items-center">
+                ${acc.nom} ${texteSupplement}
+            </label>`
+
+        div.addEventListener('click', () => {
+            const input = div.querySelector('input')
+            input.checked = true
+            prixTotalCalculé = plat.prix + acc.supplement_prix
+            const modalPrix = document.querySelector('#modal-prix')
+            if (modalPrix) modalPrix.textContent = `${prixTotalCalculé}FCFA`
+        })
+
+        conteneurOptions.appendChild(div)
+    })
+}
+
+function ajouterAuPanier(plat) {
+    let panier = obtenirPanier()
+
+    const radioCoche = document.querySelector('input[name="accompagnement"]:checked')
+    const optionChoisie = radioCoche ? radioCoche.value : "Aucun"
+    const supplement = radioCoche ? parseInt(radioCoche.dataset.sup) : 0
+
+    const index = panier.findIndex(item => item.id === plat.id && item.accompagnement === optionChoisie)
+
+    if (index !== -1) {
+        panier[index].quantite += 1
+    } else {
+        panier.push({
+            id: plat.id,
+            nom: plat.nom,
+            image: plat.image,
+            basePrix: plat.prix,
+            prix: plat.prix + supplement,
+            accompagnement: optionChoisie,
+            quantite: 1
+        })
+    }
+
+    sauvegarderPanier(panier)
+
+    if (typeof updateBadge === "function") updateBadge()
+    if (typeof showToast === "function") showToast(`${plat.nom} ajouté au panier !`)
+}
+
+function afficherContenuModal(index) {
+    indexPlatActuel = index
+    platSelectionne = plats[indexPlatActuel]
+
+    const titre = document.querySelector('#modal-titre')
+    const prix = document.querySelector('#modal-prix')
+    const desc = document.querySelector('#modal-desc')
+    const img = document.querySelector('#modal-img')
+
+    if (titre) titre.textContent = platSelectionne.nom
+    if (prix) prix.textContent = `${platSelectionne.prix} FCFA`
+    if (desc) desc.textContent = platSelectionne.description
+
+    if (img) {
+        img.src = platSelectionne.image
+        img.alt = platSelectionne.nom
+    }
+
+    genererOptionsAccompagnement(platSelectionne)
+}
+
+function ouvrirModal(plat) {
+    const index = plats.findIndex(p => p.id === plat.id)
+    afficherContenuModal(index)
+
+    modal.classList.remove('hidden')
+    modal.classList.add('flex')
+    document.body.classList.add('overflow-hidden')
+}
+
+function fermerModal() {
+    modal.classList.remove('flex')
+    modal.classList.add('hidden')
+    document.body.classList.remove('overflow-hidden')
+    platSelectionne = null
+}
+
+function resetStyles() {
+    allbtn.forEach(b => {
+        b.classList.remove('bg-braise', 'text-white', 'font-bold', 'shadow-md')
+        b.classList.add('bg-white', 'text-gray-700', 'border', 'border-gray-200')
+    })
+}
+
+function appliquerStyleActif(bouton) {
+    resetStyles()
+    bouton.classList.add('bg-braise', 'text-white', 'font-bold', 'shadow-md')
+    bouton.classList.remove('bg-white', 'text-gray-700', 'border-gray-200')
+}
+
+function afficherMenu(liste) {
+    const zone = document.querySelector('#conteneur-grid')
+    if (!zone) return
+
+    zone.innerHTML = ''
+
+    if (nbrplat) nbrplat.textContent = `${liste.length} plat(s) disponible(s)`
+
+    liste.forEach(plat => {
+        const article = document.createElement('article')
+        article.className = "max-w-sm bg-white rounded-super shadow-lg overflow-hidden border border-gray-100 hover:border-braise transition-all duration-300 hover:shadow-2xl group cursor-pointer"
+
+        article.innerHTML = `
+            <div class="h-56 overflow-hidden">
+                <img src="${plat.image}" alt="${plat.nom}" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+            </div>
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-xl font-bold text-tropical-green">${plat.nom}</h3>
+                    <span class="text-braise font-bold text-lg">${plat.prix} FCFA</span>
+                </div>
+                <p class="text-gray-600 text-sm mb-2 italic">Cliquez pour voir les détails</p>
+            </div>`
+
+        article.addEventListener('click', () => ouvrirModal(plat))
+        zone.appendChild(article)
+    })
+}
+
+function updateBadge() {
+    const panier = JSON.parse(localStorage.getItem("panier")) || []
+    const badge = document.getElementById('cart-badge')
+
+    const total = panier.reduce((a, b) => a + b.quantite, 0)
+
+    if (!badge) return
+
+    if (total > 0) {
+        badge.innerText = total
+        badge.classList.remove('hidden')
+    } else {
+        badge.classList.add('hidden')
+    }
+}
+
+function showToast(message) {
+    const container = document.getElementById('toast-container')
+    if (!container) return
+
+    const toast = document.createElement('div')
+    toast.className = "bg-white border-l-4 border-braise shadow-lg rounded-r-lg p-4 flex items-center gap-3"
+
+    toast.innerHTML = `<i class="fa fa-check-circle text-braise text-xl"></i><span>${message}</span>`
+
+    container.appendChild(toast)
+
+    setTimeout(() => toast.remove(), 3000)
+}
+
+document.addEventListener('DOMContentLoaded', updateBadge)
+
+if (burgerMenu && navlinks) {
+    burgerMenu.addEventListener('click', () => navlinks.classList.toggle('hidden'))
+    navlinks.addEventListener('click', () => navlinks.classList.add('hidden'))
+}
+
+window.addEventListener('scroll', () => {
+    if (window.scrollY > 50) {
+        mainheader.classList.add('shadow-md', 'py-2')
+    } else {
+        mainheader.classList.remove('shadow-md', 'py-2')
+    }
+})
+
+if (voirmenu && menu) {
+    voirmenu.addEventListener('click', () => menu.scrollIntoView({ behavior: 'smooth' }))
+}
+
+if (btnCommanderModal) {
+    btnCommanderModal.addEventListener('click', (e) => {
+        e.preventDefault()
+        if (platSelectionne) ajouterAuPanier(platSelectionne)
+    })
+}
+
+if (closeModal) closeModal.addEventListener('click', fermerModal)
+
+if (modal) {
+    modal.addEventListener('click', e => {
+        if (e.target === modal) fermerModal()
+    })
+}
+
+document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') fermerModal()
+})
+
+if (btnNext) {
+    btnNext.addEventListener('click', e => {
+        e.stopPropagation()
+        indexPlatActuel = (indexPlatActuel + 1) % plats.length
+        afficherContenuModal(indexPlatActuel)
+    })
+}
+
+if (btnPrev) {
+    btnPrev.addEventListener('click', e => {
+        e.stopPropagation()
+        indexPlatActuel = (indexPlatActuel - 1 + plats.length) % plats.length
+        afficherContenuModal(indexPlatActuel)
+    })
+}
+
+if (btnPoissons) {
+    btnPoissons.addEventListener('click', () => {
+        appliquerStyleActif(btnPoissons)
+        afficherMenu(plats.filter(p => p.categorie === "poisson"))
+    })
+}
+
+if (btnViandes) {
+    btnViandes.addEventListener('click', () => {
+        appliquerStyleActif(btnViandes)
+        afficherMenu(plats.filter(p => p.categorie === "viande"))
+    })
+}
+
+if (btnTous) {
+    btnTous.addEventListener('click', () => {
+        appliquerStyleActif(btnTous)
+        afficherMenu(plats)
+    })
+}
+
+if (soumissionForm) {
+    soumissionForm.addEventListener('submit', e => {
+        e.preventDefault()
+
+        // recup donnee du formulaire
+        const nom = soumissionForm.querySelector('input[type="text"]').value
+        const nb_personnes = soumissionForm.querySelector('input[type="number"]').value
+        const date_heure = soumissionForm.querySelector('input[type="datetime-local"]').value
+
+        const donnees = {
+            nom_complet: nom,
+            nb_personnes: parseInt(nb_personnes),
+            date_heure: date_heure,
+            commentaire: null
+        }
+
+        fetch('http://localhost/GRTR/backend/api/reservations.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(donnees)
+        })
+        .then(r => r.json())
+        .then(reponse => {
+            const confirmation = document.getElementById('soumission')
+            if (reponse.succes) {
+                confirmation.textContent = "Réservation réussie ! À très bientôt."
+                confirmation.classList.add('text-tropical-green', 'font-bold')
+                soumissionForm.reset()
+            } else {
+                confirmation.textContent = "Erreur : " + reponse.erreur
+                confirmation.classList.add('text-red-500')
+            }
+        })
+    })
+}
+
+fetch('http://localhost/GRTR/backend/api/plats.php')
+    .then(r => r.json())
+    .then(data => {
+        plats = data
+        afficherMenu(plats)
+        appliquerStyleActif(btnTous)
+    })  const panierListe = document.querySelector('#panier-liste')
+const sousTotalEl = document.querySelector('#sous-total')
+const livraisonEl = document.querySelector('#frais-livraison')
+const totalFinalEl = document.querySelector('#total-final')
+const formCommande = document.querySelector('#form-commande')
+const blocAdresse = document.querySelector('#zone-adresse')
+const adresseInput = document.querySelector('#adresse-client')
+
+function updateBadge() {
+    const panier = JSON.parse(localStorage.getItem('panier')) || [];
+    const totalArticles = panier.reduce((acc, item) => acc + item.quantite, 0);
+    const badge = document.getElementById('cart-count');
+    if (badge) {
+        badge.textContent = totalArticles;
+        badge.classList.toggle('hidden', totalArticles === 0);
+    }
+}
+
+function obtenirPanier() {
+    return JSON.parse(localStorage.getItem("panier")) || []
+}
+
+function sauvegarderPanier(panier) {
+    localStorage.setItem("panier", JSON.stringify(panier))
+}
+
+function afficherPanier() {
+    const panier = obtenirPanier()
+    if (!panierListe) return
+
+    panierListe.innerHTML = ''
+
+    if (panier.length === 0) {
+        panierListe.innerHTML = `
+            <div class="text-center py-10">
+                <i class="fa fa-shopping-basket text-4xl text-gray-200 mb-3"></i>
+                <p class="text-gray-500">Votre panier est vide</p>
+                <a href="index.php" class="text-braise font-bold mt-2 inline-block">Retourner au menu</a>
+            </div>`
+        calculerTotaux()
+        updateBadge()
+        return
+    }
+
+    panier.forEach((item, index) => {
+        const article = document.createElement('div')
+        article.className = "py-4 flex items-center justify-between"
+
+        article.innerHTML = `
+            <div class="flex items-center space-x-4">
+                <img src="${item.image}" class="w-16 h-16 rounded-xl object-cover">
+                <div>
+                    <h3 class="font-bold text-lg">${item.nom}</h3>
+                    <p class="text-xs text-gray-500 italic">
+                        Accompagnement : ${item.accompagnement || 'Standard'}
+                    </p>
+                    <p class="text-braise font-bold">${item.prix}FCFA</p>
+                </div>
+            </div>
+
+            <div class="flex items-center space-x-6">
+                <div class="flex items-center border rounded-full px-3 py-1">
+                    <button onclick="changerQuantite(${index}, -1)">-</button>
+                    <span class="font-bold px-2">${item.quantite}</span>
+                    <button onclick="changerQuantite(${index}, 1)">+</button>
+                </div>
+
+                <button onclick="supprimerArticle(${index})">
+                    <i class="fa fa-trash-o text-xl text-gray-400 hover:text-red-500"></i>
+                </button>
+            </div>
+        `
+        panierListe.appendChild(article)
+    })
+
+    calculerTotaux()
+    updateBadge()
+}
+
+window.changerQuantite = function (index, delta) {
+    const panier = obtenirPanier();
+    panier[index].quantite += delta;
+
+    if (panier[index].quantite <= 0) {
+        return supprimerArticle(index);
+    }
+
+    sauvegarderPanier(panier);
+    afficherPanier();
+}
+
+window.supprimerArticle = function (index) {
+    const panier = obtenirPanier()
+    panier.splice(index, 1)
+    sauvegarderPanier(panier)
+    afficherPanier()
+}
+
+function calculerTotaux() {
+    const panier = obtenirPanier();
+
+    const sousTotal = panier.reduce((sum, item) => sum + (item.prix * item.quantite), 0);
+
+    if (sousTotalEl) sousTotalEl.textContent = `${sousTotal.toFixed(2)} FCFA`;
+    if (livraisonEl) livraisonEl.textContent = `À définir`;
+    if (totalFinalEl) totalFinalEl.textContent = `${sousTotal.toFixed(2)} FCFA`;
+}
+
+document.querySelectorAll('input[name="mode"]').forEach(radio => {
+    radio.addEventListener('change', () => {
+        const isRetrait = radio.value === 'retrait'
+
+        if (blocAdresse) {
+            blocAdresse.classList.toggle('hidden', isRetrait)
+        }
+
+        if (adresseInput) {
+            adresseInput.required = !isRetrait
+        }
+
+        calculerTotaux()
+    })
+})
+
+if (formCommande) {
+    formCommande.addEventListener('submit', (e) => {
+        e.preventDefault()
+
+        const panier = obtenirPanier()
+
+        if (panier.length === 0) {
+            alert("Votre panier est vide !")
+            return
+        }
+
+        //recup donnee du formulaire
+        const nom = document.querySelector('#nom-client').value
+        const telephone = document.querySelector('#tel-client').value
+        const modeRadio = document.querySelector('input[name="mode"]:checked')
+        const mode = modeRadio ? modeRadio.value : 'livraison'
+        const adresse = document.querySelector('#adresse-client').value
+
+        //construction de l'obj a envoye
+        const donnees = {
+            client: {
+                nom_complet: nom,
+                telephone: telephone
+            },
+            commande: {
+                type: mode,
+                total_prix: panier.reduce((sum, item) => sum + (item.prix * item.quantite), 0),
+                adresse_livraison: adresse
+            },
+            lignes: panier.map(item => ({
+                id_plat: item.id,
+                id_acc: item.id_acc ?? null,
+                quantite: item.quantite,
+                prix_unitaire: item.prix
+            }))
+        }
+
+        //envoi a l'api
+        fetch('http://localhost/GRTR/backend/api/commandes.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(donnees)
+        })
+        .then(r => r.json())
+        .then(reponse => {
+                if (reponse.succes) {
+                    alert(`Merci ${nom} ! Votre commande #${reponse.id_commande} est validée. `)
+                    localStorage.removeItem("panier")
+                    window.location.href = "index.php"
+                } else {
+                    alert("Erreur : " + reponse.erreur)
+                }
+        })
+    })
+}
+
+afficherPanier()
+calculerTotaux()
+updateBadge() // ============================================
+// 1. VARIABLES GLOBALES & CONFIGURATION
+// ============================================
+const API_BASE_URL = '../../backend/api';
+
+let listeDesPlats = [];
+let listeDesAnnonces = [];
+let listeDesAccompagnements = [];
+let platsCharges = false;
+let annoncesChargees = false;
+let accompagnementsCharges = false;
+
+// ============================================
+// 2. FONCTIONS UTILITAIRES
+// ============================================
+function escapeHtml(str) {
+    if (!str) return '';
+    return str.toString()
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+function numberFormat(num) {
+    return new Intl.NumberFormat('fr-FR').format(num);
+}
+
+
+// ============================================
+// 2.5. NOTIFICATIONS (Alertes utilisateur)
+// ============================================
+function showNotification(message, type = 'success') {
+    console.log('Notification:', message, type); // Pour déboguer
+    
+    // Supprimer les anciennes notifications
+    const oldNotifs = document.querySelectorAll('.custom-notification');
+    oldNotifs.forEach(notif => notif.remove());
+    
+    // Créer l'élément de notification
+    const notification = document.createElement('div');
+    notification.className = 'custom-notification';
+    
+    // Couleur selon le type
+    let bgColor = '';
+    if (type === 'success') {
+        bgColor = '#10b981'; // emerald-500
+    } else if (type === 'error') {
+        bgColor = '#ef4444'; // red-500
+    } else if (type === 'warning') {
+        bgColor = '#f97316'; // orange-500
+    } else {
+        bgColor = '#3b82f6'; // blue-500
+    }
+    
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 9999;
+        background-color: ${bgColor};
+        color: white;
+        padding: 12px 20px;
+        border-radius: 12px;
+        font-weight: bold;
+        box-shadow: 0 10px 25px -5px rgba(0,0,0,0.2);
+        font-size: 14px;
+        font-family: system-ui, -apple-system, sans-serif;
+        transform: translateX(400px);
+        transition: transform 0.3s ease;
+        max-width: 350px;
+    `;
+    
+    notification.innerHTML = message;
+    
+    document.body.appendChild(notification);
+    
+    // Animation d'entrée
+    setTimeout(() => {
+        notification.style.transform = 'translateX(0)';
+    }, 10);
+    
+    // Disparition après 3 secondes
+    setTimeout(() => {
+        notification.style.transform = 'translateX(400px)';
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.remove();
+            }
+        }, 300);
+    }, 3000);
+}
+
+// ============================================
+// 3. GESTION DE LA NAVIGATION (SIDEBAR)
+// ============================================
+function afficherSection(sectionId) {
+    // Masquer toutes les sections
+    document.querySelectorAll('.section-content').forEach(section => {
+        section.classList.add('hidden');
+    });
+
+    // Afficher la section demandée
+    const section = document.getElementById(`section-${sectionId}`);
+    if (section) {
+        section.classList.remove('hidden');
+    }
+
+    // Mettre à jour la classe active des boutons
+    document.querySelectorAll('.nav-btn').forEach(btn => {
+        btn.classList.remove('active-nav', 'bg-tropical-green', 'text-white');
+        btn.classList.add('text-gray-700');
+    });
+
+    const activeButton = document.querySelector(`.nav-btn[onclick="afficherSection('${sectionId}')"]`);
+    if (activeButton) {
+        activeButton.classList.add('active-nav', 'bg-tropical-green', 'text-white');
+        activeButton.classList.remove('text-gray-700');
+    }
+
+    // Chargement des données selon la section
+    if (sectionId === 'statistiques') {
+        chargerStatistiques();
+    }
+    if (sectionId === 'plats' && !platsCharges) {
+        chargerPlats();
+        platsCharges = true;
+    }
+    if (sectionId === 'annonces' && !annoncesChargees) {
+        chargerAnnonces();
+        annoncesChargees = true;
+    }
+    if (sectionId === 'accompagnements' && !accompagnementsCharges) {
+        chargerAccompagnements();
+        chargerAssociationPlats();
+        accompagnementsCharges = true;
+    }
+}
+
+// ============================================
+// 4. UPLOAD D'IMAGES
+// ============================================
+function uploadImage(file, inputId, imgId, previewId) {
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append('image', file);
+
+    fetch(`${API_BASE_URL}/upload.php`, {
+        method: 'POST',
+        body: formData
+    })
+        .then(r => r.json())
+        .then(reponse => {
+            if (reponse.succes) {
+                document.getElementById(inputId).value = reponse.chemin;
+                const img = document.getElementById(imgId);
+                img.src = reponse.url;
+                document.getElementById(previewId).classList.remove('hidden');
+                console.log('Image uploadée :', reponse.chemin);
+            } else {
+                alert('Erreur upload : ' + reponse.erreur);
+            }
+        })
+        .catch(err => {
+            console.error('Erreur upload :', err);
+            alert('Erreur lors de l\'upload');
+        });
+}
+
+// ============================================
+// 5. GESTION DES STATUTS (Commandes/Réservations)
+// ============================================
+function changerStatut(table, id, statut, selectElement) {
+    const originalValue = selectElement.value;
+    selectElement.disabled = true;
+    
+    fetch(`${API_BASE_URL}/statut.php`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': getCsrfToken() },
+        body: JSON.stringify({ table, id: parseInt(id), statut })
+    })
+    .then(r => r.json())
+    .then(reponse => {
+        if (reponse.succes) {
+            showNotification('Statut mis à jour', 'success');
+            // Optionnel : recharger la section ou mettre à jour localement
+        } else {
+            showNotification('Erreur : ' + reponse.erreur, 'error');
+            selectElement.value = originalValue;
+        }
+    })
+    .catch(err => {
+        console.error("Erreur réseau :", err);
+        showNotification('Erreur réseau', 'error');
+        selectElement.value = originalValue;
+    })
+    .finally(() => {
+        selectElement.disabled = false;
+    });
+}
+
+// ============================================
+// 6. STATISTIQUES (Tableau de bord)
+// ============================================
+function chargerStatistiques() {
+    fetch(`${API_BASE_URL}/statistics.php`)
+        .then(r => r.json())
+        .then(stats => {
+            document.getElementById('stat-ca').textContent = numberFormat(stats.chiffre_affaires) + ' FCFA';
+            document.getElementById('stat-commandes').textContent = stats.nb_commandes;
+            document.getElementById('stat-en-cours').textContent = stats.nb_en_cours;
+            document.getElementById('stat-clients').textContent = stats.nb_clients;
+            document.getElementById('stat-jour').textContent = stats.nb_jour;
+            document.getElementById('stat-ca-jour').textContent = numberFormat(stats.ca_jour) + ' FCFA';
+            document.getElementById('stat-panier').textContent = numberFormat(stats.panier_moyen) + ' FCFA';
+        })
+        .catch(err => console.error('Erreur stats:', err));
+}
+
+// ============================================
+// 7. GESTION DES PLATS (CRUD)
+// ============================================
+function chargerPlats() {
+    fetch(`${API_BASE_URL}/plats.php`)
+        .then(r => r.json())
+        .then(plats => {
+            listeDesPlats = plats;
+            const tbody = document.getElementById('tableau-plats');
+            const cartes = document.getElementById('cartes-plats');
+            let htmlTableau = '';
+            let htmlCartes = '';
+
+            plats.forEach((plat, index) => {
+                const platId = parseInt(plat.id);
+                const imageSrc = plat.image ? escapeHtml(plat.image) : '../assets/images/default.jpg';
+                const nomNettoye = escapeHtml(plat.nom);
+                const catNettoye = escapeHtml(plat.categorie);
+                const descNettoye = plat.description ? escapeHtml(plat.description) : 'Aucune description';
+                const prixFormate = numberFormat(plat.prix);
+
+                htmlTableau += `
+                    <tr class="hover:bg-stone-50">
+                        <td class="px-6 py-4">${index + 1}</td>
+                        <td class="px-6 py-2">
+                            <img src="${imageSrc}" alt="${nomNettoye}" class="w-12 h-12 rounded-lg object-cover border border-gray-100">
+                        </td>
+                        <td class="px-6 py-4 font-medium">${nomNettoye}</td>
+                        <td class="px-6 py-4">${catNettoye}</td>
+                        <td class="px-6 py-4 font-bold text-braise">${prixFormate} FCFA</td>
+                        <td class="px-6 py-4">
+                            <div class="flex items-center gap-2">
+                                <button onclick="modifierPlat(${platId})" class="bg-tropical-green text-white px-3 py-1.5 rounded-lg text-xs font-bold hover:brightness-110">Modifier</button>
+                                <button onclick="supprimerPlat(${platId})" class="bg-red-600 text-white px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-red-700">Supprimer</button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+
+                htmlCartes += `
+                    <div class="bg-white rounded-super shadow-sm border border-gray-100 p-4">
+                        <div class="flex gap-4 mb-4">
+                            <img src="${imageSrc}" alt="${nomNettoye}" class="w-20 h-20 rounded-lg object-cover">
+                            <div class="flex-grow">
+                                <h3 class="font-bold text-lg text-tropical-green">${nomNettoye}</h3>
+                                <p class="text-xs text-gray-500">${catNettoye}</p>
+                                <p class="text-sm text-braise font-bold mt-2">${prixFormate} FCFA</p>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-600 mb-4">${descNettoye}</p>
+                        <div class="flex gap-2">
+                            <button onclick="modifierPlat(${platId})" class="flex-1 bg-tropical-green text-white px-3 py-2 rounded-lg text-xs font-bold hover:brightness-110">Modifier</button>
+                            <button onclick="supprimerPlat(${platId})" class="flex-1 bg-red-500 text-white px-3 py-2 rounded-lg text-xs font-bold hover:brightness-110">Supprimer</button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            if (tbody) tbody.innerHTML = htmlTableau;
+            if (cartes) cartes.innerHTML = htmlCartes;
+        })
+        .catch(err => console.error("Erreur chargement plats :", err));
+}
+
+function modifierPlat(id) {
+    const plat = listeDesPlats.find(p => p.id == id);
+    if (!plat) return;
+    document.getElementById('form-titre').textContent = 'Modifier un plat';
+    document.getElementById('plat-id').value = plat.id;
+    document.getElementById('plat-nom').value = plat.nom;
+    document.getElementById('plat-prix').value = plat.prix;
+    document.getElementById('plat-description').value = plat.description || '';
+    document.getElementById('plat-image').value = plat.image || '';
+    document.getElementById('plat-categorie').value = plat.id_categorie || '';
+    document.getElementById('btn-annuler').classList.remove('hidden');
+    document.getElementById('form-titre').scrollIntoView({ behavior: 'smooth' });
+}
+
+function supprimerPlat(id) {
+    if (!confirm('Voulez-vous vraiment supprimer ce plat ? Cette action est irréversible.')) return;
+
+    fetch(`${API_BASE_URL}/gerer_plats.php`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'supprimer', id_plat: parseInt(id) })
+    })
+        .then(r => r.json())
+        .then(reponse => {
+            if (reponse.succes) {
+                showNotification('Plat supprimé avec succès !', 'success');
+                chargerPlats();
+            } else {
+                showNotification('Erreur : ' + reponse.erreur, 'error');
+            }
+        })
+        .catch(err => {
+            console.error("Erreur réseau :", err);
+            showNotification('Erreur lors de la suppression', 'error');
+        });
+}
+
+// ============================================
+// 8. GESTION DES ANNONCES (CRUD)
+// ============================================
+function chargerAnnonces() {
+    fetch(`${API_BASE_URL}/annonces.php`)
+        .then(r => r.json())
+        .then(annonces => {
+            listeDesAnnonces = annonces;
+            const tbody = document.getElementById('tableau-annonces');
+            const cartes = document.getElementById('cartes-annonces');
+            let htmlTableau = '';
+            let htmlCartes = '';
+
+            annonces.forEach(annonce => {
+                const annonceId = parseInt(annonce.id_annonce);
+                const titre = escapeHtml(annonce.titre);
+                const desc = escapeHtml(annonce.description);
+                const dateDebut = annonce.date_debut ? new Date(annonce.date_debut).toLocaleDateString('fr-FR') : '-';
+                const dateFin = annonce.date_fin ? new Date(annonce.date_fin).toLocaleDateString('fr-FR') : '-';
+
+                htmlTableau += `
+                    <tr class="hover:bg-stone-50">
+                        <td class="px-6 py-4">${annonceId}</td>
+                        <td class="px-6 py-4 font-medium">${titre}</td>
+                        <td class="px-6 py-4">${dateDebut}</td>
+                        <td class="px-6 py-4">${dateFin}</td>
+                        <td class="px-6 py-4">
+                            <div class="flex items-center gap-2">
+                                <button onclick="modifierAnnonce(${annonceId})" class="bg-tropical-green text-white px-3 py-1.5 rounded-lg text-xs font-bold hover:brightness-110">Modifier</button>
+                                <button onclick="supprimerAnnonce(${annonceId})" class="bg-red-600 text-white px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-red-700">Supprimer</button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+
+                htmlCartes += `
+                    <div class="bg-white rounded-super shadow-sm border border-gray-100 p-4">
+                        <h3 class="font-bold text-lg text-tropical-green">${titre}</h3>
+                        <p class="text-sm text-gray-600 my-2">${desc}</p>
+                        <p class="text-xs text-gray-500">Du ${dateDebut} au ${dateFin}</p>
+                        <div class="flex gap-2 mt-4">
+                            <button onclick="modifierAnnonce(${annonceId})" class="flex-1 bg-tropical-green text-white px-3 py-2 rounded-lg text-xs font-bold">Modifier</button>
+                            <button onclick="supprimerAnnonce(${annonceId})" class="flex-1 bg-red-500 text-white px-3 py-2 rounded-lg text-xs font-bold">Supprimer</button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            if (tbody) tbody.innerHTML = htmlTableau;
+            if (cartes) cartes.innerHTML = htmlCartes;
+        })
+        .catch(err => console.error("Erreur chargement annonces :", err));
+}
+
+function modifierAnnonce(id) {
+    const ann = listeDesAnnonces.find(a => a.id_annonce == id);
+    if (!ann) return;
+    document.getElementById('form-annonce-titre').textContent = 'Modifier une annonce';
+    document.getElementById('annonce-id').value = ann.id_annonce;
+    document.getElementById('annonce-titre').value = ann.titre;
+    document.getElementById('annonce-description').value = ann.description || '';
+    document.getElementById('annonce-image').value = ann.image_url || '';
+    document.getElementById('annonce-date-debut').value = ann.date_debut || '';
+    document.getElementById('annonce-date-fin').value = ann.date_fin || '';
+    document.getElementById('btn-annuler-annonce').classList.remove('hidden');
+    document.getElementById('form-annonce-titre').scrollIntoView({ behavior: 'smooth' });
+}
+
+function supprimerAnnonce(id) {
+    if (!confirm('Voulez-vous vraiment supprimer cette annonce ?')) return;
+    fetch(`${API_BASE_URL}/annonces.php`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'supprimer', id_annonce: parseInt(id) })
+    })
+        .then(r => r.json())
+        .then(reponse => {
+            if (reponse.succes) {
+                showNotification(' Annonce supprimée avec succès !', 'success');
+                chargerAnnonces();
+            } else {
+                showNotification('Erreur : ' + reponse.erreur, 'error');
+            }
+        })
+        .catch(err => {
+            console.error("Erreur réseau :", err);
+            showNotification('Erreur lors de la suppression', 'error');
+        });
+}
+
+// ============================================
+// 9. GESTION DES ACCOMPAGNEMENTS (CRUD)
+// ============================================
+function chargerAccompagnements() {
+    fetch(`${API_BASE_URL}/accompagnements.php`)
+        .then(r => r.json())
+        .then(accompagnements => {
+            listeDesAccompagnements = accompagnements;
+            const tbody = document.getElementById('tableau-accompagnements');
+            const cartes = document.getElementById('cartes-accompagnements');
+            let htmlTableau = '';
+            let htmlCartes = '';
+
+            accompagnements.forEach(acc => {
+                const accId = parseInt(acc.id_accompagnement);
+                const nom = escapeHtml(acc.nom);
+                const prix = numberFormat(acc.supplement_prix);
+
+                htmlTableau += `
+                    <tr class="hover:bg-stone-50">
+                        <td class="px-6 py-4">${accId}</td>
+                        <td class="px-6 py-4 font-medium">${nom}</td>
+                        <td class="px-6 py-4 font-bold text-braise">${prix} FCFA</td>
+                        <td class="px-6 py-4">
+                            <div class="flex items-center gap-2">
+                                <button onclick="modifierAccompagnement(${accId})" class="bg-tropical-green text-white px-3 py-1.5 rounded-lg text-xs font-bold hover:brightness-110">Modifier</button>
+                                <button onclick="supprimerAccompagnement(${accId})" class="bg-red-600 text-white px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-red-700">Supprimer</button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+
+                htmlCartes += `
+                    <div class="bg-white rounded-super shadow-sm border border-gray-100 p-4">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="font-bold text-lg text-tropical-green">${nom}</h3>
+                            <span class="text-braise font-bold">${prix} FCFA</span>
+                        </div>
+                        <div class="flex gap-2 mt-4">
+                            <button onclick="modifierAccompagnement(${accId})" class="flex-1 bg-tropical-green text-white px-3 py-2 rounded-lg text-xs font-bold">Modifier</button>
+                            <button onclick="supprimerAccompagnement(${accId})" class="flex-1 bg-red-500 text-white px-3 py-2 rounded-lg text-xs font-bold">Supprimer</button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            if (tbody) tbody.innerHTML = htmlTableau;
+            if (cartes) cartes.innerHTML = htmlCartes;
+        })
+        .catch(err => console.error("Erreur chargement accompagnements :", err));
+}
+
+function modifierAccompagnement(id) {
+    const acc = listeDesAccompagnements.find(a => a.id_accompagnement == id);
+    if (!acc) return;
+    document.getElementById('form-accompagnement-titre').textContent = 'Modifier un accompagnement';
+    document.getElementById('accompagnement-id').value = acc.id_accompagnement;
+    document.getElementById('accompagnement-nom').value = acc.nom;
+    document.getElementById('accompagnement-prix').value = acc.supplement_prix;
+    document.getElementById('btn-annuler-accompagnement').classList.remove('hidden');
+    document.getElementById('form-accompagnement-titre').scrollIntoView({ behavior: 'smooth' });
+}
+
+function supprimerAccompagnement(id) {
+    if (!confirm('Voulez-vous vraiment supprimer cet accompagnement ? Cette action est irréversible.')) return;
+
+    fetch(`${API_BASE_URL}/gerer_accompagnements.php`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'supprimer', id_accompagnement: id })
+    })
+        .then(r => r.json())
+        .then(reponse => {
+            if (reponse.succes) {
+                showNotification(' Accompagnement supprimé avec succès !', 'success');
+                chargerAccompagnements();
+                chargerPlats();
+            } else {
+                showNotification('Erreur : ' + reponse.erreur, 'error');
+            }
+        })
+        .catch(err => {
+            console.error("Erreur réseau :", err);
+            showNotification('Erreur lors de la suppression', 'error');
+        });
+}
+
+// ============================================
+// 10. ASSOCIATION PLAT-ACCOMPAGNEMENTS
+// ============================================
+function chargerAssociationPlats() {
+    fetch(`${API_BASE_URL}/plats.php`)
+        .then(r => r.json())
+        .then(plats => {
+            const select = document.getElementById('plat-accompagnement-select');
+            let options = '<option value="">-- Sélectionner un plat --</option>';
+            plats.forEach(plat => {
+                options += `<option value="${plat.id}">${escapeHtml(plat.nom)}</option>`;
+            });
+            select.innerHTML = options;
+        });
+}
+
+function toggleAssociation(platId, accompagnementId, associer) {
+    const action = associer ? 'associer' : 'dissocier';
+    fetch(`${API_BASE_URL}/associer_accompagnements.php`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            action: action,
+            id_plat: parseInt(platId),
+            id_accompagnement: parseInt(accompagnementId)
+        })
+    })
+        .then(r => r.json())
+        .then(reponse => {
+            if (reponse.succes) {
+                const message = associer ? ' Accompagnement associé au plat !' : ' Accompagnement dissocié du plat !';
+                showNotification(message, 'success');
+            } else {
+                showNotification('Erreur : ' + reponse.erreur, 'error');
+            }
+        })
+        .catch(err => {
+            console.error("Erreur réseau :", err);
+            showNotification('Erreur lors de l\'association', 'error');
+        });
+}
+
+// ============================================
+// 11. ÉCOUTEURS D'ÉVÉNEMENTS (DOM)
+// ============================================
+
+// Upload images
+if (document.getElementById('plat-image-file')) {
+    document.getElementById('plat-image-file').addEventListener('change', function (e) {
+        uploadImage(e.target.files[0], 'plat-image', 'plat-preview-img', 'plat-image-preview');
+    });
+}
+
+if (document.getElementById('annonce-image-file')) {
+    document.getElementById('annonce-image-file').addEventListener('change', function (e) {
+        uploadImage(e.target.files[0], 'annonce-image', 'annonce-preview-img', 'annonce-image-preview');
+    });
+}
+
+// Formulaire Plats
+if (document.getElementById('form-plat')) {
+    document.getElementById('form-plat').addEventListener('submit', e => {
+        e.preventDefault();
+        const id = document.getElementById('plat-id').value;
+        const action = id ? 'modifier' : 'ajouter';
+        const donnees = {
+            action,
+            id_plat: id ? parseInt(id) : null,
+            nom: document.getElementById('plat-nom').value,
+            prix: parseFloat(document.getElementById('plat-prix').value),
+            description: document.getElementById('plat-description').value,
+            image_url: document.getElementById('plat-image').value,
+            id_categorie: parseInt(document.getElementById('plat-categorie').value)
+        };
+        fetch(`${API_BASE_URL}/gerer_plats.php`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(donnees)
+        })
+            .then(r => r.json())
+            .then(reponse => {
+                if (reponse.succes) {
+                    const message = action === 'ajouter' ? ' Plat ajouté avec succès !' : ' Plat modifié avec succès !';
+                    showNotification(message, 'success');
+                    chargerPlats();
+                    document.getElementById('btn-annuler').click();
+                } else {
+                    showNotification(' Erreur : ' + reponse.erreur, 'error');
+                }
+            })
+            .catch(err => {
+                console.error("Erreur réseau :", err);
+                showNotification(' Erreur lors de l\'opération', 'error');
+            });
+    });
+}
+
+// Bouton Annuler Plat
+if (document.getElementById('btn-annuler')) {
+    document.getElementById('btn-annuler').addEventListener('click', () => {
+        document.getElementById('form-plat').reset();
+        document.getElementById('plat-id').value = '';
+        document.getElementById('form-titre').textContent = 'Ajouter un plat';
+        document.getElementById('btn-annuler').classList.add('hidden');
+        document.getElementById('plat-image-preview').classList.add('hidden');
+    });
+}
+
+// Formulaire Accompagnements
+if (document.getElementById('form-accompagnement')) {
+    document.getElementById('form-accompagnement').addEventListener('submit', e => {
+        e.preventDefault();
+        const id = document.getElementById('accompagnement-id').value;
+        const action = id ? 'modifier' : 'ajouter';
+        const donnees = {
+            action,
+            nom: document.getElementById('accompagnement-nom').value,
+            prix_supplement: parseFloat(document.getElementById('accompagnement-prix').value)
+        };
+        if (id) {
+            donnees.id_accompagnement = parseInt(id);
+        }
+        fetch(`${API_BASE_URL}/gerer_accompagnements.php`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(donnees)
+        })
+            .then(r => r.json())
+            .then(reponse => {
+                if (reponse.succes) {
+                    const message = action === 'ajouter' ? ' Accompagnement ajouté avec succès !' : ' Accompagnement modifié avec succès !';
+                    showNotification(message, 'success');
+                    chargerAccompagnements();
+                    chargerPlats();
+                    document.getElementById('btn-annuler-accompagnement').click();
+                } else {
+                    showNotification(' Erreur : ' + reponse.erreur, 'error');
+                }
+            })
+            .catch(err => {
+                console.error("Erreur réseau :", err);
+                showNotification(' Erreur lors de l\'opération', 'error');
+            });
+    });
+}
+
+// Bouton Annuler Accompagnement
+if (document.getElementById('btn-annuler-accompagnement')) {
+    document.getElementById('btn-annuler-accompagnement').addEventListener('click', () => {
+        document.getElementById('form-accompagnement').reset();
+        document.getElementById('accompagnement-id').value = '';
+        document.getElementById('form-accompagnement-titre').textContent = 'Ajouter un accompagnement';
+        document.getElementById('btn-annuler-accompagnement').classList.add('hidden');
+    });
+}
+
+
+// Formulaire Annonces
+if (document.getElementById('form-annonce')) {
+    document.getElementById('form-annonce').addEventListener('submit', e => {
+        e.preventDefault();
+        const id = document.getElementById('annonce-id').value;
+        const action = id ? 'modifier' : 'ajouter';
+        const donnees = {
+            action,
+            id_annonce: id ? parseInt(id) : null,
+            titre: document.getElementById('annonce-titre').value,
+            description: document.getElementById('annonce-description').value,
+            image_url: document.getElementById('annonce-image').value,
+            date_debut: document.getElementById('annonce-date-debut').value,
+            date_fin: document.getElementById('annonce-date-fin').value
+        };
+        fetch(`${API_BASE_URL}/annonces.php`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(donnees)
+        })
+        .then(r => r.json())
+        .then(reponse => {
+            if (reponse.succes) {
+                const message = action === 'ajouter' ? ' Annonce ajoutée avec succès !' : ' Annonce modifiée avec succès !';
+                showNotification(message, 'success');
+                chargerAnnonces();
+                document.getElementById('btn-annuler-annonce').click();
+            } else {
+                showNotification(' Erreur : ' + reponse.erreur, 'error');
+            }
+        })
+        .catch(err => {
+            console.error("Erreur réseau :", err);
+            showNotification(' Erreur lors de l\'opération', 'error');
+        });
+    });
+}
+// Bouton Annuler Annonce
+if (document.getElementById('btn-annuler-annonce')) {
+    document.getElementById('btn-annuler-annonce').addEventListener('click', () => {
+        document.getElementById('form-annonce').reset();
+        document.getElementById('annonce-id').value = '';
+        document.getElementById('form-annonce-titre').textContent = 'Ajouter une annonce';
+        document.getElementById('btn-annuler-annonce').classList.add('hidden');
+        document.getElementById('annonce-image-preview').classList.add('hidden');
+    });
+}
+
+// Sélection du plat pour association
+document.getElementById('plat-accompagnement-select')?.addEventListener('change', function () {
+    const platId = this.value;
+    if (!platId) {
+        document.getElementById('liste-accompagnements-plat').innerHTML = '';
+        return;
+    }
+
+    fetch(`${API_BASE_URL}/accompagnements.php`)
+        .then(r => r.json())
+        .then(accompagnements => {
+            fetch(`${API_BASE_URL}/plats.php?id=${platId}`)
+                .then(r => r.json())
+                .then(plat => {
+                    const accompagnementsPlat = plat.accompagnements || [];
+                    const accompagnementsIds = accompagnementsPlat.map(a => a.id_accompagnement);
+                    let html = '';
+                    accompagnements.forEach(acc => {
+                        const estAssocie = accompagnementsIds.includes(acc.id_accompagnement);
+                        html += `
+                            <div class="flex items-center justify-between bg-white rounded-lg p-3 border border-gray-100 hover:bg-gray-50 transition">
+                                <div class="flex items-center gap-3">
+                                    <input type="checkbox" 
+                                           id="acc_${acc.id_accompagnement}" 
+                                           value="${acc.id_accompagnement}"
+                                           ${estAssocie ? 'checked' : ''}
+                                           onchange="toggleAssociation(${platId}, ${acc.id_accompagnement}, this.checked)"
+                                           class="w-4 h-4 text-braise rounded border-gray-300 focus:ring-braise">
+                                    <label for="acc_${acc.id_accompagnement}" class="font-medium text-gray-700 cursor-pointer">
+                                        ${escapeHtml(acc.nom)}
+                                    </label>
+                                </div>
+                                <span class="text-braise font-semibold text-sm">+${numberFormat(acc.supplement_prix)} FCFA</span>
+                            </div>
+                        `;
+                    });
+                    document.getElementById('liste-accompagnements-plat').innerHTML = html || '<p class="text-gray-500 text-center py-8">Aucun accompagnement disponible</p>';
+                });
+        });
+});
+
+// ============================================
+// 12. INITIALISATION AU CHARGEMENT DE LA PAGE
+// ============================================
+document.addEventListener('DOMContentLoaded', function () {
+    afficherSection('statistiques');
+    chargerAccompagnements();
+    chargerAssociationPlats();
+    accompagnementsCharges = true;
+});<?php
+header('Content-Type: application/json');
+
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    http_response_code(405);
+    echo json_encode(['erreur' => 'Méthode non autorisée']);
+    exit;
+}
+
+if (!isset($_FILES['image']) || $_FILES['image']['error'] !== UPLOAD_ERR_OK) {
+    http_response_code(400);
+    echo json_encode(['erreur' => 'Aucun fichier ou erreur d\'upload']);
+    exit;
+}
+
+$file = $_FILES['image'];
+$maxSize = 10 * 1024 * 1024;
+$allowedMimes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+
+if ($file['size'] > $maxSize) {
+    http_response_code(400);
+    echo json_encode(['erreur' => 'Fichier trop volumineux (max 10MB)']);
+    exit;
+}
+
+$finfo = finfo_open(FILEINFO_MIME_TYPE);
+$mimeType = finfo_file($finfo, $file['tmp_name']);
+finfo_close($finfo);
+
+if (!in_array($mimeType, $allowedMimes)) {
+    http_response_code(400);
+    echo json_encode(['erreur' => 'Format non autorisé']);
+    exit;
+}
+
+$uploadDir = __DIR__ . '/../uploads/';
+if (!is_dir($uploadDir)) {
+    mkdir($uploadDir, 0755, true);
+}
+
+$extension = pathinfo($file['name'], PATHINFO_EXTENSION);
+$filename = uniqid('img_', true) . '.' . $extension;
+$filepath = $uploadDir . $filename;
+
+if (!move_uploaded_file($file['tmp_name'], $filepath)) {
+    http_response_code(500);
+    echo json_encode(['erreur' => 'Erreur lors de la sauvegarde']);
+    exit;
+}
+
+$webPath = '/GRTR/backend/uploads/' . $filename;
+
+echo json_encode([
+    'succes' => true,
+    'chemin' => $webPath,
+    'url' => $webPath
+]);
+?><?php
+require_once '../config/connect.php';
+
+header('Content-Type: application/json');
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: POST');
+header('Access-Control-Allow-Headers: Content-Type');
+
+$donnees = json_decode(file_get_contents('php://input'), true);
+
+if (!$donnees) {
+    echo json_encode(['erreur' => 'Données invalides']);
+    exit;
+}
+
+try {
+    $table = $donnees['table']; 
+    $id    = $donnees['id'];
+    $statut = $donnees['statut'];
+
+    $tables_autorisees = ['Commande', 'Reservation'];
+    if (!in_array($table, $tables_autorisees)) {
+        echo json_encode(['erreur' => 'Table non autorisée']);
+        exit;
+    }
+
+    $colonne_id = $table === 'Commande' ? 'id_com' : 'id_reser';
+
+    $stmt = $bdd->prepare("UPDATE $table SET statut = ? WHERE $colonne_id = ?");
+    $stmt->execute([$statut, $id]);
+
+    echo json_encode(['succes' => true]);
+
+} catch (PDOException $e) {
+    echo json_encode(['erreur' => $e->getMessage()]);
+}
+?><?php
+require_once '../config/connect.php';
+session_start();
+
+header('Content-Type: application/json');
+
+try {
+    // Chiffre d'affaires total (commandes livrées)
+    $stmt = $bdd->query("SELECT COALESCE(SUM(total_prix), 0) as ca FROM Commande WHERE statut = 'livree'");
+    $ca = $stmt->fetch(PDO::FETCH_ASSOC)['ca'];
+
+    // Nombre total de commandes
+    $stmt = $bdd->query("SELECT COUNT(*) as nb FROM Commande");
+    $nb_commandes = $stmt->fetch(PDO::FETCH_ASSOC)['nb'];
+
+    // Commandes en cours (non terminées)
+    $stmt = $bdd->query("SELECT COUNT(*) as nb FROM Commande WHERE statut NOT IN ('livree', 'annulee')");
+    $nb_en_cours = $stmt->fetch(PDO::FETCH_ASSOC)['nb'];
+
+    // Nombre de clients uniques
+    $stmt = $bdd->query("SELECT COUNT(DISTINCT id_client) as nb FROM Commande");
+    $nb_clients = $stmt->fetch(PDO::FETCH_ASSOC)['nb'];
+
+    // Commandes aujourd'hui
+    $stmt = $bdd->query("SELECT COUNT(*) as nb FROM Commande WHERE DATE(date_heure) = CURDATE()");
+    $nb_jour = $stmt->fetch(PDO::FETCH_ASSOC)['nb'];
+
+    // CA aujourd'hui
+    $stmt = $bdd->query("SELECT COALESCE(SUM(total_prix), 0) as ca FROM Commande WHERE DATE(date_heure) = CURDATE() AND statut = 'livree'");
+    $ca_jour = $stmt->fetch(PDO::FETCH_ASSOC)['ca'];
+
+    // Panier moyen
+    $stmt = $bdd->query("SELECT COALESCE(AVG(total_prix), 0) as panier FROM Commande");
+    $panier_moyen = $stmt->fetch(PDO::FETCH_ASSOC)['panier'];
+
+    echo json_encode([
+        'chiffre_affaires' => (float)$ca,
+        'nb_commandes' => (int)$nb_commandes,
+        'nb_en_cours' => (int)$nb_en_cours,
+        'nb_clients' => (int)$nb_clients,
+        'nb_jour' => (int)$nb_jour,
+        'ca_jour' => (float)$ca_jour,
+        'panier_moyen' => (float)$panier_moyen
+    ]);
+} catch (PDOException $e) {
+    http_response_code(500);
+    echo json_encode(['erreur' => 'Erreur base de données']);
+}backend/api/accompagnements.php backend/api/annonces.php backend/api/associer_accompagnements.php backend/api/commandes.php backend/api/gerer_accompagnements.php backend/api/gerer_plats.php backend/api/plats.php backend/api/reservations.php backend/api/statistics.php backend/api/statut.php backend/api/upload.php <?php
+require_once '../config/connect.php';
+
+header('Content-Type: application/json');
+header('Access-Control-Allow-Origin: *');
+
+// Récupération des plats
+$sql = "SELECT 
+    p.id_plat AS id,
+    c.libelle AS categorie,
+    p.nom,
+    p.description,
+    p.prix,
+    p.image_url AS image,
+    p.est_disponible,
+    p.id_categorie
+FROM Plat p
+JOIN Categorie c ON p.id_categorie = c.id_categorie
+WHERE p.est_disponible = 1";
+
+$stmt = $bdd->query($sql);
+$plats = $stmt->fetchAll();
+
+// Chaque plat avec ses accompagnements
+foreach ($plats as &$plat) {
+    $plat['id'] = (int) $plat['id'];
+    $plat['prix'] = (float) $plat['prix'];
+    $plat['id_categorie'] = isset($plat['id_categorie']) ? (int) $plat['id_categorie'] : 0;
+    
+    $sql2 = "SELECT a.id_acc, a.nom, a.supplement_prix
+        FROM Accompagnement a
+        JOIN PlatAccompagnement pa ON a.id_acc = pa.id_acc
+        WHERE pa.id_plat = ?";
+
+    $stmt2 = $bdd->prepare($sql2);
+    $stmt2->execute([$plat['id']]);
+    $plat['accompagnements'] = $stmt2->fetchAll();
+
+    foreach ($plat['accompagnements'] as &$acc) {
+        $acc['id_acc'] = (int) $acc['id_acc'];
+        $acc['supplement_prix'] = (float) $acc['supplement_prix'];
+    }
+}
+
+echo json_encode($plats);
+?> <?php
+require_once '../config/connect.php';
+
+header('Content-Type: application/json');
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type');
+
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit();
+}
+
+$donnees = json_decode(file_get_contents('php://input'), true);
+
+if (!$donnees) {
+    echo json_encode(['succes' => false, 'erreur' => 'Données invalides']);
+    exit;
+}
+
+$action = $donnees['action'];
+
+try {
+    // AJOUT d'un plat
+    if ($action === 'ajouter') {
+        $stmt = $bdd->prepare("INSERT INTO Plat (id_categorie, nom, description, prix, image_url, est_disponible) VALUES (?, ?, ?, ?, ?, 1)");
+        $stmt->execute([
+            $donnees['id_categorie'],
+            $donnees['nom'],
+            $donnees['description'],
+            $donnees['prix'],
+            $donnees['image_url']
+        ]);
+        echo json_encode(['succes' => true, 'id' => $bdd->lastInsertId()]);
+    }
+    // MODIFICATION d'un plat
+    elseif ($action === 'modifier') {
+        $stmt = $bdd->prepare("UPDATE Plat SET nom = ?, description = ?, prix = ?, image_url = ?, id_categorie = ? WHERE id_plat = ?");
+        $stmt->execute([
+            $donnees['nom'],
+            $donnees['description'],
+            $donnees['prix'],
+            $donnees['image_url'],
+            $donnees['id_categorie'],
+            $donnees['id_plat']
+        ]);
+        echo json_encode(['succes' => true]);
+    }
+    // SUPPRESSION d'un plat
+    elseif ($action === 'supprimer') {
+        $id_plat = $donnees['id_plat'];
+        
+        // Vérifier si le plat existe
+        $stmt = $bdd->prepare("SELECT id_plat FROM Plat WHERE id_plat = ?");
+        $stmt->execute([$id_plat]);
+        if ($stmt->rowCount() == 0) {
+            echo json_encode(['succes' => false, 'erreur' => 'Plat non trouvé']);
+            exit;
+        }
+        
+        // Supprimer les associations avec les accompagnements
+        $stmt = $bdd->prepare("DELETE FROM PlatAccompagnement WHERE id_plat = ?");
+        $stmt->execute([$id_plat]);
+        
+        // Supprimer le plat
+        $stmt = $bdd->prepare("DELETE FROM Plat WHERE id_plat = ?");
+        $stmt->execute([$id_plat]);
+        
+        echo json_encode(['succes' => true]);
+    }
+    else {
+        echo json_encode(['succes' => false, 'erreur' => 'Action inconnue']);
+    }
+} catch (PDOException $e) {
+    echo json_encode(['succes' => false, 'erreur' => $e->getMessage()]);
+}
+?> <?php
+require_once '../config/connect.php';
+
+header('Content-Type: application/json');
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type');
+
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit();
+}
+
+$donnees = json_decode(file_get_contents('php://input'), true);
+
+if (!$donnees) {
+    echo json_encode(['succes' => false, 'erreur' => 'Données invalides']);
+    exit;
+}
+
+$action = $donnees['action'];
+
+try {
+    // AJOUT d'un accompagnement
+    if ($action === 'ajouter') {
+        $stmt = $bdd->prepare("INSERT INTO Accompagnement (nom, supplement_prix) VALUES (?, ?)");
+        $stmt->execute([
+            $donnees['nom'],
+            $donnees['prix_supplement']
+        ]);
+        echo json_encode(['succes' => true, 'id' => $bdd->lastInsertId()]);
+    }
+    // MODIFICATION d'un accompagnement
+    elseif ($action === 'modifier') {
+        $id = $donnees['id_accompagnement'];
+        
+        // Vérifier si l'accompagnement existe
+        $stmt = $bdd->prepare("SELECT id_acc FROM Accompagnement WHERE id_acc = ?");
+        $stmt->execute([$id]);
+        if ($stmt->rowCount() == 0) {
+            echo json_encode(['succes' => false, 'erreur' => 'Accompagnement non trouvé']);
+            exit;
+        }
+        
+        $stmt = $bdd->prepare("UPDATE Accompagnement SET nom = ?, supplement_prix = ? WHERE id_acc = ?");
+        $stmt->execute([
+            $donnees['nom'],
+            $donnees['prix_supplement'],
+            $id
+        ]);
+        echo json_encode(['succes' => true]);
+    }
+    // SUPPRESSION d'un accompagnement
+    elseif ($action === 'supprimer') {
+        $id = $donnees['id_accompagnement'];
+        
+        // Vérifier si l'accompagnement existe
+        $stmt = $bdd->prepare("SELECT id_acc FROM Accompagnement WHERE id_acc = ?");
+        $stmt->execute([$id]);
+        if ($stmt->rowCount() == 0) {
+            echo json_encode(['succes' => false, 'erreur' => 'Accompagnement non trouvé']);
+            exit;
+        }
+        
+        // Supprimer les associations avec les plats
+        $stmt = $bdd->prepare("DELETE FROM PlatAccompagnement WHERE id_acc = ?");
+        $stmt->execute([$id]);
+        
+        // Supprimer l'accompagnement
+        $stmt = $bdd->prepare("DELETE FROM Accompagnement WHERE id_acc = ?");
+        $stmt->execute([$id]);
+        
+        echo json_encode(['succes' => true]);
+    }
+    else {
+        echo json_encode(['succes' => false, 'erreur' => 'Action inconnue: ' . $action]);
+    }
+} catch (PDOException $e) {
+    echo json_encode(['succes' => false, 'erreur' => $e->getMessage()]);
+}
+?> <?php
+require_once '../config/connect.php';
+
+header('Content-Type: application/json');
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: POST');
+header('Access-Control-Allow-Headers: Content-Type');
+
+// Récupérer les données envoyées par le JS
+$donnees = json_decode(file_get_contents('php://input'), true);
+
+if (!$donnees) {
+    echo json_encode(['erreur' => 'Données invalides']);
+    exit;
+}
+
+try {
+    // 1. Créer le client
+    $stmt = $bdd->prepare("INSERT INTO Client (nom_complet, telephone) VALUES (?, ?)");
+    $stmt->execute([
+        $donnees['client']['nom_complet'],
+        $donnees['client']['telephone']
+    ]);
+    $id_client = $bdd->lastInsertId();
+
+    // 2. Créer la commande
+    $stmt = $bdd->prepare("INSERT INTO Commande (id_client, type, total_prix, adresse_livraison) VALUES (?, ?, ?, ?)");
+    $stmt->execute([
+        $id_client,
+        $donnees['commande']['type'],
+        $donnees['commande']['total_prix'],
+        $donnees['commande']['adresse_livraison'] ?? null
+    ]);
+    $id_commande = $bdd->lastInsertId();
+
+    // 3. Créer chaque ligne
+    foreach ($donnees['lignes'] as $ligne) {
+        $stmt = $bdd->prepare("INSERT INTO LigneCommande (id_com, id_plat, id_acc, quantite, prix_unitaire) VALUES (?, ?, ?, ?, ?)");
+        $stmt->execute([
+            $id_commande,
+            $ligne['id_plat'],
+            $ligne['id_acc'] ?? null,
+            $ligne['quantite'],
+            $ligne['prix_unitaire']
+        ]);
+    }
+
+    echo json_encode([
+        'succes' => true,
+        'id_commande' => $id_commande
+    ]);
+
+} catch (PDOException $e) {
+    echo json_encode(['erreur' => $e->getMessage()]);
+}
+?> <?php
+require_once '../config/connect.php';
+
+header('Content-Type: application/json');
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: POST, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type');
+
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit();
+}
+
+$donnees = json_decode(file_get_contents('php://input'), true);
+
+if (!$donnees) {
+    echo json_encode(['succes' => false, 'erreur' => 'Données invalides']);
+    exit;
+}
+
+$action = $donnees['action'];
+
+try {
+    if ($action === 'associer') {
+        $stmt = $bdd->prepare("INSERT IGNORE INTO PlatAccompagnement (id_plat, id_acc) VALUES (?, ?)");
+        $stmt->execute([
+            intval($donnees['id_plat']),
+            intval($donnees['id_accompagnement'])
+        ]);
+        echo json_encode(['succes' => true]);
+    } 
+    elseif ($action === 'dissocier') {
+        $stmt = $bdd->prepare("DELETE FROM PlatAccompagnement WHERE id_plat = ? AND id_acc = ?");
+        $stmt->execute([
+            intval($donnees['id_plat']),
+            intval($donnees['id_accompagnement'])
+        ]);
+        echo json_encode(['succes' => true]);
+    } 
+    else {
+        echo json_encode(['succes' => false, 'erreur' => 'Action inconnue']);
+    }
+} catch (PDOException $e) {
+    echo json_encode(['succes' => false, 'erreur' => $e->getMessage()]);
+}
+?> <?php
+require_once '../../backend/config/connect.php';
+
+header('Content-Type: application/json');
+
+// GET : Récupère toutes les annonces actives
+if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+    $query = "SELECT * FROM Annonce WHERE est_active = 1 AND (date_fin IS NULL OR date_fin >= CURDATE()) ORDER BY date_creation DESC";
+    $annonces = $bdd->query($query)->fetchAll();
+    echo json_encode($annonces);
+    exit;
+}
+
+// POST : Ajouter/Modifier une annonce (admin seulement)
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $data = json_decode(file_get_contents('php://input'), true);
+    
+    if ($data['action'] === 'ajouter') {
+        $stmt = $bdd->prepare("INSERT INTO Annonce (titre, description, image_url, date_debut, date_fin, est_active) VALUES (?, ?, ?, ?, ?, 1)");
+        $stmt->execute([$data['titre'], $data['description'], $data['image_url'], $data['date_debut'], $data['date_fin']]);
+        echo json_encode(['succes' => true, 'id' => $bdd->lastInsertId()]);
+    } 
+    elseif ($data['action'] === 'modifier') {
+        $stmt = $bdd->prepare("UPDATE Annonce SET titre = ?, description = ?, image_url = ?, date_debut = ?, date_fin = ? WHERE id_annonce = ?");
+        $stmt->execute([$data['titre'], $data['description'], $data['image_url'], $data['date_debut'], $data['date_fin'], $data['id_annonce']]);
+        echo json_encode(['succes' => true]);
+    } 
+    elseif ($data['action'] === 'supprimer') {
+        $stmt = $bdd->prepare("DELETE FROM Annonce WHERE id_annonce = ?");
+        $stmt->execute([$data['id_annonce']]);
+        echo json_encode(['succes' => true]);
+    }
+}
+?> <?php
+require_once '../config/connect.php';
+
+header('Content-Type: application/json');
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: GET, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type');
+
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit();
+}
+
+try {
+    $sql = "SELECT id_acc, nom, supplement_prix FROM Accompagnement ORDER BY nom";
+    $stmt = $bdd->query($sql);
+    $accompagnements = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+    foreach ($accompagnements as &$acc) {
+        $acc['id_accompagnement'] = (int)$acc['id_acc'];
+        $acc['supplement_prix'] = (float)$acc['supplement_prix'];
+        unset($acc['id_acc']);
+    }
+    
+    echo json_encode($accompagnements);
+} catch (PDOException $e) {
+    http_response_code(500);
+    echo json_encode(['erreur' => 'Erreur base de données: ' . $e->getMessage()]);
+}
+?>

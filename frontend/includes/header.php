@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo $titre ?? 'Grillades Tropicales'; ?></title>
+    <title><?php echo $titre ?? 'Braise Marine'; ?></title>
     <link rel="stylesheet" href="../assets/css/style.css" />
     <link rel="stylesheet" href="../assets/css/output.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -21,12 +21,15 @@
     <header id="main-header" class="bg-white/90 backdrop-blur-md shadow-sm sticky top-0 z-50 transition-all duration-300">
         <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
 
+            <!-- ZONE MODIFIÉE ICI -->
             <div class="flex items-center space-x-2">
-                <img src="../assets/images/logo.png" alt="Logo Grillades Tropicales" class="w-10 h-10">
+                <!-- La classe w-10 h-10 a été changée pour w-8 h-8 -->
+               
                 <span class="text-xl font-bold tracking-tight text-tropical-green font-display">
-                    Grillades<span class="text-braise">Tropicales</span>
+                    Braise<span class="text-braise">Marine</span>
                 </span>
             </div>
+            <!-- FIN DE LA ZONE MODIFIÉE -->
 
             <?php if ($page === 'index') : ?>
                 <div class="flex items-center space-x-6">

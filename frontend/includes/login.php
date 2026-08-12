@@ -40,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Connexion Admin | Grillades Tropicales</title>
+    <title>Connexion Admin | Braise Marine</title>
     <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="../assets/css/output.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -53,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <h1 class="text-3xl font-bold text-tropical-green font-display">
                 Espace Admin
             </h1>
-            <p class="text-gray-500 text-sm mt-2">Grillades Tropicales</p>
+            <p class="text-gray-500 text-sm mt-2">Braise Marine</p>
         </div>
 
         <?php if ($erreur) : ?>
@@ -80,7 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </form>
 
         <p class="text-center text-xs text-gray-400 mt-8">
-            © 2026 Grillades Tropicales — Accès réservé
+            © 2026 Braise Marine — Accès réservé
         </p>
     </div>
 

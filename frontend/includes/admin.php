@@ -43,7 +43,7 @@ $categories = $bdd->query("SELECT * FROM Categorie")->fetchAll();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="<?php echo $_SESSION['csrf_token']; ?>">
-    <title>Admin | Grillades Tropicales</title>
+    <title>Admin | Braise Marine</title>
     <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="../assets/css/output.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -56,7 +56,7 @@ $categories = $bdd->query("SELECT * FROM Categorie")->fetchAll();
     <header class="bg-white/90 backdrop-blur-md shadow-sm sticky top-0 z-50">
         <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
             <span class="text-xl font-bold text-tropical-green font-display">
-                Grillades<span class="text-braise">Tropicales</span> <span class="text-gray-400 text-sm font-normal">— Admin</span>
+                Braise<span class="text-braise">Marine</span> <span class="text-gray-400 text-sm font-normal">— Admin</span>
             </span>
             <a href="login.php?logout=1" class="text-red-500 font-medium hover:text-red-600 transition flex items-center gap-2">
                 <i class="fas fa-sign-out-alt"></i>Se déconnecter
