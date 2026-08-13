@@ -1,0 +1,10 @@
+# Reproduit en local (Apache) les mêmes routes "jolies" que vercel.json,
+# pour que les liens internes du site fonctionnent de façon identique en
+# développement (Apache) et en production (Vercel).
+RewriteEngine On
+
+RewriteRule ^$ frontend/includes/index.php [L]
+RewriteRule ^admin$ frontend/includes/admin.php [L]
+RewriteRule ^login$ frontend/includes/login.php [L]
+RewriteRule ^commande$ frontend/includes/commande.php [L]
+RewriteRule ^backend/api/([a-zA-Z_]+)\.php$ backend/api/router.php?file=$1 [L,QSA]

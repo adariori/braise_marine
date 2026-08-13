@@ -5,8 +5,8 @@
 // externe (PlanetScale, Railway, Aiven, Clever Cloud...).
 define("hostname", getenv('DB_HOST') ?: 'localhost');
 define("database", getenv('DB_NAME') ?: 'braise_marine');
-define("username", getenv('DB_USER') ?: 'root');
-define("password", getenv('DB_PASS') ?: '');
+define("username", getenv('DB_USER') ?: 'admin');
+define("password", getenv('DB_PASS') ?: 'root');
 define("dbport", getenv('DB_PORT') ?: '3306');
 
 $dsn = 'mysql:host=' . hostname . ';port=' . dbport . ';dbname=' . database . ';charset=utf8mb4';

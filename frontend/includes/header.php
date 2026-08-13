@@ -1,3 +1,4 @@
+<?php require_once __DIR__ . '/base_path.php'; $base = basePath(); ?>
 <!DOCTYPE html>
 <html lang="fr">
 
@@ -5,11 +6,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo $titre ?? 'Braise Marine'; ?></title>
-    <link rel="stylesheet" href="../assets/css/style.css" />
-    <link rel="stylesheet" href="../assets/css/output.css">
+    <link rel="stylesheet" href="<?php echo $base; ?>/frontend/assets/css/style.css" />
+    <link rel="stylesheet" href="<?php echo $base; ?>/frontend/assets/css/output.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <script>window.BASE_PATH = <?php echo json_encode($base); ?>;</script>
 </head>
 
 <body class="antialiased text-charcoal <?php echo $page === 'commande' ? 'bg-stone-50' : 'bg-white'; ?>">
@@ -40,7 +42,7 @@
                     </ul>
 
                     <!-- Icône panier -->
-                    <a href="commande.php" class="text-tropical-green hover:text-braise transition-colors relative" title="Ma commande" aria-label="Voir mon panier">
+                    <a href="<?php echo $base; ?>/commande" class="text-tropical-green hover:text-braise transition-colors relative" title="Ma commande" aria-label="Voir mon panier">
                         <i class="fas fa-shopping-basket text-2xl"></i>
                         <span id="cart-count" class="absolute -top-2 -right-2 bg-braise text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full hidden">0</span>
                     </a>
@@ -52,11 +54,11 @@
 
             <?php else : ?>
                 <div class="flex items-center space-x-6">
-                    <a href="index.php" class="text-tropical-green font-medium hover:text-braise transition">
+                    <a href="<?php echo $base; ?>/" class="text-tropical-green font-medium hover:text-braise transition">
                         <i class="fas fa-arrow-left mr-2"></i>Retour au menu
                     </a>
                     <div class="relative">
-                        <a href="commande.php" class="p-2 block" aria-label="Voir mon panier">
+                        <a href="<?php echo $base; ?>/commande" class="p-2 block" aria-label="Voir mon panier">
                             <i class="fas fa-shopping-basket text-2xl text-tropical-green"></i>
                             <span id="cart-count" class="absolute -top-1 -right-1 bg-braise text-white text-[10px] font-bold rounded-full h-5 w-5 flex items-center justify-center hidden">0</span>
                         </a>

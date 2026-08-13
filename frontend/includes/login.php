@@ -1,4 +1,7 @@
 <?php
+require_once __DIR__ . '/base_path.php';
+$base = basePath();
+
 // Vercel : seul /tmp est accessible en écriture, on y stocke les sessions.
 session_save_path(sys_get_temp_dir());
 session_start();
@@ -6,12 +9,12 @@ session_start();
 //deconnexion
 if (isset($_GET['logout'])) {
     session_destroy();
-    header('Location: login.php');
+    header('Location: ' . $base . '/login');
     exit;
 }
 
 if (isset($_SESSION['admin'])) {
-    header('Location: admin.php');
+    header('Location: ' . $base . '/admin');
     exit;
 }
 
@@ -29,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($admin && password_verify($password, $admin['password'])) {
         $_SESSION['admin'] = true;
-        header('Location: admin.php');
+        header('Location: ' . $base . '/admin');
         exit;
     } else {
         $erreur = "Identifiant ou mot de passe incorrect.";
@@ -43,8 +46,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Connexion Admin | Braise Marine</title>
-    <link rel="stylesheet" href="../assets/css/style.css">
-    <link rel="stylesheet" href="../assets/css/output.css">
+    <link rel="stylesheet" href="<?php echo $base; ?>/frontend/assets/css/style.css">
+    <link rel="stylesheet" href="<?php echo $base; ?>/frontend/assets/css/output.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 </head>

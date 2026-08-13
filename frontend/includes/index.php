@@ -69,7 +69,7 @@
                     </p>
                 </div>
                 <div class="rounded-super overflow-hidden shadow-2xl aspect-video bg-gray-200">
-                    <img src="../assets/images/about.png" alt="Notre restaurant" class="w-full h-full object-cover" loading="lazy">
+                    <img src="<?php echo $base; ?>/frontend/assets/images/about.png" alt="Notre restaurant" class="w-full h-full object-cover" loading="lazy">
                 </div>
             </div>
         </section>
@@ -174,7 +174,7 @@
         <script>
             // Charger les annonces
             function chargerAnnonces() {
-                fetch('../../backend/api/annonces.php')
+                fetch((window.BASE_PATH || '') + '/backend/api/annonces.php')
                     .then(r => r.json())
                     .then(annonces => {
                         const conteneur = document.getElementById('conteneur-annonces');
@@ -264,4 +264,4 @@
         </div>
     </div>
 
-    <script src="../assets/js/main.js"></script>
+    <script src="<?php echo $base; ?>/frontend/assets/js/main.js"></script>

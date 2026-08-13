@@ -297,7 +297,7 @@ if (soumissionForm) {
             commentaire: null
         }
 
-        fetch('../../backend/api/reservations.php', {
+        fetch((window.BASE_PATH || '') + '/backend/api/reservations.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(donnees)
@@ -317,7 +317,7 @@ if (soumissionForm) {
     })
 }
 
-fetch('../../backend/api/plats.php')
+fetch((window.BASE_PATH || '') + '/backend/api/plats.php')
     .then(r => r.json())
     .then(data => {
         plats = data

@@ -99,6 +99,35 @@ CREATE TABLE Reservation (
     FOREIGN KEY (id_client) REFERENCES Client (id_client)
 );
 
+-- Table de liaison plats <-> accompagnements (utilisée par
+-- backend/api/plats.php et backend/api/associer_accompagnements.php)
+CREATE TABLE PlatAccompagnement (
+    id_plat INT NOT NULL,
+    id_acc INT NOT NULL,
+    PRIMARY KEY (id_plat, id_acc),
+    FOREIGN KEY (id_plat) REFERENCES Plat (id_plat),
+    FOREIGN KEY (id_acc) REFERENCES Accompagnement (id_acc)
+);
+
+-- Annonces/promotions affichées sur la page d'accueil (backend/api/annonces.php)
+CREATE TABLE Annonce (
+    id_annonce INT AUTO_INCREMENT PRIMARY KEY,
+    titre VARCHAR(150) NOT NULL,
+    description TEXT,
+    image_url VARCHAR(255),
+    date_debut DATE,
+    date_fin DATE,
+    est_active TINYINT(1) DEFAULT 1,
+    date_creation DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Compte(s) admin pour le back-office (frontend/includes/login.php)
+CREATE TABLE Admin (
+    id_admin INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(100) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL
+);
+
 INSERT INTO
     Categorie (libelle, icone)
 VALUES ('Grillades', 'fa-fire'),
@@ -162,3 +191,18 @@ VALUES (
         'assets/images/5.jpg',
         1
     );
+
+-- Chaque plat (id 1 à 5) accompagné par défaut d'Alloco et Riz blanc (id 1 et 2)
+INSERT INTO
+    PlatAccompagnement (id_plat, id_acc)
+VALUES (1, 1), (1, 2),
+    (2, 1), (2, 2),
+    (3, 1), (3, 2),
+    (4, 1), (4, 2),
+    (5, 1), (5, 2);
+
+-- Compte admin par défaut : identifiant "admin", mot de passe "admin123"
+-- (À CHANGER après le premier déploiement — hash bcrypt de "admin123")
+INSERT INTO
+    Admin (username, password)
+VALUES ('admin', '$2y$12$kPRPS.Ht1KGZlKjx7ZrOQuok6/Tm1/WmIEX9AJeDLcjcAiI18I5NS');

@@ -9,10 +9,10 @@
     { "src": "backend/uploads/**", "use": "@vercel/static" }
   ],
   "routes": [
-    { "src": "^/$", "dest": "/frontend/includes/index.php", "status": 302 },
-    { "src": "^/admin$", "dest": "/frontend/includes/admin.php", "status": 302 },
-    { "src": "^/login$", "dest": "/frontend/includes/login.php", "status": 302 },
-    { "src": "^/commande$", "dest": "/frontend/includes/commande.php", "status": 302 },
+    { "src": "^/$", "dest": "/frontend/includes/index.php" },
+    { "src": "^/admin$", "dest": "/frontend/includes/admin.php" },
+    { "src": "^/login$", "dest": "/frontend/includes/login.php" },
+    { "src": "^/commande$", "dest": "/frontend/includes/commande.php" },
     { "src": "^/backend/api/([a-zA-Z_]+)\\.php$", "dest": "/backend/api/router.php?file=$1" },
     { "src": "^/(.*)$", "dest": "/$1" }
   ]

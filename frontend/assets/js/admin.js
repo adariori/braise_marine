@@ -1,7 +1,7 @@
 // ============================================
 // 1. VARIABLES GLOBALES & CONFIGURATION
 // ============================================
-const API_BASE_URL = '../../backend/api';
+const API_BASE_URL = (window.BASE_PATH || '') + '/backend/api';
 
 let listeDesPlats = [];
 let listeDesAnnonces = [];

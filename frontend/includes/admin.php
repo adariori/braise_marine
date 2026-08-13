@@ -1,11 +1,14 @@
 <?php
+require_once __DIR__ . '/base_path.php';
+$base = basePath();
+
 // Vercel : seul /tmp est accessible en écriture, on y stocke les sessions.
 session_save_path(sys_get_temp_dir());
 session_start();
 
 // Si non connecté, dirige vers login
 if (!isset($_SESSION['admin'])) {
-    header('Location: login.php');
+    header('Location: ' . $base . '/login');
     exit;
 }
 
@@ -46,11 +49,12 @@ $categories = $bdd->query("SELECT * FROM Categorie")->fetchAll();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="<?php echo $_SESSION['csrf_token']; ?>">
     <title>Admin | Braise Marine</title>
-    <link rel="stylesheet" href="../assets/css/style.css">
-    <link rel="stylesheet" href="../assets/css/output.css">
+    <link rel="stylesheet" href="<?php echo $base; ?>/frontend/assets/css/style.css">
+    <link rel="stylesheet" href="<?php echo $base; ?>/frontend/assets/css/output.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <script>window.BASE_PATH = <?php echo json_encode($base); ?>;</script>
 </head>
 
 <body class="antialiased bg-sand text-charcoal">
@@ -60,7 +64,7 @@ $categories = $bdd->query("SELECT * FROM Categorie")->fetchAll();
             <span class="text-xl font-bold text-tropical-green font-display">
                 Braise<span class="text-braise">Marine</span> <span class="text-gray-400 text-sm font-normal">— Admin</span>
             </span>
-            <a href="login.php?logout=1" class="text-red-500 font-medium hover:text-red-600 transition flex items-center gap-2">
+            <a href="<?php echo $base; ?>/login?logout=1" class="text-red-500 font-medium hover:text-red-600 transition flex items-center gap-2">
                 <i class="fas fa-sign-out-alt"></i>Se déconnecter
             </a>
         </nav>
@@ -599,7 +603,7 @@ $categories = $bdd->query("SELECT * FROM Categorie")->fetchAll();
 
     </div>
 
-    <script src="../assets/js/admin.js"></script>
+    <script src="<?php echo $base; ?>/frontend/assets/js/admin.js"></script>
 
 </body>
 

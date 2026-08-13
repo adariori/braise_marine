@@ -96,4 +96,4 @@ include 'header.php';
 <!-- footer -->
 <?php include 'footer.php'; ?>
 
-<script src="../assets/js/commande.js"></script>
+<script src="<?php echo $base; ?>/frontend/assets/js/commande.js"></script>
