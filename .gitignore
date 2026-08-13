@@ -15,6 +15,9 @@ build/
 .env.local
 .env.*.local
 
+# Identifiants MySQL locaux (jamais commités)
+backend/config/connect.local.php
+
 # OS files
 .DS_Store
 Thumbs.db

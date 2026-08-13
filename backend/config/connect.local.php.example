@@ -1,0 +1,8 @@
+<?php
+// Copie ce fichier en "connect.local.php" (déjà ignoré par git) et renseigne
+// tes propres identifiants MySQL locaux. Ne JAMAIS commiter connect.local.php.
+putenv('DB_HOST=localhost');
+putenv('DB_PORT=3306');
+putenv('DB_NAME=braise_marine');
+putenv('DB_USER=root');
+putenv('DB_PASS=');

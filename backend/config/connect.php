@@ -1,12 +1,16 @@
 <?php
-// En local : valeurs par défaut ci-dessous.
-// En production (Vercel) : Vercel n'héberge pas de MySQL, ces valeurs doivent
-// être fournies via des variables d'environnement pointant vers une base
-// externe (PlanetScale, Railway, Aiven, Clever Cloud...).
+// Identifiants réels chargés depuis un fichier local non versionné
+// (voir connect.local.php.example) ou depuis des variables d'environnement
+// (Vercel, ou tout autre hébergeur). Ne jamais mettre de vrais identifiants
+// en dur ici : ce fichier est public sur le dépôt GitHub.
+if (file_exists(__DIR__ . '/connect.local.php')) {
+    require __DIR__ . '/connect.local.php';
+}
+
 define("hostname", getenv('DB_HOST') ?: 'localhost');
 define("database", getenv('DB_NAME') ?: 'braise_marine');
-define("username", getenv('DB_USER') ?: 'admin');
-define("password", getenv('DB_PASS') ?: 'root');
+define("username", getenv('DB_USER') ?: 'root');
+define("password", getenv('DB_PASS') ?: '');
 define("dbport", getenv('DB_PORT') ?: '3306');
 
 $dsn = 'mysql:host=' . hostname . ';port=' . dbport . ';dbname=' . database . ';charset=utf8mb4';
