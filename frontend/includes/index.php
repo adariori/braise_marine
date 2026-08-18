@@ -170,21 +170,20 @@
             </div>
         </section>
 
+        <script src="<?php echo $base; ?>/frontend/assets/js/demo-data.js"></script>
+
         <!-- Script annonces -->
         <script>
             // Charger les annonces
-            function chargerAnnonces() {
-                fetch((window.BASE_PATH || '') + '/backend/api/annonces.php')
-                    .then(r => r.json())
-                    .then(annonces => {
-                        const conteneur = document.getElementById('conteneur-annonces');
+            function afficherAnnonces(annonces) {
+                const conteneur = document.getElementById('conteneur-annonces');
 
-                        if (annonces.length === 0) {
-                            conteneur.innerHTML = '<p class="text-white text-center col-span-full">Aucune annonce pour le moment</p>';
-                            return;
-                        }
+                if (annonces.length === 0) {
+                    conteneur.innerHTML = '<p class="text-white text-center col-span-full">Aucune annonce pour le moment</p>';
+                    return;
+                }
 
-                        conteneur.innerHTML = annonces.map(annonce => `
+                conteneur.innerHTML = annonces.map(annonce => `
                     <div class="bg-white rounded-super shadow-lg overflow-hidden hover:shadow-2xl transition-all">
                         ${annonce.image_url ? `<img src="${(window.BASE_PATH || '') + annonce.image_url}" alt="${annonce.titre}" class="w-full h-40 object-cover">` : ''}
                         <div class="p-6">
@@ -199,13 +198,27 @@
                         </div>
                     </div>
                 `).join('');
-                                    })
-                                    .catch(err => console.error("Erreur chargement annonces :", err));
-                            }
+            }
 
-                            // Charger au démarrage
-                            document.addEventListener('DOMContentLoaded', chargerAnnonces);
-                        </script>
+            function chargerAnnonces() {
+                fetch((window.BASE_PATH || '') + '/backend/api/annonces.php')
+                    .then(r => {
+                        if (!r.ok) throw new Error('API indisponible');
+                        return r.json();
+                    })
+                    .then(annonces => {
+                        afficherAnnonces((Array.isArray(annonces) && annonces.length > 0) ? annonces : annoncesDeDemo());
+                    })
+                    .catch(() => {
+                        // Pas de base de données branchée (ex: prod sans MySQL externe) :
+                        // on affiche une annonce de démonstration.
+                        afficherAnnonces(annoncesDeDemo());
+                    });
+            }
+
+            // Charger au démarrage
+            document.addEventListener('DOMContentLoaded', chargerAnnonces);
+        </script>
 
     </main>
 

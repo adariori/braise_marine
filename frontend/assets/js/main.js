@@ -327,9 +327,19 @@ if (soumissionForm) {
 }
 
 fetch((window.BASE_PATH || '') + '/backend/api/plats.php')
-    .then(r => r.json())
+    .then(r => {
+        if (!r.ok) throw new Error('API indisponible')
+        return r.json()
+    })
     .then(data => {
-        plats = data
+        plats = (Array.isArray(data) && data.length > 0) ? data : platsDeDemo()
+        afficherMenu(plats)
+        appliquerStyleActif(btnTous)
+    })
+    .catch(() => {
+        // Pas de base de données branchée (ex: prod sans MySQL externe) :
+        // on affiche des plats de démonstration pour ne pas laisser la page vide.
+        plats = platsDeDemo()
         afficherMenu(plats)
         appliquerStyleActif(btnTous)
     })
