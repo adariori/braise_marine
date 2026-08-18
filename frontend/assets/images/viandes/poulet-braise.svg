@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+  <defs>
+    <linearGradient id="bg3" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#D64531"/>
+      <stop offset="100%" stop-color="#b8391f"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="400" fill="url(#bg3)"/>
+  <g opacity="0.25">
+    <circle cx="345" cy="80" r="12" fill="#E8A837"/>
+    <circle cx="45" cy="330" r="10" fill="#F9F6F0"/>
+  </g>
+  <!-- pilon de poulet braisé -->
+  <g transform="translate(200,200)">
+    <path d="M -20,-90 C 40,-90 70,-40 55,10 C 45,45 15,70 -10,95 C -35,115 -70,110 -85,90 C -100,68 -85,45 -60,30 C -30,10 -50,-40 -20,-90 Z" fill="#E8A837"/>
+    <path d="M -85,90 C -100,105 -110,120 -115,135" stroke="#F9F6F0" stroke-width="14" stroke-linecap="round" fill="none"/>
+    <path d="M -20,-70 C -35,-40 -35,-10 -20,20" stroke="#b8391f" stroke-width="5" opacity="0.5" fill="none"/>
+    <path d="M 10,-70 C 5,-40 10,-5 5,25" stroke="#b8391f" stroke-width="5" opacity="0.5" fill="none"/>
+    <g opacity="0.6">
+      <circle cx="-10" cy="-20" r="4" fill="#2D2A26"/>
+      <circle cx="15" cy="10" r="4" fill="#2D2A26"/>
+      <circle cx="-25" cy="30" r="4" fill="#2D2A26"/>
+      <circle cx="-5" cy="50" r="4" fill="#2D2A26"/>
+    </g>
+  </g>
+  <text x="200" y="380" text-anchor="middle" font-family="Georgia, serif" font-size="22" fill="#F9F6F0" opacity="0.9">Poulet Braisé</text>
+</svg>

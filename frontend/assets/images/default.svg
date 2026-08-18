@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+  <rect width="400" height="400" fill="#F9F6F0"/>
+  <ellipse cx="200" cy="230" rx="150" ry="70" fill="#FFFFFF" stroke="#6B5E52" stroke-width="3" opacity="0.9"/>
+  <ellipse cx="200" cy="225" rx="110" ry="48" fill="#F9F6F0"/>
+  <g stroke="#D64531" stroke-width="8" stroke-linecap="round" opacity="0.7">
+    <line x1="170" y1="140" x2="170" y2="185"/>
+    <line x1="160" y1="140" x2="160" y2="175"/>
+    <line x1="180" y1="140" x2="180" y2="175"/>
+  </g>
+  <ellipse cx="235" cy="160" rx="16" ry="30" fill="#D64531" opacity="0.7" transform="rotate(20 235 160)"/>
+  <text x="200" y="330" text-anchor="middle" font-family="Georgia, serif" font-size="20" fill="#2D2A26" opacity="0.6">Braise Marine</text>
+</svg>

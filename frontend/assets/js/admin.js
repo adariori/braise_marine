@@ -3,6 +3,14 @@
 // ============================================
 const API_BASE_URL = (window.BASE_PATH || '') + '/backend/api';
 
+// Préfixe une image stockée en base (chemin racine, ex: "/backend/uploads/x.jpg")
+// avec le préfixe de site courant (vide sur Vercel, "/GRTR" en local).
+function resoudreImage(chemin) {
+    const base = window.BASE_PATH || ''
+    if (!chemin) return base + '/frontend/assets/images/default.svg'
+    return chemin.startsWith('http') ? chemin : base + chemin
+}
+
 let listeDesPlats = [];
 let listeDesAnnonces = [];
 let listeDesAccompagnements = [];
@@ -234,7 +242,7 @@ function chargerPlats() {
 
             plats.forEach((plat, index) => {
                 const platId = parseInt(plat.id);
-                const imageSrc = plat.image ? escapeHtml(plat.image) : '../assets/images/default.jpg';
+                const imageSrc = resoudreImage(plat.image);
                 const nomNettoye = escapeHtml(plat.nom);
                 const catNettoye = escapeHtml(plat.categorie);
                 const descNettoye = plat.description ? escapeHtml(plat.description) : 'Aucune description';

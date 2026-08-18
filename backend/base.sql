@@ -156,7 +156,7 @@ VALUES (
         'Poulet Braisé',
         'Accompagné d\'allocos et sauce maison.',
         15.00,
-        'assets/images/1.jpg',
+        '/frontend/assets/images/viandes/poulet-braise.svg',
         1
     ),
     (
@@ -164,7 +164,7 @@ VALUES (
         'Poisson Braisé',
         'Poisson frais grillé au feu de bois.',
         20.00,
-        'assets/images/2.jpg',
+        '/frontend/assets/images/poissons/poisson-braise.svg',
         1
     ),
     (
@@ -172,7 +172,7 @@ VALUES (
         'Côtelettes d\'Agneau',
         'Agneau tendre mariné aux herbes tropicales.',
         22.00,
-        'assets/images/3.jpg',
+        '/frontend/assets/images/viandes/agneau.svg',
         1
     ),
     (
@@ -180,7 +180,7 @@ VALUES (
         'Gambas Grillées',
         'Gambas géantes marinées au citron vert.',
         25.00,
-        'assets/images/4.jpg',
+        '/frontend/assets/images/poissons/gambas.svg',
         1
     ),
     (
@@ -188,7 +188,19 @@ VALUES (
         'Brochettes Mixtes',
         'Assortiment de viandes grillées.',
         18.00,
-        'assets/images/5.jpg',
+        '/frontend/assets/images/viandes/brochettes.svg',
+        1
+    );
+
+-- Annonce de démo (bandeau promo sur la page d'accueil)
+INSERT INTO
+    Annonce (titre, description, image_url, date_debut, date_fin, est_active)
+VALUES (
+        'Soirée grillades du vendredi',
+        'Menu spécial face à la mer, tous les vendredis soir.',
+        '/frontend/assets/images/evenement.svg',
+        NULL,
+        NULL,
         1
     );
 

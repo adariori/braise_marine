@@ -59,10 +59,11 @@ if (!move_uploaded_file($file['tmp_name'], $filepath)) {
     exit;
 }
 
-// APP_BASE_PATH permet de préfixer les URLs si le site n'est pas servi à la
-// racine du domaine (ex: alias Apache local "/GRTR"). Vide par défaut (Vercel).
-$basePath = rtrim(getenv('APP_BASE_PATH') ?: '', '/');
-$webPath = $basePath . '/backend/uploads/' . $filename;
+// Chemin stocké tel quel en base, SANS préfixe d'environnement (le front
+// ajoute window.BASE_PATH au moment de l'affichage — voir base_path.php /
+// header.php). Ça évite d'avoir un chemin figé en base qui ne serait
+// correct que sur l'environnement où l'upload a eu lieu.
+$webPath = '/backend/uploads/' . $filename;
 
 echo json_encode([
     'succes' => true,

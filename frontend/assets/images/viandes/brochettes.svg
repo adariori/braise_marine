@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+  <defs>
+    <linearGradient id="bg5" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#E8A837"/>
+      <stop offset="100%" stop-color="#c98d24"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="400" fill="url(#bg5)"/>
+  <g opacity="0.2">
+    <circle cx="340" cy="340" r="14" fill="#D64531"/>
+    <circle cx="50" cy="60" r="10" fill="#2D2A26"/>
+  </g>
+  <!-- deux brochettes -->
+  <g transform="translate(120,120) rotate(35)">
+    <line x1="-30" y1="0" x2="230" y2="0" stroke="#6B5E52" stroke-width="6" stroke-linecap="round"/>
+    <rect x="0" y="-24" width="42" height="48" rx="6" fill="#D64531"/>
+    <rect x="52" y="-24" width="42" height="48" rx="6" fill="#F9F6F0"/>
+    <rect x="104" y="-24" width="42" height="48" rx="6" fill="#D64531"/>
+    <rect x="156" y="-24" width="34" height="48" rx="6" fill="#F9F6F0"/>
+  </g>
+  <g transform="translate(60,260) rotate(-10)">
+    <line x1="-20" y1="0" x2="240" y2="0" stroke="#6B5E52" stroke-width="6" stroke-linecap="round"/>
+    <rect x="0" y="-24" width="42" height="48" rx="6" fill="#2D2A26"/>
+    <rect x="52" y="-24" width="42" height="48" rx="6" fill="#D64531"/>
+    <rect x="104" y="-24" width="42" height="48" rx="6" fill="#2D2A26"/>
+    <rect x="156" y="-24" width="42" height="48" rx="6" fill="#D64531"/>
+  </g>
+  <text x="200" y="380" text-anchor="middle" font-family="Georgia, serif" font-size="22" fill="#2D2A26" opacity="0.9">Brochettes Mixtes</text>
+</svg>

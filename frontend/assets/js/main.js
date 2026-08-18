@@ -1,3 +1,12 @@
+// Préfixe une image stockée en base (chemin racine, ex: "/backend/uploads/x.jpg")
+// avec le préfixe de site courant (vide sur Vercel, "/GRTR" en local). Avec
+// repli sur une image par défaut si aucune image n'est renseignée.
+function resoudreImage(chemin) {
+    const base = window.BASE_PATH || ''
+    if (!chemin) return base + '/frontend/assets/images/default.svg'
+    return chemin.startsWith('http') ? chemin : base + chemin
+}
+
 const voirmenu = document.querySelector('#voir_menu')
 const menu = document.querySelector('#notre-menu')
 const navlinks = document.querySelector('#nav-links')
@@ -111,7 +120,7 @@ function afficherContenuModal(index) {
     if (desc) desc.textContent = platSelectionne.description
 
     if (img) {
-        img.src = platSelectionne.image
+        img.src = resoudreImage(platSelectionne.image)
         img.alt = platSelectionne.nom
     }
 
@@ -161,7 +170,7 @@ function afficherMenu(liste) {
 
         article.innerHTML = `
             <div class="h-56 overflow-hidden">
-                <img src="${plat.image}" alt="${plat.nom}" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                <img src="${resoudreImage(plat.image)}" alt="${plat.nom}" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
             </div>
             <div class="p-6">
                 <div class="flex justify-between items-center mb-4">

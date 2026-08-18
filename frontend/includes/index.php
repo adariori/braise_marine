@@ -186,7 +186,7 @@
 
                         conteneur.innerHTML = annonces.map(annonce => `
                     <div class="bg-white rounded-super shadow-lg overflow-hidden hover:shadow-2xl transition-all">
-                        ${annonce.image_url ? `<img src="${annonce.image_url}" alt="${annonce.titre}" class="w-full h-40 object-cover">` : ''}
+                        ${annonce.image_url ? `<img src="${(window.BASE_PATH || '') + annonce.image_url}" alt="${annonce.titre}" class="w-full h-40 object-cover">` : ''}
                         <div class="p-6">
                             <h3 class="text-xl font-bold text-tropical-green mb-2">${annonce.titre}</h3>
                             <p class="text-gray-600 text-sm mb-4">${annonce.description}</p>
